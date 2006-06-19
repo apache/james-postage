@@ -1,0 +1,17 @@
+current plans
+
++ make project maven2 compatible
++ move to maven2
++ test with disappearing services. is sampling data generated? are error codes being set?
++ increment mails per min
++ wiki documentation
++ 1 unmatched message bug
+
+
+future plans
++ add spam configuration
++ track bounced or otherwise undelivered mails
++ add special accounts for retrieving spam and ghosted mails
++ introduce handlers checking mail integrity
++ configurable interceptors which declare a mail as 'sent correctly'
++ fetchmail

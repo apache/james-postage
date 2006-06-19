@@ -1,0 +1,100 @@
+++ Overview
+
+What is it?
+A small stand-alone tool to put load onto a running James Server and record its performance.
+
+What's the name?
+Postage. (Well, maybe we can fix that soon.)
+
+How is the load generated?
+By sending mails from/to a number of internal/external accounts.
+
+How is the load measured?
+By matching sent and delivered test mails, and recording timestamps when sending and retrieving mails.
+Recording James' JVM memory data is a planned feature.
+ 
+How does the tool evaluate the recorded data? Does it paint nice diagrams?
+It doesn't. But you should be able to import the Comma Separated Data it generates into a spreadsheet of your choice.
+
+I want to simulate a large user base, how can I do that?
+Postage creates any number of users you want. See Postage configuration.
+
+How does Postage send mail?
+a. By sending mail in using James' SMTP service
+b. By sending mail out ('relaying') through James' SMTP service
+ 
+How does Postage know if delivery was successful?
+a. By polling internal accounts through James' POP3 service                                                             
+b. By acting as a mail gateway for James' outbound mail coming through SMTP
+
+++ James configuration
+
++ incoming SMTP must be enabled for the machine running postage (TODO: add config part here) 
++ POP3 must be enabled with "simple" authentication
++ James must handle mail for internal user domain (TODO: add config part here)
++
+
+++ start Postage 
+
+org.apache.james.postage.Main <path/to/config_file.xml> <scenario1> [<scenario2> ... ]
+ 
+++ needed libraries
+
+the following libraries are expected on the classpath:
+
+for reading xml configuration file:                               
+commons-beanutils.jar
+commons-collections-3.1.jar
+commons-configuration-1.2.jar
+commons-digester.jar
+commons-lang-2.1.jar
+
+for logging:
+commons-logging.jar
+
+for telnet, SMTP & POP3  client:
+commons-net-1.4.1.jar
+
+for unit testing:
+junit.jar
+
+for embedded SMTP server from James:
+james-2.3-dev.jar
+mail-1.3.2.jar
+mailet-2.3.jar
+mailet-api-2.3.jar
+activation.jar
+avalon-framework-api-4.3.jar
+avalon-framework-impl-4.3.jar
+avalon-logkit-2.1.jar
+concurrent-1.3.4.jar
+cornerstone-connection-api-2.1.jar
+cornerstone-connection-impl-2.1.jar
+cornerstone-sockets-api-2.1.jar
+cornerstone-sockets-impl-2.1.jar
+cornerstone-threads-api-2.1.jar
+cornerstone-threads-impl-2.1.jar
+dnsjava-2.0.1.jar
+excalibur-pool-api-2.1.jar
+excalibur-pool-impl-2.1.jar
+excalibur-thread-api-2.1.jar
+excalibur-thread-impl-2.1.jar
+
+++ How does it work?
+
++ Prepare James
+
++ Prepare the Postage configuration
+
++ Start Postage
+
+ Postage selects the Scenario you want to run
+ Postage checks if all services can be reached
+ Postage starts to do its job
+ Postage writes all recorded data
+
+
+
+
+
+
