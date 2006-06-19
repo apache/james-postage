@@ -1,0 +1,177 @@
+<project name="James Postage" default="build" basedir=".">
+
+    <!--
+     ! Copyright (c) 2006 The Apache Software Foundation.                  !
+     ! All rights reserved.                                                !
+     !                                                                     !
+     ! Licensed under the Apache License, Version 2.0 (the "License"); you !
+     ! may not use this file except in compliance with the License. You    !
+     ! may obtain a copy of the License at:                                !
+     !                                                                     !
+     !     http://www.apache.org/licenses/LICENSE-2.0                      !
+     !                                                                     !
+     ! Unless required by applicable law or agreed to in writing, software !
+     ! distributed under the License is distributed on an "AS IS" BASIS,   !
+     ! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or     !
+     ! implied.  See the License for the specific language governing       !
+     ! permissions and limitations under the License.                      !
+    -->
+
+    <description>James Postage Testing Tool</description>
+
+    <!--  CONFIGURE -->
+    
+    <!--<property file="build.properties" /> -->
+    
+    <property name="dir.build" value="${basedir}/build"/>
+    <property name="dir.build.source" value="${dir.build}/source/"/>
+    <property name="dir.build.classes" value="${dir.build}/classes/"/>
+    <property name="dir.build.lib" value="${dir.build}/lib/"/>
+    
+    <property name="dir.source.classes" value="${basedir}/src/main/java/"/>
+    
+    <!-- TODO change this to a James Distribution based on a JAMES_HOME variable, or let maven do the job --> 
+    <property name="dir.james.basedir" value="${basedir}/../../../apache/james/trunk/"/>
+
+    <property name="force.java1_4.support" value="false"/>
+    
+    <target name="initialize">
+        <tstamp/>
+        
+        <path id="java.build.classpath">
+            <fileset dir="${basedir}/lib/">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${dir.james.basedir}/lib/">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+
+        <path id="java.run.classpath">
+            <fileset dir="${basedir}/build/lib/">
+                <include name="postage.jar"/>
+            </fileset>
+            <fileset dir="${basedir}/lib/">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${dir.james.basedir}/lib/">
+                <include name="*.jar"/>
+            </fileset>
+        
+        </path>
+
+        <!--
+         no.gmx property determines, whether or not we can and should compile in Java 5 support (JMX support for the JVM
+         parameters like memory, threads).
+         if yes, it is probably not possible to run the application in earlier JVMs.
+         if false, it is not possible to record memory and thread consumption.
+        -->
+        <condition property="no.jmx" >
+            <or>
+                <equals arg1="${ant.java.version}" arg2="1.1" />
+                <equals arg1="${ant.java.version}" arg2="1.2" />
+                <equals arg1="${ant.java.version}" arg2="1.3" />
+                <equals arg1="${ant.java.version}" arg2="1.4" />
+                <equals arg1="force.java1_4.support" arg2="true" />
+            </or>
+        </condition>
+
+    </target>
+
+    <target name="init-compiler-sources">
+        <copy todir="${dir.build.source}"  >
+            <fileset dir="${dir.source.classes}" >
+                <include name="**/*.java" />
+                <exclude name="**/JVMResourceSamplerWorker.java" if="no.jmx"/>  
+            </fileset> 
+        </copy>
+    </target>
+        
+    <!-- PREPARE LIBRARIES -->
+    <target name="fetch-third-party-libs" depends="initialize" >
+        <extension id="ext.lib.junit" extensionName="junit-3.8.1.jar" />
+        
+        <jarlib-resolve property="lib.junit">
+            <extension refid="ext.lib.junit"/>
+            <url url="http://www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar" destfile="lib/junit.jar"/>
+        </jarlib-resolve>    
+    </target>
+    
+    <!--  CLEAN UP -->
+    
+    <target name="clean" depends="initialize" >
+        <delete dir="${dir.build}"/>
+    </target>
+
+    
+    <!--  COMPILE -->
+    
+    <target name="init-paths">
+        <mkdir dir="${dir.build}"/>
+        <mkdir dir="${dir.build.classes}"/>
+            
+        <delete dir="${dir.build.source}" failonerror="false"/>
+        <mkdir dir="${dir.build.source}"/>
+    </target>
+        
+    <target name="build" depends="initialize, init-paths, init-compiler-sources">
+        <echo>Compiling ${ant.project.name}</echo>
+                
+        <!-- build the src javas -->
+        <javac destdir="${dir.build.classes}"
+            classpathref="java.build.classpath"
+            debug="on" >
+            <src path="${dir.build.source}" /> 
+        </javac>
+		
+        <echo>Finished compiling ${ant.project.name}</echo>
+    </target>
+    
+    <!--  PACKAGE -->
+    
+    <target name="package" depends="initialize" >
+        <mkdir dir="${dir.build}"/>
+        <mkdir dir="${dir.build.lib}"/>
+        
+        <jar file="${dir.build.lib}/postage.jar" basedir="${dir.build.classes}" >
+            <manifest >
+              <attribute name="Built-By" value="${user.name}"/>
+              <attribute name="Main-Class" value="org.apache.james.postage.Main"/>
+              <section name="common">
+                <attribute name="Specification-Title" value="Apache James Postage"/>
+                <attribute name="Specification-Version" value="0.1"/>
+                <attribute name="Specification-Vendor" value="Apache Software Foundation"/>
+                <attribute name="Implementation-Title" value="Postage"/>
+                <attribute name="Implementation-Version" value="0.1"/> 
+                <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
+              </section>
+            </manifest>
+        </jar>
+        <!-- TODO add Apache Manifest Info -->
+        <tstamp>
+            <format property="end.time" pattern="HH:mm:ss"/>
+        </tstamp> 
+        <echo>Finished: ${end.time}</echo>
+    </target>
+
+    <!--  RUN -->
+    
+    <target name="run" depends="initialize" >
+        <java classname="org.apache.james.postage.Main" fork="true">
+            <classpath refid="java.run.classpath"/>
+            <sysproperty key="javax.xml.parsers.DocumentBuilderFactory" value="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl" />
+            <arg value="./conf/postage.xml" />
+            <arg value="release" />
+        </java>
+    </target>
+
+    <target name="run-debug" depends="initialize" >
+        <java classname="org.apache.james.postage.Main" fork="true">
+            <classpath refid="java.run.classpath"/>
+            <sysproperty key="javax.xml.parsers.DocumentBuilderFactory" value="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl" />
+            <arg value="./conf/postage.xml" />
+            <arg value="debug" />
+        </java>
+    </target>
+
+</project>
