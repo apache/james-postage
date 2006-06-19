@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<postage>
+  <!-- each configuration has 1..n scenarios, each representing a complete run.
+       one/some/all scenarios can be chosen to be run sequentially using the id which must be unique.
+  -->  
+  <scenario id="sc1" runtimeMinutes="1">
+      <!-- general description of the environment. this info gets printed into the result files to know later
+           what configuration was run
+      -->
+      <description>
+          <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
+          <maxheap>64MB</maxheap>
+          <james-version>James-2.3.0b1</james-version>
+          <repository-configuration>default</repository-configuration>
+          <thread-configuration>default</thread-configuration>
+      </description>
+      <users>
+        <!-- internal users are created in the test server at initialization, the username is <username-prefix><NNN> 
+             the email used in tests is <username-prefix><NNN>@<domain>.
+             if reuseExisting is no set to 'yes', existing internal James accounts are deleted and re-created, existing
+             mails for these accounts are discarded.
+             the JAMES server to be tested must handle mails for this domain this can be achieved by
+             adding a line like this
+                <servername>mail.james.local</servername>
+             to your servernames section in james.xml
+        -->
+        <internal count="10" username-prefix="test_int" domain="mail.james.local" password="test" reuseExisting="yes" />
+        <!-- external user's emails are assembled like: <username-prefix><NNN>@<domain>.
+             external user domain must not be any of the domains James handles so the mail gets forwarded to the 
+             gateway (see 'smtp-forwarding' below)
+        -->
+        <external count="3" username-prefix="test_ext" domain="mail.sample.com" />
+      </users>
+      <!-- profiles describe the generated emails sent through James by Postage -->
+      <profiles>
+          <!-- name must be unique within the scenario. 
+               source = "extern|intern". target = "extern|intern". both together determine which accounts are sending/receiving. -->
+          <profile name="ext-int" source="extern" target="intern">
+             <!-- count-per-min: number of mails generated per minute each using a separate connection
+                  subject: mail subject line. is recorded and written to result file to be able to track the type of mail, e.g.
+                  "big", "attachement", "short"
+                  text-size-min/max: if greater 0, a text/plain MIME part is generated for every test mail having a random
+                      size within this range
+                  binary-size-min/max: if greater 0, an application/octet-stream MIME part is generated for every test 
+                      mail having a random size within this range
+                  mail-factory-class: (optional attribute) if not using the default mail factory, denote full class name here.
+                      default is: "org.apache.james.postage.mail.DefaultMailFactory"
+             -->
+             <send count-per-min="10" subject="ext2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+          </profile>
+          <profile name="int-ext" source="intern" target="extern">
+             <send count-per-min="10" subject="int2ext" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+          </profile>
+          <profile name="int-int" source="intern" target="intern">
+             <send count-per-min="10" subject="int2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+          </profile>
+      </profiles>
+      <!-- on which machine the target James instance is located -->
+      <testserver host="localhost">
+        <!-- Postage's SMTP port, James should forward all outbound test mail to it (Mail Gateway'ing), 
+             to make it trackable by Postage: 
+             <gateway>localhost</gateway>
+             <gatewayPort>2525</gatewayPort>
+             latecomer-wait-seconds: time in seconds postage waits for mails (forwarded through the gateway) beyond the 
+                 point where no new messages are generated.
+        -->
+        <smtp-forwarding port="2525" latecomer-wait-seconds="45"/>
+        <!-- James' SMTP listening port. -->
+        <smtp-inbound port="25" />
+        <!-- James' POP3 listening port. 
+             count-per-min: how often per minute another random internal user account is accessed and all test email there is 
+             downloaded -->
+        <pop3 port="110" count-per-min="10" />
+        <!-- Postage generates user accounts using James' remote manager -->
+        <remotemanager port="4555" name="root" password="root" />
+        <!-- TODO - spam processing not yet functional -->
+        <spam-account name="spam-sink" password="spam-sink" />
+
+        <!-- postage can sample key performance data directly from the JVM JAMES is running in.
+             Therefore, JAMES and Postage must run under a Java5 JVM with special functionality enabled on JAMES part.
+             if this feature is disabled, a Java5 JVM is not required on either part.
+             jmx-remoting-port: 0 for disabling this feature. if greater 0, the port JAMES JVM is listening on for Postage to connect
+        -->
+        <jvm-resources jmx-remoting-port="10201" />
+          
+      </testserver>
+  </scenario> 
+  <!-- put as many scenarios, as you want 
+  <scenario id="sc2" runtimeMinutes="1">
+   ...
+  </scenario id="sc2" >
+  -->
+    
+    <!-- scenario for short runs as needed during development -->
+    <scenario id="debug" runtimeMinutes="1">
+        <description>
+            <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
+            <maxheap>64MB</maxheap>
+            <james-version>James-2.3.0b1</james-version>
+            <repository-configuration>default</repository-configuration>
+            <thread-configuration>default</thread-configuration>
+        </description>
+        <users>
+          <internal count="10" username-prefix="test_int" domain="mail.james.local" password="test" reuseExisting="yes" />
+          <external count="3" username-prefix="test_ext" domain="mail.sample.com" />
+        </users>
+        <profiles>
+            <profile name="ext-int" source="extern" target="intern">
+               <send count-per-min="10" subject="ext2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000" />
+            </profile>
+            <profile name="int-ext" source="intern" target="extern">
+               <send count-per-min="10" subject="int2ext" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+            </profile>
+            <profile name="int-int" source="intern" target="intern">
+               <send count-per-min="10" subject="int2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+            </profile>
+        </profiles>
+        <testserver host="localhost">
+          <smtp-forwarding port="2525" latecomer-wait-seconds="120"/>
+          <smtp-inbound port="25" />
+          <pop3 port="110" count-per-min="10" />
+          <remotemanager port="4555" name="root" password="root" />
+          <spam-account name="spam-sink" password="spam-sink" />
+          <jvm-resources jmx-remoting-port="0" />
+        </testserver>
+    </scenario> 
+    
+    <!-- 
+         'release' scenario should run without problems with every out-of-the-box James installment on a contemporary
+         machine.
+    -->
+    <scenario id="release" runtimeMinutes="1440">
+        <description>
+            <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
+            <maxheap>64MB</maxheap>
+            <james-version>James-2.3.0b1</james-version>
+            <repository-configuration>default</repository-configuration>
+            <thread-configuration>default</thread-configuration>
+        </description>
+        <users>
+          <internal count="50" username-prefix="test_int" domain="mail.james.local" password="test" reuseExisting="yes" />
+          <external count="100" username-prefix="test_ext" domain="mail.sample.com" />
+        </users>
+        <profiles>
+            <profile name="ext-int" source="extern" target="intern">
+               <send count-per-min="10" subject="ext2int_text" text-size-min="10" text-size-max="500" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="1" subject="ext2int_attachment" text-size-min="10" text-size-max="200" binary-size-min="1" binary-size-max="30000"  />
+            </profile>
+            <profile name="int-ext" source="intern" target="extern">
+               <send count-per-min="20" subject="int2ext" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+            </profile>
+            <profile name="int-int" source="intern" target="intern">
+               <send count-per-min="20" subject="int2int" text-size-min="10" text-size-max="500" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="5" subject="int2int" text-size-min="10" text-size-max="100" binary-size-min="1" binary-size-max="30000"  />
+            </profile>
+        </profiles>
+        <testserver host="localhost">
+          <smtp-forwarding port="2525" latecomer-wait-seconds="45"/>
+          <smtp-inbound port="25" />
+          <pop3 port="110" count-per-min="10" />
+          <remotemanager port="4555" name="root" password="root" />
+          <spam-account name="spam-sink" password="spam-sink" />
+          <jvm-resources jmx-remoting-port="0" />
+        </testserver>
+    </scenario> 
+    
+    <scenario id="release_james512" runtimeMinutes="480"><!-- 8h=480, 1d=1440, 3d=4320 -->
+        <description>
+            <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
+            <maxheap>64MB</maxheap>
+            <james-version>James-2.3.0b1</james-version>
+            <repository-configuration>default</repository-configuration>
+            <thread-configuration>default</thread-configuration>
+        </description>
+        <users>
+          <internal count="1" username-prefix="test_int" domain="mail.james.local" password="test" reuseExisting="yes" />
+          <external count="0" username-prefix="test_ext" domain="mail.sample.com" />
+        </users>
+        <profiles>
+            <profile name="ext-int" source="extern" target="intern">
+            </profile>
+            <profile name="int-ext" source="intern" target="extern">
+            </profile>
+            <profile name="int-int" source="intern" target="intern">
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="25" subject="int2int" text-size-min="10" text-size-max="20" binary-size-min="0" binary-size-max="0"  />
+
+            </profile>
+        </profiles>
+        <testserver host="localhost">
+          <smtp-forwarding port="2525" latecomer-wait-seconds="120"/>
+          <smtp-inbound port="25" />
+          <pop3 port="110" count-per-min="10" />
+          <remotemanager port="4555" name="root" password="root" />
+          <spam-account name="spam-sink" password="spam-sink" />
+          <jvm-resources jmx-remoting-port="10201" />
+        </testserver>
+    </scenario>
+
+    <!-- 
+         'extended_resources' scenario typically requires adjustments to be made to JVM and James' config.xml
+         by setting max heap to 512MB and doubling resources for threads etc.
+    -->
+    <scenario id="extended_resources" runtimeMinutes="360">
+        <description>
+            <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
+            <maxheap>64MB</maxheap>
+            <james-version>James-2.3.0b1</james-version>
+            <repository-configuration>default</repository-configuration>
+            <thread-configuration>default</thread-configuration>
+        </description>
+        <users>
+          <internal count="500" username-prefix="test_int" domain="mail.james.local" password="test" reuseExisting="yes" />
+          <external count="1000" username-prefix="test_ext" domain="mail.sample.com" />
+        </users>
+        <profiles>
+            <profile name="ext-int" source="extern" target="intern">
+               <send count-per-min="100" subject="ext2int_text" text-size-min="10" text-size-max="500" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="10" subject="ext2int_attachment" text-size-min="10" text-size-max="200" binary-size-min="100000" binary-size-max="300000"  />
+            </profile>          
+            <profile name="int-ext" source="intern" target="extern">
+               <send count-per-min="200" subject="int2ext" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+            </profile>
+            <profile name="int-int" source="intern" target="intern">
+               <send count-per-min="200" subject="int2int" text-size-min="10" text-size-max="500" binary-size-min="0" binary-size-max="0"  />
+               <send count-per-min="50" subject="int2int" text-size-min="10" text-size-max="100" binary-size-min="100000" binary-size-max="1500000"  />
+            </profile>               
+        </profiles>
+        <testserver host="localhost">
+          <smtp-forwarding port="2525" latecomer-wait-seconds="45"/>
+          <smtp-inbound port="25" />
+          <pop3 port="110" count-per-min="100" />
+          <remotemanager port="4555" name="root" password="root" />
+          <spam-account name="spam-sink" password="spam-sink" />
+          <jvm-resources jmx-remoting-port="10201" />
+        </testserver>
+    </scenario> 
+    
+</postage> 
