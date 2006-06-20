@@ -68,8 +68,8 @@ public class JVMResourceSampler implements Sampler {
         }
 
         try {
-            m_connectMethod = workerClass.getMethod("connectRemoteJamesJMXServer", null);
-            m_doSampleMethod = workerClass.getMethod("doSample", null);
+            m_connectMethod = workerClass.getMethod("connectRemoteJamesJMXServer", (Class)null);
+            m_doSampleMethod = workerClass.getMethod("doSample", (Class)null);
         } catch (NoSuchMethodException e) {
             throw new IllegalStateException("could not access delegation methods");
         }
@@ -79,7 +79,7 @@ public class JVMResourceSampler implements Sampler {
     public void connectRemoteJamesJMXServer() throws SamplingException {
         if(jvmResourceSampleWorker == null) throw new SamplingException("JSE specific features not present. (compile the project with JSE 5)");
         try {
-            m_connectMethod.invoke(jvmResourceSampleWorker, null);
+            m_connectMethod.invoke(jvmResourceSampleWorker, (Class)null);
         } catch (Exception e) {
             throw new SamplingException("could not establish connection to remote James JMX. is James really configured for JMX and running under JSE5 or later?");
         }
@@ -88,7 +88,7 @@ public class JVMResourceSampler implements Sampler {
     public void doSample() throws SamplingException {
         if(jvmResourceSampleWorker == null) throw new SamplingException("JSE specific features not present. (compile the project with JSE 5)");
         try {
-            m_doSampleMethod.invoke(jvmResourceSampleWorker, null);
+            m_doSampleMethod.invoke(jvmResourceSampleWorker, (Class)null);
         } catch (Exception e) {
             throw new SamplingException(e);
         }
