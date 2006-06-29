@@ -20,15 +20,14 @@ package org.apache.james.postage.client;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Writer;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.BufferedReader;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemoteManagerClient {
 
@@ -37,7 +36,7 @@ public class RemoteManagerClient {
     private String  m_username = null;
     private String  m_password = null;
     private TelnetClient m_telnetClient;
-    private Reader m_reader;
+    private BufferedReader m_reader;
     private Writer m_writer;
 
     public RemoteManagerClient(String host, int port, String username, String password) {
@@ -51,7 +50,7 @@ public class RemoteManagerClient {
         m_telnetClient = new TelnetClient();
         try {
             m_telnetClient.connect(m_host, m_port);
-            m_reader = new BufferedReader(new InputStreamReader(m_telnetClient.getInputStream()));
+            m_reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(m_telnetClient.getInputStream(), 1024), "ASCII"));
             m_writer = new OutputStreamWriter(m_telnetClient.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,6 +59,7 @@ public class RemoteManagerClient {
 
         try {
             sendCommand(m_username);
+            delay();
             sendCommand(m_password);
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,7 +73,7 @@ public class RemoteManagerClient {
         }
         return true;
     }
-    
+
     public void disconnect() {
         if (m_telnetClient == null) return;
         try {
@@ -105,40 +105,46 @@ public class RemoteManagerClient {
     }
 
     public List readAnswer() {
-        long startTime = System.currentTimeMillis();
+        return readAnswer(0);
+    }
+    
+    protected List readAnswer(int numLines) {
+        List allAnswerLines = new ArrayList();
         try {
-            while (!m_reader.ready() && startTime + 100 > System.currentTimeMillis()) {
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    break;
+            delay();
+            if (numLines > 0) {
+                for (int i = 0; i < numLines; i++) {
+                    readline(allAnswerLines);
+                }
+            } else {
+                readline(allAnswerLines);
+                
+                while (m_reader.ready()) {
+                    while (m_reader.ready()) {
+                        readline(allAnswerLines);
+                    }
+                    delay();
                 }
             }
-            if (!m_reader.ready()) return null;
+            return allAnswerLines;
+        } catch (NullPointerException e) {
+            return null;
         } catch (IOException e) {
             return null;
         }
+    }
 
-        StringBuffer stringBuffer = new StringBuffer();
-        char[] charBuffer = new char[100];
-        List allAnswerLines = new ArrayList();
+    private void readline(List allAnswerLines) throws IOException {
+        if (!m_reader.ready()) return;
+        String line = m_reader.readLine();
+        if (line != null) allAnswerLines.add(line);
+    }
+
+    private void delay() {
         try {
-            int readCount;
-            while ((m_reader.ready() && (readCount = m_reader.read(charBuffer)) > 0)) {
-                stringBuffer.append(charBuffer, 0, readCount);
-                if (m_reader.ready()) continue;
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
         }
-
-        allAnswerLines.addAll(Arrays.asList(stringBuffer.toString().split("\n")));
-        return allAnswerLines;
     }
 
 
