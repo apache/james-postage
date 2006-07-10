@@ -49,6 +49,7 @@ public class SimpleMailServer implements MailServer {
     private PostageRunnerResult m_results;
 
     public void sendMail(MailAddress sender, Collection recipients, MimeMessage msg) throws MessagingException {
+        //log.info("start processing incoming mail having id = " + msg.getMessageID());
         MailProcessingRecord mailProcessingRecord = new MailProcessingRecord();
         mailProcessingRecord.setReceivingQueue("smtpOutbound");
         mailProcessingRecord.setTimeFetchStart(System.currentTimeMillis());
@@ -71,6 +72,9 @@ public class SimpleMailServer implements MailServer {
             // TODO mailProcessingRecord.setByteReceivedBinary();
             
             mailProcessingRecord.setTimeFetchEnd(System.currentTimeMillis());
+        } catch(MessagingException e) {
+            log.error("error processing incoming mail: " + e.getMessage());
+            throw e; // rethrow after logging 
         } finally{
             boolean matched = m_results.matchMailRecord(mailProcessingRecord);
             if (!matched) {

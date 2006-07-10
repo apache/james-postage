@@ -37,6 +37,7 @@ public class JVMResourceSampler implements Sampler {
     private Object jvmResourceSampleWorker = null;
     private Method m_connectMethod;
     private Method m_doSampleMethod;
+    private static final Class[] VOID_ARGUMENT_LIST = new Class[]{};
 
     public static boolean isJMXAvailable() {
         try {
@@ -64,14 +65,15 @@ public class JVMResourceSampler implements Sampler {
         try {
             jvmResourceSampleWorker = constructor.newInstance(new Object[]{host, new Integer(port), results});
         } catch (Exception e) {
-            throw new IllegalStateException("could not create JVMResourceSamplerWorker");
+            throw new IllegalStateException("could not create JVMResourceSamplerWorker", e);
         }
+        if (jvmResourceSampleWorker == null) throw new IllegalStateException("could not create JVMResourceSamplerWorker");
 
         try {
-            m_connectMethod = workerClass.getMethod("connectRemoteJamesJMXServer", (Class)null);
-            m_doSampleMethod = workerClass.getMethod("doSample", (Class)null);
+            m_connectMethod = workerClass.getMethod("connectRemoteJamesJMXServer", VOID_ARGUMENT_LIST);
+            m_doSampleMethod = workerClass.getMethod("doSample", VOID_ARGUMENT_LIST);
         } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("could not access delegation methods");
+            throw new IllegalStateException("could not access delegation methods", e);
         }
 
     }
@@ -79,7 +81,7 @@ public class JVMResourceSampler implements Sampler {
     public void connectRemoteJamesJMXServer() throws SamplingException {
         if(jvmResourceSampleWorker == null) throw new SamplingException("JSE specific features not present. (compile the project with JSE 5)");
         try {
-            m_connectMethod.invoke(jvmResourceSampleWorker, (Class)null);
+            m_connectMethod.invoke(jvmResourceSampleWorker, VOID_ARGUMENT_LIST);
         } catch (Exception e) {
             throw new SamplingException("could not establish connection to remote James JMX. is James really configured for JMX and running under JSE5 or later?");
         }
@@ -88,7 +90,7 @@ public class JVMResourceSampler implements Sampler {
     public void doSample() throws SamplingException {
         if(jvmResourceSampleWorker == null) throw new SamplingException("JSE specific features not present. (compile the project with JSE 5)");
         try {
-            m_doSampleMethod.invoke(jvmResourceSampleWorker, (Class)null);
+            m_doSampleMethod.invoke(jvmResourceSampleWorker, VOID_ARGUMENT_LIST);
         } catch (Exception e) {
             throw new SamplingException(e);
         }
