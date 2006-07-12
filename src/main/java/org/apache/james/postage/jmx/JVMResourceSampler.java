@@ -65,7 +65,7 @@ public class JVMResourceSampler implements Sampler {
         try {
             jvmResourceSampleWorker = constructor.newInstance(new Object[]{host, new Integer(port), results});
         } catch (Exception e) {
-            throw new IllegalStateException("could not create JVMResourceSamplerWorker", e);
+            throw new RuntimeException("could not create JVMResourceSamplerWorker", e);
         }
         if (jvmResourceSampleWorker == null) throw new IllegalStateException("could not create JVMResourceSamplerWorker");
 
@@ -73,7 +73,7 @@ public class JVMResourceSampler implements Sampler {
             m_connectMethod = workerClass.getMethod("connectRemoteJamesJMXServer", VOID_ARGUMENT_LIST);
             m_doSampleMethod = workerClass.getMethod("doSample", VOID_ARGUMENT_LIST);
         } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("could not access delegation methods", e);
+            throw new RuntimeException("could not access delegation methods", e);
         }
 
     }
