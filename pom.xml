@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.    
+-->
+<!--
+ | DISCLAIMER DISCLAIMER DISCLAIMER DISCLAIMER DISCLAIMER 
+ | 
+ | This file is only intended to be used to build the james-server
+ | website. It must not be used to build packages for james-server
+ | application.
+ | 
+ | DISCLAIMER DISCLAIMER DISCLAIMER DISCLAIMER DISCLAIMER 
+ -->
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.james</groupId>
+  <artifactId>james-postage</artifactId>
+  <name>Apache JAMES Postage Project</name>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <description>
+    Postage is a tool to test mail server perfomance/stability.
+  </description>
+  <parent>
+    <groupId>org.apache.james</groupId>
+    <artifactId>james-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <url>http://james.apache.org/postage/index.html</url>
+  <inceptionYear>2006</inceptionYear>
+
+  <issueManagement>
+    <system>jira</system>
+    <url>http://issues.apache.org/jira/browse/POSTAGE</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>continuum</system>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnError />
+        <sendOnFailure />
+        <address>server-dev@james.apache.org</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+
+  <mailingLists>
+    <mailingList>
+      <name>Server User List</name>
+      <subscribe>server-user-subscribe@james.apache.org</subscribe>
+      <unsubscribe>server-user-unsubscribe@james.apache.org</unsubscribe>
+      <archive>http://www.mail-archive.com/server-user@james.apache.org/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Server Developer List</name>
+      <subscribe>server-dev-subscribe@james.apache.org</subscribe>
+      <unsubscribe>server-dev-unsubscribe@james.apache.org</unsubscribe>
+      <post>server-dev@james.apache.org</post>
+      <archive>http://www.mail-archive.com/server-dev@james.apache.org/</archive>
+    </mailingList>
+    <mailingList>
+      <name>James General List</name>
+      <subscribe>server-general-subscribe@james.apache.org</subscribe>
+      <unsubscribe>server-general-unsubscribe@james.apache.org</unsubscribe>
+      <archive>http://www.mail-archive.com/server-general@james.apache.org/</archive>
+    </mailingList>
+  </mailingLists>
+
+  <scm>
+    <connection>
+      scm:svn:http://svn.apache.org/repos/asf/james/postage/trunk
+    </connection>
+    <developerConnection>
+      scm:svn:https://${maven.username}@svn.apache.org/repos/asf/james/postage/trunk
+    </developerConnection>
+    <url>
+      http://svn.apache.org/viewcvs.cgi/james/postage/trunk?root=Apache-SVN
+    </url>
+  </scm>
+
+  <repositories>
+    <repository>
+      <id>bago-dist-m1</id>
+      <name>Temporary Repository</name>
+      <url>http://people.apache.org/~bago/maven/dist-m1</url>
+      <layout>legacy</layout>
+      <snapshots>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <dependencies verbose="true">
+
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>avalon-framework</groupId>
+      <artifactId>avalon-framework-api</artifactId>
+      <version>4.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>avalon-framework</groupId>
+      <artifactId>avalon-framework-impl</artifactId>
+      <version>4.3</version>
+      <exclusions>
+        <exclusion>
+          <groupId>jmock</groupId>
+          <artifactId>jmock</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xalan</groupId>
+          <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xmlParserAPIs</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>geronimo-spec</groupId>
+          <artifactId>geronimo-spec-javamail</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>geronimo-spec</groupId>
+          <artifactId>geronimo-spec-jms</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+      <version>1.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-beanutils</groupId>
+          <artifactId>commons-beanutils-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>dom4j</groupId>
+          <artifactId>dom4j</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>1.4.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>cornerstone-sockets</groupId>
+      <artifactId>cornerstone-sockets-api</artifactId>
+      <version>2.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>cornerstone-sockets</groupId>
+      <artifactId>cornerstone-sockets-impl</artifactId>
+      <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
+    	<groupId>org.apache.james</groupId>
+    	<artifactId>james-server</artifactId>
+    	<version>2.3.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>james-repo</id>
+      <name>James Central Repository</name>
+      <url>scp://minotaur.apache.org/www/james.apache.org/dist-m2</url>
+    </repository>
+    <snapshotRepository>
+      <id>james-snapshots</id>
+      <name>James Central Development Repository</name>
+      <url>scp://minotaur.apache.org/www/james.apache.org/dist-m2-snapshot</url>
+    </snapshotRepository>
+    <site>
+      <id>james-website</id>
+      <url>scp://minotaur.apache.org/www/james.apache.org/public_html/maven/</url>
+    </site>
+  </distributionManagement>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>org.apache.james.postage.Main</mainClass>
+              <packageName>org.apache.james.postage</packageName>
+              <addClasspath>true</addClasspath>
+            </manifest>
+            <manifestEntries>
+              <mode>development</mode>
+              <url>${pom.url}</url>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>bin</descriptorRef>
+            <descriptorRef>src</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+    </plugins>
+    
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jxr-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <targetjdk>1.4</targetjdk>
+          <rulesets>
+            <ruleset>/rulesets/basic.xml</ruleset>
+            <ruleset>/rulesets/controversial.xml</ruleset>
+          </rulesets>
+          <format>xml</format>
+          <linkXref>true</linkXref>
+          <sourceEncoding>utf-8</sourceEncoding>
+          <minimumTokens>100</minimumTokens>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+</project>

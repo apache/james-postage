@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.    
+-->
+<document>
+  <properties>
+    <title>Prepare James</title>
+    <author email="server-dev@james.apache.org">James jSPF Project Team</author>
+  </properties>
+  <body>
+    <section name="Prepare James">
+      <p>You should have a James instance readily installed. This means at least extracted James binary and started the server once (see <a href="http://wiki.apache.org/james/JamesQuickstart">JamesQuickstart</a>).</p>
+    </section>
+    <section name="Edit the configuration file JAMES_HOME/apps/james/SAR-INF/config.xml">
+      <subsection name="Internal test domain">
+        <p>In the server names sections, add new line containing the virtual domain "mail.james.local". This makes James consume all mails addressed to, for example [MAILTO] test@mail.james.local.</p>
+        <p>It should look something like this, depending on your further configuration preferences:</p>
+        <source>
+&lt;servernames autodetect="true" autodetectIP="true"&gt;
+  &lt;!-- CONFIRM? --&gt;
+  &lt;servername&gt;localhost&lt;/servername&gt;
+  &lt;servername&gt;mail.james.local&lt;/servername&gt;
+&lt;/servernames&gt;
+        </source>
+      </subsection>
+      <subsection name="Sending external mail">
+        <p>All mail addresses not handled by James are delivered to their intended destination, if possible. For Postage to intercept this and receive all mails send out by James, we must enable gateway forwarding.</p>
+        <p>change</p>
+        <source>
+&lt;gateway&gt; otherserver.mydomain.com &lt;/gateway&gt;
+&lt;gatewayPort&gt;25&lt;/gatewayPort&gt;
+        </source>
+        <p>into</p>
+        <source>
+&lt;gateway&gt; localhost &lt;/gateway&gt;
+&lt;gatewayPort&gt; 2525 &lt;/gatewayPort&gt;
+        </source>
+        <p>If Postage is running on another machine than James, you should use the appropriate host/port combination under which Postage is receiving mail.</p>
+        <p>Now Postage is consuming all mail sent out by James and tries to align the mail it puts into James with mail coming out of the server.</p>
+        <p>NOTE: This configuration makes James unable to deliver regular external mail, don't do this on a production system!</p>
+      </subsection>
+    </section>
+    <section name="Enable Postage to record memory and thread resource consumption of James">
+      <p>This is optional configuration.</p>
+      <p>It only works, if James is run under JSE5 or newer and only if Postage has been build with JMX support. It also conflicts with James' current genuine MX4J-based JMX support, which has to be disabled (see ConfigureJmx how to use JSE5 JMX support).</p>
+      <p>Edit file &lt;JAMES_HOME&gt;/bin/phoenix.[sh|bat]</p>
+      <p>Replace line</p>
+      <source>
+JVM_OPTS="-Djava.ext.dirs=$JVM_EXT_DIRS"
+      </source>
+      <p>with (on one line)</p>
+      <source>
+JVM_OPTS="-Djava.ext.dirs=$JVM_EXT_DIRS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false 
+-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=10201 "
+      </source>
+    </section>
+  </body>
+</document>
