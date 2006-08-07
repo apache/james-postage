@@ -2,7 +2,10 @@
    ==  NOTICE file for use with the Apache License, Version 2.0,  ==
    =========================================================================
 
-   This product includes software developed by
+   Apache JAMES Postage
+   Copyright 2006 The Apache Software Foundation
+
+   This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
 
    This product also includes software developed by :
