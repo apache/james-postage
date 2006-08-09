@@ -23,6 +23,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.james.smtpserver.HeloCmdHandler;
 import org.apache.james.smtpserver.EhloCmdHandler;
 import org.apache.james.smtpserver.AuthCmdHandler;
+import org.apache.james.smtpserver.NoopCmdHandler;
+import org.apache.james.smtpserver.SendMailHandler;
 import org.apache.james.smtpserver.VrfyCmdHandler;
 import org.apache.james.smtpserver.ExpnCmdHandler;
 import org.apache.james.smtpserver.MailCmdHandler;
@@ -43,7 +45,7 @@ public class SimpleSMTPServerConfiguration extends DefaultConfiguration {
         return defaultConfiguration;
     }
 
-    public static DefaultConfiguration createRemoteManagerHandlerChainConfiguration() {
+    public static DefaultConfiguration createHandlerChainConfiguration() {
         DefaultConfiguration handlerChainConfig = new DefaultConfiguration("handlerchain");
         handlerChainConfig.addChild(createCommandHandlerConfiguration("HELO", HeloCmdHandler.class));
         handlerChainConfig.addChild(createCommandHandlerConfiguration("EHLO", EhloCmdHandler.class));
@@ -56,6 +58,8 @@ public class SimpleSMTPServerConfiguration extends DefaultConfiguration {
         handlerChainConfig.addChild(createCommandHandlerConfiguration("RSET", RsetCmdHandler.class));
         handlerChainConfig.addChild(createCommandHandlerConfiguration("HELP", HelpCmdHandler.class));
         handlerChainConfig.addChild(createCommandHandlerConfiguration("QUIT", QuitCmdHandler.class));
+        handlerChainConfig.addChild(createCommandHandlerConfiguration("NOOP", NoopCmdHandler.class));
+        handlerChainConfig.addChild(createCommandHandlerConfiguration("Default SendMailHandler", SendMailHandler.class));
         return handlerChainConfig;
     }
 
@@ -107,7 +111,7 @@ public class SimpleSMTPServerConfiguration extends DefaultConfiguration {
         handlerConfig.addChild(getValuedConfiguration("maxmessagesize", "" + 0));
         handlerConfig.addChild(getValuedConfiguration("authRequired", m_authorizingMode));
 
-        handlerConfig.addChild(createRemoteManagerHandlerChainConfiguration());
+        handlerConfig.addChild(createHandlerChainConfiguration());
         addChild(handlerConfig);
     }
 
