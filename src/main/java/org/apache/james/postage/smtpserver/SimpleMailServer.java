@@ -1,19 +1,21 @@
-/***********************************************************************
- * Copyright (c) 2006 The Apache Software Foundation.                  *
- * All rights reserved.                                                *
- * ------------------------------------------------------------------- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you *
- * may not use this file except in compliance with the License. You    *
- * may obtain a copy of the License at:                                *
- *                                                                     *
- *     http://www.apache.org/licenses/LICENSE-2.0                      *
- *                                                                     *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS,   *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or     *
- * implied.  See the License for the specific language governing       *
- * permissions and limitations under the License.                      *
- ***********************************************************************/
+/****************************************************************
+ * Licensed to the Apache Software Foundation (ASF) under one   *
+ * or more contributor license agreements.  See the NOTICE file *
+ * distributed with this work for additional information        *
+ * regarding copyright ownership.  The ASF licenses this file   *
+ * to you under the Apache License, Version 2.0 (the            *
+ * "License"); you may not use this file except in compliance   *
+ * with the License.  You may obtain a copy of the License at   *
+ *                                                              *
+ *   http://www.apache.org/licenses/LICENSE-2.0                 *
+ *                                                              *
+ * Unless required by applicable law or agreed to in writing,   *
+ * software distributed under the License is distributed on an  *
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       *
+ * KIND, either express or implied.  See the License for the    *
+ * specific language governing permissions and limitations      *
+ * under the License.                                           *
+ ****************************************************************/
 
 
 package org.apache.james.postage.smtpserver;
@@ -39,7 +41,7 @@ import java.util.HashSet;
 
 /**
  * a quite simple (only receiving) SMTP server which reads mails and tries to match them with sent test mails.
- * reuses James' own SMTP server components  
+ * reuses James' own SMTP server components
  */
 public class SimpleMailServer implements MailServer {
 
@@ -70,11 +72,11 @@ public class SimpleMailServer implements MailServer {
 
             // TODO mailProcessingRecord.setByteReceivedText();
             // TODO mailProcessingRecord.setByteReceivedBinary();
-            
+
             mailProcessingRecord.setTimeFetchEnd(System.currentTimeMillis());
         } catch(MessagingException e) {
             log.error("error processing incoming mail: " + e.getMessage());
-            throw e; // rethrow after logging 
+            throw e; // rethrow after logging
         } finally{
             boolean matched = m_results.matchMailRecord(mailProcessingRecord);
             if (!matched) {
@@ -94,7 +96,7 @@ public class SimpleMailServer implements MailServer {
     }
 
     public void sendMail(MimeMessage message) throws MessagingException {
-        // taken from class org.apache.james.James 
+        // taken from class org.apache.james.James
         MailAddress sender = new MailAddress((InternetAddress)message.getFrom()[0]);
         Collection recipients = new HashSet();
         Address addresses[] = message.getAllRecipients();

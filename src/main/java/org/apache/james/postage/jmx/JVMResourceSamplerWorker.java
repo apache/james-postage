@@ -1,19 +1,21 @@
-/***********************************************************************
- * Copyright (c) 2006 The Apache Software Foundation.             *
- * All rights reserved.                                                *
- * ------------------------------------------------------------------- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you *
- * may not use this file except in compliance with the License. You    *
- * may obtain a copy of the License at:                                *
- *                                                                     *
- *     http://www.apache.org/licenses/LICENSE-2.0                      *
- *                                                                     *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS,   *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or     *
- * implied.  See the License for the specific language governing       *
- * permissions and limitations under the License.                      *
- ***********************************************************************/
+/****************************************************************
+ * Licensed to the Apache Software Foundation (ASF) under one   *
+ * or more contributor license agreements.  See the NOTICE file *
+ * distributed with this work for additional information        *
+ * regarding copyright ownership.  The ASF licenses this file   *
+ * to you under the Apache License, Version 2.0 (the            *
+ * "License"); you may not use this file except in compliance   *
+ * with the License.  You may obtain a copy of the License at   *
+ *                                                              *
+ *   http://www.apache.org/licenses/LICENSE-2.0                 *
+ *                                                              *
+ * Unless required by applicable law or agreed to in writing,   *
+ * software distributed under the License is distributed on an  *
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       *
+ * KIND, either express or implied.  See the License for the    *
+ * specific language governing permissions and limitations      *
+ * under the License.                                           *
+ ****************************************************************/
 
 
 package org.apache.james.postage.jmx;
@@ -36,15 +38,15 @@ import java.util.Iterator;
 
 /**
  * the peek into the James JVM is done using the build-in management (JMX) of J2SE 5 (and probably later)
- * you must start James under a J2SE 5 compatible JVM and 
+ * you must start James under a J2SE 5 compatible JVM and
  * add some system properties to the phoenix.[sh|bat] file (all on one line):
- * JVM_OPTS="-Djava.ext.dirs=$JVM_EXT_DIRS 
- *           -Dcom.sun.management.jmxremote 
- *           -Dcom.sun.management.jmxremote.ssl=false 
- *           -Dcom.sun.management.jmxremote.authenticate=false 
+ * JVM_OPTS="-Djava.ext.dirs=$JVM_EXT_DIRS
+ *           -Dcom.sun.management.jmxremote
+ *           -Dcom.sun.management.jmxremote.ssl=false
+ *           -Dcom.sun.management.jmxremote.authenticate=false
  *           -Dcom.sun.management.jmxremote.port=10201 "
- * 
- * this class does not even compile on Java versions before JSE 5. 
+ *
+ * this class does not even compile on Java versions before JSE 5.
  */
 public class JVMResourceSamplerWorker implements Sampler {
 

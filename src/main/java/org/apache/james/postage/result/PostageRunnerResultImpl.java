@@ -1,19 +1,21 @@
-/***********************************************************************
- * Copyright (c) 2006 The Apache Software Foundation.                  *
- * All rights reserved.                                                *
- * ------------------------------------------------------------------- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you *
- * may not use this file except in compliance with the License. You    *
- * may obtain a copy of the License at:                                *
- *                                                                     *
- *     http://www.apache.org/licenses/LICENSE-2.0                      *
- *                                                                     *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS,   *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or     *
- * implied.  See the License for the specific language governing       *
- * permissions and limitations under the License.                      *
- ***********************************************************************/
+/****************************************************************
+ * Licensed to the Apache Software Foundation (ASF) under one   *
+ * or more contributor license agreements.  See the NOTICE file *
+ * distributed with this work for additional information        *
+ * regarding copyright ownership.  The ASF licenses this file   *
+ * to you under the Apache License, Version 2.0 (the            *
+ * "License"); you may not use this file except in compliance   *
+ * with the License.  You may obtain a copy of the License at   *
+ *                                                              *
+ *   http://www.apache.org/licenses/LICENSE-2.0                 *
+ *                                                              *
+ * Unless required by applicable law or agreed to in writing,   *
+ * software distributed under the License is distributed on an  *
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       *
+ * KIND, either express or implied.  See the License for the    *
+ * specific language governing permissions and limitations      *
+ * under the License.                                           *
+ ****************************************************************/
 
 
 package org.apache.james.postage.result;
@@ -95,7 +97,7 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
     public void setEnvironmentDescription(Map descriptionItems) {
         m_environmentInfo.putAll(descriptionItems);
     }
-    
+
     public long getUnmatchedMails() {
         return m_unmatchedMailResults.size();
     }
@@ -119,7 +121,7 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
     private void writeMatchedMailResults(OutputStreamWriter outputStreamWriter) throws IOException {
         Map writeResults = m_matchedMailResults; // keep current results for writing
-        m_matchedMailResults = initMatchedMailResultContainer(); // establish new map for further unwritten results  
+        m_matchedMailResults = initMatchedMailResultContainer(); // establish new map for further unwritten results
         writeMailResults(writeResults, outputStreamWriter);
         outputStreamWriter.flush();
     }
@@ -239,11 +241,11 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
         try {
             outputStream = new FileOutputStream(filenameErrors, true);
             outputStreamWriter = new OutputStreamWriter(outputStream);
-            
+
             if (new File(filenameErrors).length() <= 0) {
                 outputStreamWriter.write("timestamp,number,message\r\n");
             }
-            
+
             List unwrittenResults = m_errors;
             m_errors = initErrorResultContainer();
             Iterator iterator = unwrittenResults.iterator();
@@ -255,7 +257,7 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
                 resultString.append(record.m_number).append(",");
                 resultString.append(record.m_message).append(",");
                 resultString.append("\r\n");
-                
+
                 outputStreamWriter.write(resultString.toString());
             }
         } catch (IOException e) {

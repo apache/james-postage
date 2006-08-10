@@ -1,19 +1,21 @@
-/***********************************************************************
- * Copyright (c) 2006 The Apache Software Foundation.             *
- * All rights reserved.                                                *
- * ------------------------------------------------------------------- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you *
- * may not use this file except in compliance with the License. You    *
- * may obtain a copy of the License at:                                *
- *                                                                     *
- *     http://www.apache.org/licenses/LICENSE-2.0                      *
- *                                                                     *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS,   *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or     *
- * implied.  See the License for the specific language governing       *
- * permissions and limitations under the License.                      *
- ***********************************************************************/
+/****************************************************************
+ * Licensed to the Apache Software Foundation (ASF) under one   *
+ * or more contributor license agreements.  See the NOTICE file *
+ * distributed with this work for additional information        *
+ * regarding copyright ownership.  The ASF licenses this file   *
+ * to you under the Apache License, Version 2.0 (the            *
+ * "License"); you may not use this file except in compliance   *
+ * with the License.  You may obtain a copy of the License at   *
+ *                                                              *
+ *   http://www.apache.org/licenses/LICENSE-2.0                 *
+ *                                                              *
+ * Unless required by applicable law or agreed to in writing,   *
+ * software distributed under the License is distributed on an  *
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       *
+ * KIND, either express or implied.  See the License for the    *
+ * specific language governing permissions and limitations      *
+ * under the License.                                           *
+ ****************************************************************/
 
 
 package org.apache.james.postage.result;
@@ -23,10 +25,10 @@ package org.apache.james.postage.result;
  */
 public class JVMResourcesRecord {
     private static String SEPARATOR = ",";
-    
+
     private final long m_timestamp = System.currentTimeMillis();
     private String m_errorMessage = null;
-    
+
     private long m_memoryCommitted = -1;
     private long m_memoryInit = -1;
     private long m_memoryMax = -1;
@@ -34,7 +36,7 @@ public class JVMResourcesRecord {
     private long m_threadCountPeak = -1;
     private long m_threadCountCurrent = -1;
     private long m_threadCountTotalStarted = -1;
-    
+
     public String getErrorMessage() {
         return m_errorMessage;
     }
@@ -98,7 +100,7 @@ public class JVMResourcesRecord {
     public void setThreadCountTotalStarted(long threadCountTotalStarted) {
         this.m_threadCountTotalStarted = threadCountTotalStarted;
     }
-    
+
     public static StringBuffer writeHeader() {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("timestamp").append(SEPARATOR);
@@ -111,10 +113,10 @@ public class JVMResourcesRecord {
         stringBuffer.append("threadCountCurrent").append(SEPARATOR);
         stringBuffer.append("threadCountTotalStarted").append(SEPARATOR);
         stringBuffer.append("\r\n");
-        
+
         return stringBuffer;
     }
-    
+
     public StringBuffer writeData() {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(m_timestamp).append(SEPARATOR);
@@ -127,8 +129,8 @@ public class JVMResourcesRecord {
         stringBuffer.append(m_threadCountCurrent).append(SEPARATOR);
         stringBuffer.append(m_threadCountTotalStarted).append(SEPARATOR);
         stringBuffer.append("\r\n");
-        
+
         return stringBuffer;
     }
-    
+
 }

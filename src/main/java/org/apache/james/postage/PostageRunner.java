@@ -1,19 +1,21 @@
-/***********************************************************************
- * Copyright (c) 2006 The Apache Software Foundation.                  *
- * All rights reserved.                                                *
- * ------------------------------------------------------------------- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you *
- * may not use this file except in compliance with the License. You    *
- * may obtain a copy of the License at:                                *
- *                                                                     *
- *     http://www.apache.org/licenses/LICENSE-2.0                      *
- *                                                                     *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS,   *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or     *
- * implied.  See the License for the specific language governing       *
- * permissions and limitations under the License.                      *
- ***********************************************************************/
+/****************************************************************
+ * Licensed to the Apache Software Foundation (ASF) under one   *
+ * or more contributor license agreements.  See the NOTICE file *
+ * distributed with this work for additional information        *
+ * regarding copyright ownership.  The ASF licenses this file   *
+ * to you under the Apache License, Version 2.0 (the            *
+ * "License"); you may not use this file except in compliance   *
+ * with the License.  You may obtain a copy of the License at   *
+ *                                                              *
+ *   http://www.apache.org/licenses/LICENSE-2.0                 *
+ *                                                              *
+ * Unless required by applicable law or agreed to in writing,   *
+ * software distributed under the License is distributed on an  *
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY       *
+ * KIND, either express or implied.  See the License for the    *
+ * specific language governing permissions and limitations      *
+ * under the License.                                           *
+ ****************************************************************/
 
 
 package org.apache.james.postage;
@@ -40,7 +42,7 @@ import java.util.Set;
 import java.io.File;
 
 /**
- * central controlling class for the testing process. starts all workers, collects data and stops when time is out. 
+ * central controlling class for the testing process. starts all workers, collects data and stops when time is out.
  * relates to one and only one Scenario section from the configuration file.
  */
 public class PostageRunner implements Runnable {
@@ -75,23 +77,23 @@ public class PostageRunner implements Runnable {
      * sends messages to James in two ways:
      * 1. internal users relay to internal or external users using (inbound) SMTP
      * 2. external users send mail to internal users using (inbound) SMTP
-     * 
+     *
      * the correct mail delivery is checked in two ways:
      * 1. by checking internal users mails using POP3
      * 2. by checking mail to external users by receiving all mail forwarded by James to outbound/forwarded SMTP
-     *  
+     *
      * @param postageConfiguration
      */
     public PostageRunner(PostageConfiguration postageConfiguration) {
         m_postageConfiguration = postageConfiguration;
-        
+
         int totalMailsPerMin = m_postageConfiguration.getTotalMailsPerMin();
         int durationMinutes = m_postageConfiguration.getDurationMinutes();
-        
+
         m_postageConfiguration.addDescriptionItem("mails_per_min", "" + totalMailsPerMin);
         m_postageConfiguration.addDescriptionItem("totally_running_min", "" + durationMinutes);
         m_postageConfiguration.addDescriptionItem("totally_mails_target", "" + totalMailsPerMin * durationMinutes);
-        
+
         m_results.setEnvironmentDescription(m_postageConfiguration.getDescriptionItems());
     }
 
@@ -129,7 +131,7 @@ public class PostageRunner implements Runnable {
             log.error("recording data was aborted!", e);
         }
 
-        // has to be set by method stopRecording() 
+        // has to be set by method stopRecording()
         // m_currentPhase = PHASE_COMPLETED;
 
         // writeMatchedMailResults (remaining) collected data
@@ -140,7 +142,7 @@ public class PostageRunner implements Runnable {
     private void prepareResultFile(String canonicalMailResultFileName) {
         File writeCandidate = new File(canonicalMailResultFileName);
         if (writeCandidate.exists()) {
-            // rename existing result file from previous run 
+            // rename existing result file from previous run
             // to something like "result___.cvs.64906993" to make place for new results
             writeCandidate.renameTo(new File(canonicalMailResultFileName + "." + writeCandidate.lastModified()));
         }
@@ -191,7 +193,7 @@ public class PostageRunner implements Runnable {
      */
     private void oneMinuteCheckpoint() {
         m_minutesRunning++;
-        log.info("reached checkpoint after " + m_minutesRunning + " of " 
+        log.info("reached checkpoint after " + m_minutesRunning + " of "
                   + m_postageConfiguration.getDurationMinutes() + " minute(s) running.");
 
         //TODO do this in a separate thread?
@@ -208,7 +210,7 @@ public class PostageRunner implements Runnable {
             }
         }
         if (m_inboundMailingController != null) m_inboundMailingController.stop();
-        
+
         if (m_outboundMailingInterceptorController != null) m_outboundMailingInterceptorController.stop();
         m_currentPhase = PHASE_COMPLETED;
     }
@@ -230,7 +232,7 @@ public class PostageRunner implements Runnable {
         String filenameErrors = getCanonicalErrorsFileName();
         m_results.writeResults(filenameMailResult, filenameJVMStatistics, filenameErrors, flushMatchedMailOnly);
     }
-                             
+
     public String getCanonicalMailResultFileName() {
         return "postage_mailResults." + m_postageConfiguration.getId() + ".csv";
     }
@@ -277,7 +279,7 @@ public class PostageRunner implements Runnable {
         }
 
         if (m_currentPhase == PHASE_COMPLETED) {
-            // walk through all internal users and check for un-matched mails  
+            // walk through all internal users and check for un-matched mails
             log.info("checking all internal accounts for unmatched mail...");
             m_inboundMailingChecker.doMatchMailForAllUsers();
             log.info("...done checking internal accounts");
@@ -432,7 +434,7 @@ public class PostageRunner implements Runnable {
     }
 
     /**
-     * aquire a list of all existing internal James accounts 
+     * aquire a list of all existing internal James accounts
      * @return Set<String>, each String a username
      */
     private Set getExistingUsers(String host, int remoteManagerPort, String remoteManagerUsername, String remoteManagerPassword) {
