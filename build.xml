@@ -1,6 +1,6 @@
 <project name="James Postage" default="build" basedir=".">
 
-<!---------------------------------------------------------------
+<!--
  ! Licensed to the Apache Software Foundation (ASF) under one   !
  ! or more contributor license agreements.  See the NOTICE file !
  ! distributed with this work for additional information        !
@@ -17,7 +17,7 @@
  ! KIND, either express or implied.  See the License for the    !
  ! specific language governing permissions and limitations      !
  ! under the License.                                           !
- ---------------------------------------------------------------->  
+ -->  
 
     <description>James Postage Testing Tool</description>
 
@@ -33,7 +33,7 @@
     <property name="dir.source.classes" value="${basedir}/src/main/java/"/>
     
     <!-- TODO change this to a James Distribution based on a JAMES_HOME variable, or let maven do the job --> 
-    <property name="dir.james.basedir" value="${basedir}/../../../apache/james/trunk/"/>
+    <property name="dir.james.basedir" value="${basedir}/../../server/branches/v2.3"/>
 
     <property name="force.java1_4.support" value="false"/>
     
@@ -45,6 +45,9 @@
                 <include name="*.jar"/>
             </fileset>
             <fileset dir="${dir.james.basedir}/lib/">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${dir.james.basedir}/build/lib/">
                 <include name="*.jar"/>
             </fileset>
         </path>
@@ -59,7 +62,9 @@
             <fileset dir="${dir.james.basedir}/lib/">
                 <include name="*.jar"/>
             </fileset>
-        
+            <fileset dir="${dir.james.basedir}/build/lib/">
+                <include name="*.jar"/>
+            </fileset>
         </path>
 
         <!--
