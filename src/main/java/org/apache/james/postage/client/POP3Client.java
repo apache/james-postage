@@ -130,7 +130,7 @@ public class POP3Client implements Sampler {
                 return;
             }
 
-            for (int i = 0; i < entries.length; i++) {
+            for (int i = 0; entries != null && i < entries.length; i++) {
 // TODO do we need to check the state?                assertEquals(1, pop3Client.getState());
                 POP3MessageInfo entry = entries[i];
                 int size = entry.size;
