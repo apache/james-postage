@@ -14,5 +14,5 @@
      - the dnsjava project (http://www.dnsjava.org/)
      ** TODO: add remaining, if any **
 
-   Please read the different LICENSE files present in the root directory of
+   Please read the LICENSE.txt file present in the root directory of
    this distribution.   
