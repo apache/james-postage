@@ -26,4 +26,6 @@ package org.apache.james.postage.mail;
 public class HeaderConstants {
     public static final String MAIL_ID_HEADER = "X-James-Postage-Count";
     public static final String JAMES_POSTAGE_HEADER = "X-James-Postage";
+
+    public static final String JAMES_POSTAGE_STARTUPCHECK_HEADER_ID = "PROFORMA";
 }

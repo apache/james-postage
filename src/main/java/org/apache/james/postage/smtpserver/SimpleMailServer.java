@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.james.postage.result.PostageRunnerResult;
 import org.apache.james.postage.mail.HeaderConstants;
+import org.apache.james.postage.mail.MailMatchingUtils;
 import org.apache.james.services.MailRepository;
 import org.apache.james.services.MailServer;
 import org.apache.mailet.Mail;
@@ -58,12 +59,10 @@ public class SimpleMailServer implements MailServer {
         mailProcessingRecord.setByteReceivedTotal(msg.getSize());
 
         try {
-            String[] id = msg.getHeader(HeaderConstants.MAIL_ID_HEADER);
-            if (id == null || id.length == 0 ) {
-                log.info("skipping non-postage mail. message is lost. subject was: " + msg.getSubject());
-                return;
-            }
-            mailProcessingRecord.setMailId(id[0]);
+            if (!MailMatchingUtils.isMatchCandidate(msg)) return;
+
+            String id = MailMatchingUtils.getMailIdHeader(msg);
+            mailProcessingRecord.setMailId(id);
 
             String[] subjectHeader = msg.getHeader("Subject");
             if (subjectHeader != null && subjectHeader.length > 0) {

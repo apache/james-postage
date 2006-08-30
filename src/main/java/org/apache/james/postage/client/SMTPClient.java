@@ -22,6 +22,7 @@ package org.apache.james.postage.client;
 
 import org.apache.james.postage.SamplingException;
 import org.apache.james.postage.StartupException;
+import org.apache.james.postage.mail.HeaderConstants;
 import org.apache.james.postage.configuration.MailSender;
 import org.apache.james.postage.execution.Sampler;
 import org.apache.james.postage.result.MailProcessingRecord;
@@ -62,6 +63,7 @@ public class SMTPClient implements Sampler {
 
             MailProcessingRecord proformaMailProcessingRecord = new MailProcessingRecord();
             Session session = getMailSession();
+            proformaMailProcessingRecord.setMailId(HeaderConstants.JAMES_POSTAGE_STARTUPCHECK_HEADER_ID);
             Message message = m_mailSender.createMail(session, proformaMailProcessingRecord);
             setMailFromAndTo(message, proformaMailProcessingRecord);
             Transport.send(message);

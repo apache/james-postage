@@ -20,6 +20,8 @@
 
 package org.apache.james.postage.result;
 
+import org.apache.james.postage.PostageRunner;
+
 /**
  * contains all gathered data concerning one mail message
  */
@@ -37,8 +39,8 @@ public class MailProcessingRecord {
     String senderMailAddress;
     String receiver;
     String receiverMailAddress;
-    long timeSendStart;
     long timeSendEnd;
+    long timeSendStart;
     long byteSendText;
     long byteSendBinary;
     int errorNumberSending;
@@ -54,7 +56,7 @@ public class MailProcessingRecord {
     String receivingQueue;
 
     public synchronized static String getNextId() {
-        return "" + (m_messageId++);
+        return PostageRunner.getMessageIdPrefix() + (m_messageId++);
     }
 
     public boolean isMatchedSentAndReceived() {

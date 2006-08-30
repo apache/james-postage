@@ -28,7 +28,7 @@ import org.apache.james.postage.PostageException;
 import org.apache.james.postage.SamplingException;
 import org.apache.james.postage.StartupException;
 import org.apache.james.postage.execution.Sampler;
-import org.apache.james.postage.mail.HeaderConstants;
+import org.apache.james.postage.mail.MailMatchingUtils;
 import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.james.postage.result.PostageRunnerResult;
 import org.apache.james.postage.user.UserList;
@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Iterator;
-import java.util.List;
 
 public class POP3Client implements Sampler {
 
@@ -117,8 +116,6 @@ public class POP3Client implements Sampler {
         try {
             org.apache.commons.net.pop3.POP3Client pop3Client = openConnection(username);
 
-
-
             // retrieve all messages
             POP3MessageInfo[] entries = null;
             try {
@@ -173,19 +170,9 @@ public class POP3Client implements Sampler {
 
         InputStream in = new ReaderInputStream(mailReader);
         MimeMessage message;
-        String id = null;
         try {
             message = new MimeMessage(null, in);
             in.close();
-
-            String[] idHeaders = message.getHeader(HeaderConstants.MAIL_ID_HEADER);
-            if (idHeaders != null && idHeaders.length > 0) {
-                id = idHeaders[0]; // there should be exactly one.
-            }
-            if (id == null) {
-                log.info("skipping non-postage mail. remains on server. subject was: " + message.getSubject());
-                return;
-            }
         } catch (IOException e) {
             log.info("failed to close mail reader.");
             return;
@@ -194,6 +181,10 @@ public class POP3Client implements Sampler {
             return;
         }
 
+
+        if (!MailMatchingUtils.isMatchCandidate(message)) return;
+
+        String id = MailMatchingUtils.getMailIdHeader(message);
         try {
             mailProcessingRecord.setByteReceivedTotal(message.getSize());
 

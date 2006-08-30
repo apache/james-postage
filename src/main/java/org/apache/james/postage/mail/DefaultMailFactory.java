@@ -63,6 +63,10 @@ public class DefaultMailFactory implements MailFactory {
 
             if (mailProcessingRecord.getMailId() != null) {
                 message.addHeader(HeaderConstants.MAIL_ID_HEADER, mailProcessingRecord.getMailId());
+            } else {
+            	// TODO resolve situations when ID is null
+            	log.warn("ID header is NULL!");
+            	throw new RuntimeException("could not create mail with ID = NULL");
             }
 
             if (mailSender.sendTextPart()) {
