@@ -54,6 +54,7 @@ public class DefaultMailFactory implements MailFactory {
         try {
             message.addHeader("Mime-Version", "1.0");
             message.addHeader(HeaderConstants.JAMES_POSTAGE_HEADER, "This is a test mail sent by James Postage");
+            message.addHeader(HeaderConstants.JAMES_POSTAGE_VALIDATORCLASSNAME_HEADER, "org.apache.james.postage.mail.DefaultMailValidator");
             message.setSubject(mailSender.getSubject());
             message.addHeader("Message-ID", "Postage-" + System.currentTimeMillis());
             mailProcessingRecord.setSubject(mailSender.getSubject());

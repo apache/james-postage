@@ -209,19 +209,24 @@ public class POP3Client implements Sampler {
             log.info("failed to process mail. remains on server");
             return;
         } finally {
-            matchMails(mailProcessingRecord);
+        	MailProcessingRecord matchedAndMergedRecord = matchMails(mailProcessingRecord);
+            if (matchedAndMergedRecord != null) {
+            	MailMatchingUtils.validateMail(message, matchedAndMergedRecord);
+            }
         }
     }
 
-    private void matchMails(MailProcessingRecord mailProcessingRecord) {
-        boolean matched = m_results.matchMailRecord(mailProcessingRecord);
-        if (!matched) {
+    private MailProcessingRecord matchMails(MailProcessingRecord mailProcessingRecord) {
+        MailProcessingRecord matchedAndMergedRecord = m_results.matchMailRecord(mailProcessingRecord);
+        if (matchedAndMergedRecord == null) {
+        	// (but only do this if sure this is a Postage test mail for this runner)
             String oldMailId = mailProcessingRecord.getMailId();
             String newMailId = MailProcessingRecord.getNextId();
             mailProcessingRecord.setMailId(newMailId);
             log.info("changed mail id from " + oldMailId + " to " + newMailId);
             m_results.addNewMailRecord(mailProcessingRecord);
         }
+        return matchedAndMergedRecord;
     }
 
     private int getPartSize(MimeMultipart parts, String mimeType) {

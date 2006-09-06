@@ -51,20 +51,20 @@ public class SimpleMailServer implements MailServer {
     private int m_counter = 0;
     private PostageRunnerResult m_results;
 
-    public void sendMail(MailAddress sender, Collection recipients, MimeMessage msg) throws MessagingException {
+    public void sendMail(MailAddress sender, Collection recipients, MimeMessage message) throws MessagingException {
         //log.info("start processing incoming mail having id = " + msg.getMessageID());
         MailProcessingRecord mailProcessingRecord = new MailProcessingRecord();
         mailProcessingRecord.setReceivingQueue("smtpOutbound");
         mailProcessingRecord.setTimeFetchStart(System.currentTimeMillis());
-        mailProcessingRecord.setByteReceivedTotal(msg.getSize());
+        mailProcessingRecord.setByteReceivedTotal(message.getSize());
 
         try {
-            if (!MailMatchingUtils.isMatchCandidate(msg)) return;
+            if (!MailMatchingUtils.isMatchCandidate(message)) return;
 
-            String id = MailMatchingUtils.getMailIdHeader(msg);
+            String id = MailMatchingUtils.getMailIdHeader(message);
             mailProcessingRecord.setMailId(id);
 
-            String[] subjectHeader = msg.getHeader("Subject");
+            String[] subjectHeader = message.getHeader("Subject");
             if (subjectHeader != null && subjectHeader.length > 0) {
                 mailProcessingRecord.setSubject(subjectHeader[0]);
             }
@@ -77,10 +77,13 @@ public class SimpleMailServer implements MailServer {
             log.error("error processing incoming mail: " + e.getMessage());
             throw e; // rethrow after logging
         } finally{
-            boolean matched = m_results.matchMailRecord(mailProcessingRecord);
-            if (!matched) {
+        	MailProcessingRecord matchedAndMergedRecord = m_results.matchMailRecord(mailProcessingRecord);
+            if (matchedAndMergedRecord == null) {
                 if (mailProcessingRecord.getMailId() == null) mailProcessingRecord.setMailId(MailProcessingRecord.getNextId());
                 m_results.addNewMailRecord(mailProcessingRecord);
+            }
+            else {
+            	MailMatchingUtils.validateMail(message, matchedAndMergedRecord);
             }
         }
     }

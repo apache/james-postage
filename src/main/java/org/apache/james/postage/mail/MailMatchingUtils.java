@@ -20,6 +20,8 @@ package org.apache.james.postage.mail;
 
 import org.apache.james.postage.PostageRunner;
 import org.apache.james.postage.PostageRuntimeException;
+import org.apache.james.postage.classloading.CachedInstanceFactory;
+import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -105,5 +107,17 @@ public class MailMatchingUtils {
         }
         if (MailMatchingUtils.isPostageStartupCheckMail(message)) return false;
         return true;
+    }
+    
+    public static boolean validateMail(MimeMessage message, MailProcessingRecord mailProcessingRecord) {
+    	String classname = getUniqueHeader(message, HeaderConstants.JAMES_POSTAGE_VALIDATORCLASSNAME_HEADER);
+    	MailValidator validator = (MailValidator)CachedInstanceFactory.createInstance(classname);
+    	if (validator == null) return false;
+    	
+    	boolean isValid = validator.validate(message, mailProcessingRecord);
+    	if (isValid) mailProcessingRecord.setValid();
+		else log.warn("failed to validate mail");
+    	
+		return isValid;
     }
 }

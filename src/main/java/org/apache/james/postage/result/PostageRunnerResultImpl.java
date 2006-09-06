@@ -66,10 +66,10 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
         }
     }
 
-    public synchronized boolean matchMailRecord(MailProcessingRecord mailProcessingRecord) {
-        if (mailProcessingRecord == null) return false;
+    public synchronized MailProcessingRecord matchMailRecord(MailProcessingRecord mailProcessingRecord) {
+        if (mailProcessingRecord == null) return null;
         String mailId = mailProcessingRecord.getMailId();
-        if (mailId == null) return false;
+        if (mailId == null) return null;
 
         if (m_unmatchedMailResults.containsKey(mailId)) {
             // merge both mail result objects into one and move it to matched list
@@ -80,14 +80,14 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
             m_matchedMailResults.put(mailId, match);
             m_matchedMailCounter++;
-            return true;
+            return match;
         } else if (m_matchedMailResults.containsKey(mailId)) {
             log.warn("mail already matched for mailId = " + mailId);
         } else {
             log.warn("mail match candidate has unknown (purged?) mailId = " + mailId);
         }
 
-        return false;
+        return null;
     }
 
     public void addJVMResult(JVMResourcesRecord jvmResourcesRecord) {

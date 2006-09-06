@@ -28,7 +28,12 @@ public interface PostageRunnerResult {
 
     void addNewMailRecord(MailProcessingRecord mailProcessingRecord);
 
-    boolean matchMailRecord(MailProcessingRecord mailProcessingRecord);
+    /**
+     * 
+     * @param mailProcessingRecord record for whom a match is searched
+     * @return null, if no match is found or matching and merged record otherwise
+     */
+    MailProcessingRecord matchMailRecord(MailProcessingRecord mailProcessingRecord);
 
     void addJVMResult(JVMResourcesRecord jvmResourcesRecord);
 

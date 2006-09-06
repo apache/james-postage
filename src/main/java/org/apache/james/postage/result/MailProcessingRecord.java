@@ -31,6 +31,7 @@ public class MailProcessingRecord {
     private static int m_messageId = 1;
 
     boolean matchedSentAndReceived = false;
+    boolean isReceivedValid = false;
 
     long timeConnectStart;
     String mailId;
@@ -61,6 +62,14 @@ public class MailProcessingRecord {
 
     public boolean isMatchedSentAndReceived() {
         return matchedSentAndReceived;
+    }
+    
+    public void setValid() {
+    	isReceivedValid = true;
+    }
+    
+    public boolean isReceivedValid() {
+    	return isReceivedValid;
     }
 
     public long getTimeConnectStart() {
@@ -256,6 +265,7 @@ public class MailProcessingRecord {
         if (timeFetchEnd == 0) timeFetchEnd = anotherRecord.timeFetchEnd;
         if (timeServerReceived == 0) timeServerReceived = anotherRecord.timeServerReceived;
         if (receivingQueue == null) receivingQueue = anotherRecord.receivingQueue;
+        if (anotherRecord.isReceivedValid) isReceivedValid = anotherRecord.isReceivedValid;
     }
 
     public static StringBuffer writeHeader() {
@@ -282,6 +292,7 @@ public class MailProcessingRecord {
         stringBuffer.append("timeFetchEnd").append(SEPARATOR);
         stringBuffer.append("timeServerReceived").append(SEPARATOR);
         stringBuffer.append("receivingQueue").append(SEPARATOR);
+        stringBuffer.append("valid").append(SEPARATOR);
         stringBuffer.append("\r\n");
 
         return stringBuffer;
@@ -311,6 +322,7 @@ public class MailProcessingRecord {
         stringBuffer.append(timeFetchEnd).append(SEPARATOR);
         stringBuffer.append(timeServerReceived).append(SEPARATOR);
         stringBuffer.append(receivingQueue).append(SEPARATOR);
+        stringBuffer.append(isReceivedValid).append(SEPARATOR);
         stringBuffer.append("\r\n");
 
         return stringBuffer;
