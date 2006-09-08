@@ -353,8 +353,8 @@
       <url>scp://minotaur.apache.org/www/james.apache.org/dist-m2-snapshot</url>
     </snapshotRepository>
     <site>
-      <id>james-website</id>
-      <url>scp://minotaur.apache.org/www/james.apache.org/public_html/maven/</url>
+      <id>postage-website</id>
+      <url>scp://minotaur.apache.org/www/james.apache.org/postage/</url>
     </site>
   </distributionManagement>
 
