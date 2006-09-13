@@ -19,13 +19,36 @@
 package org.apache.james.postage.mail;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMultipart;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.james.postage.result.MailProcessingRecord;
 
 public class DefaultMailValidator implements MailValidator {
 
+    private static Log log = LogFactory.getLog(DefaultMailValidator.class);
+
 	public boolean validate(Message message, MailProcessingRecord record) {
-		return true;
+
+		MimeMultipart mimeMultipart;
+		try {
+			mimeMultipart = new MimeMultipart(message.getDataHandler().getDataSource());
+		} catch (MessagingException e) {
+			return false;
+		}
+
+		// figuring out the parts created by DefaultMailFactory
+        int textPartSize = MailMatchingUtils.getMimePartSize(mimeMultipart, "text/plain");
+        record.setByteReceivedText(textPartSize);
+        int binaryPartSize = MailMatchingUtils.getMimePartSize(mimeMultipart, "application/octet-stream");
+		record.setByteReceivedBinary(binaryPartSize);
+        
+        boolean textPartValid = textPartSize == record.getByteSendText();
+		boolean binaryPartValid = binaryPartSize == record.getByteSendBinary();
+		boolean valid = textPartValid && binaryPartValid;
+		return valid;
 	}
 
 }

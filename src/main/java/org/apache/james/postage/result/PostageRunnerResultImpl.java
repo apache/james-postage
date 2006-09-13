@@ -53,6 +53,8 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
     private long m_matchedMailCounter = 0;
 
+    private long m_validMailCounter = 0;
+
     private Map  m_environmentInfo = new LinkedHashMap();
 
     public void addNewMailRecord(MailProcessingRecord mailProcessingRecord) {
@@ -89,6 +91,16 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
         return null;
     }
+    
+    public void recordValidatedMatch(MailProcessingRecord matchedAndMergedRecord) {
+    	if (!m_matchedMailResults.values().contains(matchedAndMergedRecord)) {
+    		log.error("cannot record validation result for (already written?) result having id " 
+    				   + matchedAndMergedRecord.getMailId());
+    		return;
+    	}
+    	
+    	if (matchedAndMergedRecord.isReceivedValid()) m_validMailCounter++;
+    }
 
     public void addJVMResult(JVMResourcesRecord jvmResourcesRecord) {
         m_jvmStatistics.add(jvmResourcesRecord);
@@ -104,6 +116,10 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
     public long getMatchedMails() {
         return m_matchedMailCounter;
+    }
+
+    public long getValidMails() {
+        return m_validMailCounter;
     }
 
     public void writeMailResults(OutputStreamWriter outputStreamWriter, boolean flushOnlyMatched) throws IOException {

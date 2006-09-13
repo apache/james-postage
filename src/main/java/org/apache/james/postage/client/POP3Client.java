@@ -20,28 +20,18 @@
 
 package org.apache.james.postage.client;
 
+import java.io.IOException;
+import java.util.Iterator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.pop3.POP3MessageInfo;
-import org.apache.james.fetchmail.ReaderInputStream;
 import org.apache.james.postage.PostageException;
 import org.apache.james.postage.SamplingException;
 import org.apache.james.postage.StartupException;
 import org.apache.james.postage.execution.Sampler;
-import org.apache.james.postage.mail.MailMatchingUtils;
-import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.james.postage.result.PostageRunnerResult;
 import org.apache.james.postage.user.UserList;
-
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.Iterator;
 
 public class POP3Client implements Sampler {
 
@@ -128,121 +118,19 @@ public class POP3Client implements Sampler {
             }
 
             for (int i = 0; entries != null && i < entries.length; i++) {
-// TODO do we need to check the state?                assertEquals(1, pop3Client.getState());
                 POP3MessageInfo entry = entries[i];
-                int size = entry.size;
 
-                MailProcessingRecord mailProcessingRecord = new MailProcessingRecord();
-                mailProcessingRecord.setReceivingQueue("pop3");
-                mailProcessingRecord.setTimeFetchStart(System.currentTimeMillis());
-
-                String mailText;
-                BufferedReader mailReader = null;
-                Reader reader = null;
                 try {
-                    reader = pop3Client.retrieveMessage(entry.number);
-                    mailReader = new BufferedReader(reader);
-
-                    analyzeAndMatch(mailReader, mailProcessingRecord, pop3Client, i);
-                } catch (Exception e) {
-                    log.info("failed to read pop3 mail #" + i + " for " + username);
-                    continue; // mail processing record is discarded
-                } finally {
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException e) {
-                            log.warn("error closing mail reader");
-                        }
-                    }
-                }
-
-                continue;
+					new POP3MailAnalyzeStrategy("pop3", m_results, pop3Client, entry.number, i).handle();
+				} catch (Exception exception) {
+					log.warn("error processing pop3 mail", exception);
+				}
             }
 
             closeSession(pop3Client);
         } catch (PostageException e) {
             throw new SamplingException("sample failed", e);
         }
-    }
-
-    private void analyzeAndMatch(Reader mailReader, MailProcessingRecord mailProcessingRecord, org.apache.commons.net.pop3.POP3Client pop3Client, int i) {
-
-        InputStream in = new ReaderInputStream(mailReader);
-        MimeMessage message;
-        try {
-            message = new MimeMessage(null, in);
-            in.close();
-        } catch (IOException e) {
-            log.info("failed to close mail reader.");
-            return;
-        } catch (MessagingException e) {
-            log.info("failed to process mail. remains on server");
-            return;
-        }
-
-
-        if (!MailMatchingUtils.isMatchCandidate(message)) return;
-
-        String id = MailMatchingUtils.getMailIdHeader(message);
-        try {
-            mailProcessingRecord.setByteReceivedTotal(message.getSize());
-
-            mailProcessingRecord.setMailId(id);
-            mailProcessingRecord.setSubject(message.getSubject());
-
-            MimeMultipart mimeMultipart = new MimeMultipart(message.getDataHandler().getDataSource());
-
-            // this assumes, there is zero or one part each, either of type plaintext or binary
-            mailProcessingRecord.setByteReceivedText(getPartSize(mimeMultipart, "text/plain"));
-            mailProcessingRecord.setByteReceivedBinary(getPartSize(mimeMultipart, "application/octet-stream"));
-
-            mailProcessingRecord.setTimeFetchEnd(System.currentTimeMillis());
-
-            try {
-                pop3Client.deleteMessage(i + 1); // don't retrieve again next time
-            } catch (Exception e) {
-                log.info("failed to delete mail.");
-                return;
-            }
-        } catch (MessagingException e) {
-            log.info("failed to process mail. remains on server");
-            return;
-        } finally {
-        	MailProcessingRecord matchedAndMergedRecord = matchMails(mailProcessingRecord);
-            if (matchedAndMergedRecord != null) {
-            	MailMatchingUtils.validateMail(message, matchedAndMergedRecord);
-            }
-        }
-    }
-
-    private MailProcessingRecord matchMails(MailProcessingRecord mailProcessingRecord) {
-        MailProcessingRecord matchedAndMergedRecord = m_results.matchMailRecord(mailProcessingRecord);
-        if (matchedAndMergedRecord == null) {
-        	// (but only do this if sure this is a Postage test mail for this runner)
-            String oldMailId = mailProcessingRecord.getMailId();
-            String newMailId = MailProcessingRecord.getNextId();
-            mailProcessingRecord.setMailId(newMailId);
-            log.info("changed mail id from " + oldMailId + " to " + newMailId);
-            m_results.addNewMailRecord(mailProcessingRecord);
-        }
-        return matchedAndMergedRecord;
-    }
-
-    private int getPartSize(MimeMultipart parts, String mimeType) {
-        if (parts != null) {
-            try {
-                for (int i = 0; i < parts.getCount(); i++) {
-                    BodyPart bodyPart = parts.getBodyPart(i);
-                    if (mimeType.equals(bodyPart.getContentType())) {
-                        return bodyPart.getSize();
-                    }
-                }
-            } catch (MessagingException e) {
-                log.info("failed to process body parts.", e);
-            }
-        }
-        return 0;
     }
 }
 

@@ -26,6 +26,7 @@ import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.james.postage.result.PostageRunnerResult;
 import org.apache.james.postage.mail.HeaderConstants;
 import org.apache.james.postage.mail.MailMatchingUtils;
+import org.apache.james.postage.mail.MailAnalyzeStrategy;
 import org.apache.james.services.MailRepository;
 import org.apache.james.services.MailServer;
 import org.apache.mailet.Mail;
@@ -35,6 +36,8 @@ import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
@@ -52,40 +55,11 @@ public class SimpleMailServer implements MailServer {
     private PostageRunnerResult m_results;
 
     public void sendMail(MailAddress sender, Collection recipients, MimeMessage message) throws MessagingException {
-        //log.info("start processing incoming mail having id = " + msg.getMessageID());
-        MailProcessingRecord mailProcessingRecord = new MailProcessingRecord();
-        mailProcessingRecord.setReceivingQueue("smtpOutbound");
-        mailProcessingRecord.setTimeFetchStart(System.currentTimeMillis());
-        mailProcessingRecord.setByteReceivedTotal(message.getSize());
-
-        try {
-            if (!MailMatchingUtils.isMatchCandidate(message)) return;
-
-            String id = MailMatchingUtils.getMailIdHeader(message);
-            mailProcessingRecord.setMailId(id);
-
-            String[] subjectHeader = message.getHeader("Subject");
-            if (subjectHeader != null && subjectHeader.length > 0) {
-                mailProcessingRecord.setSubject(subjectHeader[0]);
-            }
-
-            // TODO mailProcessingRecord.setByteReceivedText();
-            // TODO mailProcessingRecord.setByteReceivedBinary();
-
-            mailProcessingRecord.setTimeFetchEnd(System.currentTimeMillis());
-        } catch(MessagingException e) {
-            log.error("error processing incoming mail: " + e.getMessage());
-            throw e; // rethrow after logging
-        } finally{
-        	MailProcessingRecord matchedAndMergedRecord = m_results.matchMailRecord(mailProcessingRecord);
-            if (matchedAndMergedRecord == null) {
-                if (mailProcessingRecord.getMailId() == null) mailProcessingRecord.setMailId(MailProcessingRecord.getNextId());
-                m_results.addNewMailRecord(mailProcessingRecord);
-            }
-            else {
-            	MailMatchingUtils.validateMail(message, matchedAndMergedRecord);
-            }
-        }
+    	try {
+            new SMTPMailAnalyzeStrategy("smtpOutbound", m_results, message).handle();
+		} catch (Exception e) {
+			throw new MessagingException("error handling message", e);
+		}
     }
 
     public void sendMail(MailAddress sender, Collection recipients, InputStream msg) throws MessagingException {

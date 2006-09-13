@@ -261,6 +261,7 @@ public class PostageRunner implements Runnable {
     private void logElapsedData() {
         log.info("unmatched messages: " + m_results.getUnmatchedMails());
         log.info("matched messages:   " + m_results.getMatchedMails());
+        log.info("valid matches:      " + m_results.getValidMails());
         log.info("recorded errors:    " + m_results.getErrorCount());
     }
 

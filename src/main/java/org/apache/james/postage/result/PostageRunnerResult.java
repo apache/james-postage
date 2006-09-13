@@ -26,20 +26,32 @@ public interface PostageRunnerResult {
 
     void setEnvironmentDescription(Map descriptionItems);
 
+    /**
+     * add a record to be matched later on
+     * @param mailProcessingRecord
+     */
     void addNewMailRecord(MailProcessingRecord mailProcessingRecord);
 
     /**
-     * 
+     * retrieve the matching record, if existing
      * @param mailProcessingRecord record for whom a match is searched
      * @return null, if no match is found or matching and merged record otherwise
      */
     MailProcessingRecord matchMailRecord(MailProcessingRecord mailProcessingRecord);
 
+    /**
+     * count the valid matches
+     * @param mailProcessingRecord
+     */
+    void recordValidatedMatch(MailProcessingRecord matchedAndMergedRecord);    
+    
     void addJVMResult(JVMResourcesRecord jvmResourcesRecord);
 
     long getUnmatchedMails();
 
     long getMatchedMails();
+
+    long getValidMails();
 
     long getTimestampFirstResult();
 

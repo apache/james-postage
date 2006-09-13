@@ -25,12 +25,15 @@ import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import java.util.regex.Pattern;
 
 /**
- * helps matching result mails to sent test mails
+ * helps matching, analysing and validating result mails and sent test mails
  */
 public class MailMatchingUtils {
 
@@ -119,5 +122,29 @@ public class MailMatchingUtils {
 		else log.warn("failed to validate mail");
     	
 		return isValid;
+    }
+    
+    public static MimeMultipart convertToMimeMultipart(MimeMessage message) {
+        try {
+			return new MimeMultipart(message.getDataHandler().getDataSource());
+		} catch (MessagingException e) {
+			throw new RuntimeException("could not convert MimeMessage to MimeMultipart", e);
+		}
+    }
+    
+    public static int getMimePartSize(MimeMultipart parts, String mimeType) {
+        if (parts != null) {
+            try {
+                for (int i = 0; i < parts.getCount(); i++) {
+                    BodyPart bodyPart = parts.getBodyPart(i);
+                    if (bodyPart.getContentType().startsWith(mimeType)) {
+                        return bodyPart.getSize();
+                    }
+                }
+            } catch (MessagingException e) {
+                log.info("failed to process body parts.", e);
+            }
+        }
+        return 0;
     }
 }

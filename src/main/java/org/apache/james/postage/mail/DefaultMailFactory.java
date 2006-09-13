@@ -82,6 +82,9 @@ public class DefaultMailFactory implements MailFactory {
                 for (int i = 0; i < mailSize; i++) textBody.append(getRandomChar());
 
                 part.setText(textBody.toString());
+
+//                part.setDataHandler(new DataHandler(textBody.toString(), "text/plain"));
+                
                 multipart.addBodyPart(part);
             }
 
