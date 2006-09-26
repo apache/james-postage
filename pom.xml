@@ -30,7 +30,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.james</groupId>
   <artifactId>james-postage</artifactId>
-  <name>Apache JAMES Postage Project</name>
+  <name>Apache JAMES Postage</name>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <description>
