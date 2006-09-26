@@ -39,7 +39,7 @@
   <parent>
     <groupId>org.apache.james</groupId>
     <artifactId>james-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
   </parent>
   <url>http://james.apache.org/postage/index.html</url>
   <inceptionYear>2006</inceptionYear>
@@ -48,40 +48,6 @@
     <system>jira</system>
     <url>http://issues.apache.org/jira/browse/POSTAGE</url>
   </issueManagement>
-
-  <ciManagement>
-    <system>continuum</system>
-    <notifiers>
-      <notifier>
-        <type>mail</type>
-        <sendOnError />
-        <sendOnFailure />
-        <address>server-dev@james.apache.org</address>
-      </notifier>
-    </notifiers>
-  </ciManagement>
-
-  <mailingLists>
-    <mailingList>
-      <name>Server User List</name>
-      <subscribe>server-user-subscribe@james.apache.org</subscribe>
-      <unsubscribe>server-user-unsubscribe@james.apache.org</unsubscribe>
-      <archive>http://www.mail-archive.com/server-user@james.apache.org/</archive>
-    </mailingList>
-    <mailingList>
-      <name>Server Developer List</name>
-      <subscribe>server-dev-subscribe@james.apache.org</subscribe>
-      <unsubscribe>server-dev-unsubscribe@james.apache.org</unsubscribe>
-      <post>server-dev@james.apache.org</post>
-      <archive>http://www.mail-archive.com/server-dev@james.apache.org/</archive>
-    </mailingList>
-    <mailingList>
-      <name>James General List</name>
-      <subscribe>server-general-subscribe@james.apache.org</subscribe>
-      <unsubscribe>server-general-unsubscribe@james.apache.org</unsubscribe>
-      <archive>http://www.mail-archive.com/server-general@james.apache.org/</archive>
-    </mailingList>
-  </mailingLists>
 
   <scm>
     <connection>
@@ -96,6 +62,41 @@
   </scm>
 
   <repositories>
+  
+    <repository>
+      <id>central</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    
+    <repository>
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+    
+    <!-- 
+     this should be removed and custom jars should 
+     be copied to a local files based repository.
+    -->
+    <repository>
+      <id>ibiblio</id>
+      <name>Main maven repo</name>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <!--
     <repository>
       <id>bago-dist-m1</id>
       <name>Temporary Repository</name>
@@ -106,6 +107,7 @@
         <checksumPolicy>ignore</checksumPolicy>
       </snapshots>
     </repository>
+    -->
   </repositories>
 
   <dependencies verbose="true">
@@ -229,7 +231,7 @@
     <dependency>
     	<groupId>org.apache.james</groupId>
     	<artifactId>james-server</artifactId>
-    	<version>2.3.0-SNAPSHOT</version>
+    	<version>3.0-SNAPSHOT</version>
     	<exclusions>
         <exclusion>
           <groupId>org.bouncycastle</groupId>
@@ -349,16 +351,6 @@
   </dependencies>
 
   <distributionManagement>
-    <repository>
-      <id>james-repo</id>
-      <name>James Central Repository</name>
-      <url>scp://minotaur.apache.org/www/james.apache.org/dist-m2</url>
-    </repository>
-    <snapshotRepository>
-      <id>james-snapshots</id>
-      <name>James Central Development Repository</name>
-      <url>scp://minotaur.apache.org/www/james.apache.org/dist-m2-snapshot</url>
-    </snapshotRepository>
     <site>
       <id>postage-website</id>
       <url>scp://minotaur.apache.org/www/james.apache.org/postage/</url>

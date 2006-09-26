@@ -117,5 +117,10 @@ public class TrivialMailContext implements MailetContext {
     public Iterator getSMTPHostAddresses(String domainName) {
         return null;  // trivial implementation
     }
+
+    // compatibility with James-trunk
+    public boolean isLocalEmail(MailAddress arg0) {
+        return false; // trivial implementation
+    }
 }
 
