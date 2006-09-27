@@ -20,110 +20,62 @@
 
 package org.apache.james.postage.mail;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.james.postage.configuration.MailSender;
 import org.apache.james.postage.result.MailProcessingRecord;
 
 import javax.activation.DataHandler;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-public class DefaultMailFactory implements MailFactory {
+public class DefaultMailFactory extends AbstractMailFactory implements MailFactory {
 
-    private static Log log = LogFactory.getLog(DefaultMailFactory.class);
+	protected void populateMessage(MimeMessage message, MailSender mailSender, MailProcessingRecord mailProcessingRecord) throws MessagingException {
+        message.addHeader("Mime-Version", "1.0");
+        message.addHeader("Content-Type", "multipart/mixed");
 
-    private final static char[] CHARSET = new char[]
-                                {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-                                 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-                                 'u', 'v', 'w', 'x', 'y', 'z',
-                                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                                 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                                 'U', 'V', 'W', 'X', 'Y', 'Z'};
+		Multipart multipart = new MimeMultipart("mixed");
 
+		if (mailSender.sendTextPart()) {
+		    int sizeMinText = mailSender.getSizeMinText();
+		    int sizeMaxText = mailSender.getSizeMaxText();
+		    MimeBodyPart part = new MimeBodyPart();
 
-    public Message createMail(Session mailSession, MailSender mailSender, MailProcessingRecord mailProcessingRecord) {
-        MimeMessage message = new MimeMessage(mailSession);
+		    int mailSize = generateRandomPartSize(sizeMinText, sizeMaxText);
+		    mailProcessingRecord.setByteSendText(mailSize);
 
-        try {
-            message.addHeader("Mime-Version", "1.0");
-            message.addHeader(HeaderConstants.JAMES_POSTAGE_HEADER, "This is a test mail sent by James Postage");
-            message.addHeader(HeaderConstants.JAMES_POSTAGE_VALIDATORCLASSNAME_HEADER, "org.apache.james.postage.mail.DefaultMailValidator");
-            message.setSubject(mailSender.getSubject());
-            message.addHeader("Message-ID", "Postage-" + System.currentTimeMillis());
-            mailProcessingRecord.setSubject(mailSender.getSubject());
-            message.addHeader("Content-Type", "multipart/mixed");
+		    StringBuffer textBody = new StringBuffer(mailSize);
+		    for (int i = 0; i < mailSize; i++) textBody.append(getRandomChar());
 
-            Multipart multipart = new MimeMultipart("mixed");
-
-            if (mailProcessingRecord.getMailId() != null) {
-                message.addHeader(HeaderConstants.MAIL_ID_HEADER, mailProcessingRecord.getMailId());
-            } else {
-            	// TODO resolve situations when ID is null
-            	log.warn("ID header is NULL!");
-            	throw new RuntimeException("could not create mail with ID = NULL");
-            }
-
-            if (mailSender.sendTextPart()) {
-                int sizeMinText = mailSender.getSizeMinText();
-                int sizeMaxText = mailSender.getSizeMaxText();
-                MimeBodyPart part = new MimeBodyPart();
-
-                int mailSize = generateRandomPartSize(sizeMinText, sizeMaxText);
-                mailProcessingRecord.setByteSendText(mailSize);
-
-                StringBuffer textBody = new StringBuffer(mailSize);
-                for (int i = 0; i < mailSize; i++) textBody.append(getRandomChar());
-
-                part.setText(textBody.toString());
+		    part.setText(textBody.toString());
 
 //                part.setDataHandler(new DataHandler(textBody.toString(), "text/plain"));
-                
-                multipart.addBodyPart(part);
-            }
+		    
+		    multipart.addBodyPart(part);
+		}
 
-            if (mailSender.sendBinaryPart()) {
-                int sizeMinBinary = mailSender.getSizeMinBinary();
-                int sizeMaxBinary = mailSender.getSizeMaxBinary();
-                MimeBodyPart part = new MimeBodyPart();
+		if (mailSender.sendBinaryPart()) {
+		    int sizeMinBinary = mailSender.getSizeMinBinary();
+		    int sizeMaxBinary = mailSender.getSizeMaxBinary();
+		    MimeBodyPart part = new MimeBodyPart();
 
-                int mailSize = generateRandomPartSize(sizeMinBinary, sizeMaxBinary);
-                mailProcessingRecord.setByteSendBinary(mailSize);
+		    int mailSize = generateRandomPartSize(sizeMinBinary, sizeMaxBinary);
+		    mailProcessingRecord.setByteSendBinary(mailSize);
 
-                byte[] bytes = new byte[mailSize];
-                for (int i = 0; i < mailSize; i++) bytes[i] = getRandomByte();
+		    byte[] bytes = new byte[mailSize];
+		    for (int i = 0; i < mailSize; i++) bytes[i] = getRandomByte();
 
-                part.setDataHandler(new DataHandler(new ByteArrayDataSource(bytes, "application/octet-stream")));
-                multipart.addBodyPart(part);
-            }
-            message.setContent(multipart);
-        } catch (MessagingException e) {
-            mailProcessingRecord.setErrorTextSending(e.toString());
-            log.error("mail could not be created", e);
-            return null;
-        }
-        return message;
-    }
+		    part.setDataHandler(new DataHandler(new ByteArrayDataSource(bytes, "application/octet-stream")));
+		    multipart.addBodyPart(part);
+		}
+		message.setContent(multipart);
+	}
+	
+	protected Class getValidatorClass() {
+		return DefaultMailValidator.class;
+	}
 
-    private int generateRandomPartSize(int sizeMin, int sizeMax) {
-        return (int)(Math.random() * (double)(sizeMax - sizeMin)) + sizeMin;
-    }
-
-    public static char getRandomChar() {
-        return CHARSET[getRandomInt()];
-    }
-
-    private static int getRandomInt() {
-        return (int)(Math.random() * (double)(CHARSET.length - 1));
-    }
-
-    public static byte getRandomByte() {
-        return (byte)CHARSET[getRandomInt()];
-    }
 }
