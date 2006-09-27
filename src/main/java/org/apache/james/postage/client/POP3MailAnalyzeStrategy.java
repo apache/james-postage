@@ -32,34 +32,34 @@ import org.apache.james.postage.result.PostageRunnerResult;
 
 public class POP3MailAnalyzeStrategy extends MailAnalyzeStrategy {
 
-	private int mailNumber;
-	private int mailIndex;
-	private org.apache.commons.net.pop3.POP3Client pop3Client;
+    private int mailNumber;
+    private int mailIndex;
+    private org.apache.commons.net.pop3.POP3Client pop3Client;
 
-	public POP3MailAnalyzeStrategy(String receivingQueueName, PostageRunnerResult results, 
-								   org.apache.commons.net.pop3.POP3Client pop3Client, 
-								   int mailNumber, int mailIndex) {
-		super(receivingQueueName, results);
-		this.pop3Client = pop3Client;
-		this.mailNumber = mailNumber;
-		this.mailIndex = mailIndex;
-	}
+    public POP3MailAnalyzeStrategy(String receivingQueueName, PostageRunnerResult results, 
+                                   org.apache.commons.net.pop3.POP3Client pop3Client, 
+                                   int mailNumber, int mailIndex) {
+        super(receivingQueueName, results);
+        this.pop3Client = pop3Client;
+        this.mailNumber = mailNumber;
+        this.mailIndex = mailIndex;
+    }
 
-	protected MimeMessage loadMessage() throws Exception {
-		Reader reader = pop3Client.retrieveMessage(mailNumber);
+    protected MimeMessage loadMessage() throws Exception {
+        Reader reader = pop3Client.retrieveMessage(mailNumber);
         BufferedReader mailReader = new BufferedReader(reader);
-		InputStream in = new ReaderInputStream(mailReader);
-		MimeMessage message;
-		try {
-			message = new MimeMessage(null, in);
-			in.close();
-		} catch (IOException e) {
-			log.info("failed to close POP3 mail reader.");
-			throw e;
-		} catch (MessagingException e) {
-			log.info("failed to process POP3 mail. remains on server");
-			throw e;
-		} finally {
+        InputStream in = new ReaderInputStream(mailReader);
+        MimeMessage message;
+        try {
+            message = new MimeMessage(null, in);
+            in.close();
+        } catch (IOException e) {
+            log.info("failed to close POP3 mail reader.");
+            throw e;
+        } catch (MessagingException e) {
+            log.info("failed to process POP3 mail. remains on server");
+            throw e;
+        } finally {
             if (in != null) {
                 try {
                     in.close();
@@ -69,7 +69,7 @@ public class POP3MailAnalyzeStrategy extends MailAnalyzeStrategy {
             }
             if (mailReader != null) {
                 try {
-                	mailReader.close();
+                    mailReader.close();
                 } catch (IOException e) {
                     log.warn("error closing mail reader");
                 }
@@ -83,10 +83,10 @@ public class POP3MailAnalyzeStrategy extends MailAnalyzeStrategy {
             }
         }
 
-		return message;
-	}
-	
-	protected void dismissMessage() throws Exception {
+        return message;
+    }
+    
+    protected void dismissMessage() throws Exception {
         try {
             pop3Client.deleteMessage(mailIndex + 1); // don't retrieve again next time
         } catch (Exception e) {

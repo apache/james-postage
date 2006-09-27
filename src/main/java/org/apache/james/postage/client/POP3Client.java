@@ -121,10 +121,10 @@ public class POP3Client implements Sampler {
                 POP3MessageInfo entry = entries[i];
 
                 try {
-					new POP3MailAnalyzeStrategy("pop3", m_results, pop3Client, entry.number, i).handle();
-				} catch (Exception exception) {
-					log.warn("error processing pop3 mail", exception);
-				}
+                    new POP3MailAnalyzeStrategy("pop3", m_results, pop3Client, entry.number, i).handle();
+                } catch (Exception exception) {
+                    log.warn("error processing pop3 mail", exception);
+                }
             }
 
             closeSession(pop3Client);

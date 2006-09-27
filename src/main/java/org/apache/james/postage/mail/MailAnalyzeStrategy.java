@@ -36,59 +36,59 @@ public abstract class MailAnalyzeStrategy {
     private PostageRunnerResult results = null;
 
     public MailAnalyzeStrategy(String receivingQueueName, PostageRunnerResult results) {
-    	this.queue = receivingQueueName;
-    	this.results = results;
-	}
+        this.queue = receivingQueueName;
+        this.results = results;
+    }
     
     public void handle() throws Exception { 
-    	MailProcessingRecord mailProcessingRecord = prepareRecord();
+        MailProcessingRecord mailProcessingRecord = prepareRecord();
 
-    	MimeMessage message = loadMessage();
-    	
-    	// do we _really_ have to handle this?
-    	if (!MailMatchingUtils.isMatchCandidate(message)) return;
+        MimeMessage message = loadMessage();
+        
+        // do we _really_ have to handle this?
+        if (!MailMatchingUtils.isMatchCandidate(message)) return;
 
-	    String id = MailMatchingUtils.getMailIdHeader(message);
-	    try {
-	        mailProcessingRecord.setByteReceivedTotal(message.getSize());
-	
-	        mailProcessingRecord.setMailId(id);
-	        mailProcessingRecord.setSubject(message.getSubject());
-	
-	        mailProcessingRecord.setTimeFetchEnd(System.currentTimeMillis());
-	
-	    } catch (MessagingException e) {
-	        log.info(queue + ": failed to process mail. remains on server");
-	        return;
-	    } finally {
-	    	MailProcessingRecord matchedAndMergedRecord = results.matchMailRecord(mailProcessingRecord);
-	        if (matchedAndMergedRecord != null) {
-	        	MailMatchingUtils.validateMail(message, matchedAndMergedRecord);
-	        	results.recordValidatedMatch(matchedAndMergedRecord);
-	        }
-	    }
+        String id = MailMatchingUtils.getMailIdHeader(message);
+        try {
+            mailProcessingRecord.setByteReceivedTotal(message.getSize());
     
-	    dismissMessage();
+            mailProcessingRecord.setMailId(id);
+            mailProcessingRecord.setSubject(message.getSubject());
+    
+            mailProcessingRecord.setTimeFetchEnd(System.currentTimeMillis());
+    
+        } catch (MessagingException e) {
+            log.info(queue + ": failed to process mail. remains on server");
+            return;
+        } finally {
+            MailProcessingRecord matchedAndMergedRecord = results.matchMailRecord(mailProcessingRecord);
+            if (matchedAndMergedRecord != null) {
+                MailMatchingUtils.validateMail(message, matchedAndMergedRecord);
+                results.recordValidatedMatch(matchedAndMergedRecord);
+            }
+        }
+    
+        dismissMessage();
     }
 
     /** 
      * mandatory override to make the message available
      */
-	protected MimeMessage loadMessage() throws Exception {
-		return null;
-	}
+    protected MimeMessage loadMessage() throws Exception {
+        return null;
+    }
 
-	/**
-	 * optional override to delete the message.
-	 */
-	protected void dismissMessage() throws Exception {
-		; // empty body
-	}
-	
-	private MailProcessingRecord prepareRecord() {
-		MailProcessingRecord mailProcessingRecord = new MailProcessingRecord();
-		mailProcessingRecord.setReceivingQueue(queue);
-		mailProcessingRecord.setTimeFetchStart(System.currentTimeMillis());
-		return mailProcessingRecord;
-	}
+    /**
+     * optional override to delete the message.
+     */
+    protected void dismissMessage() throws Exception {
+        ; // empty body
+    }
+    
+    private MailProcessingRecord prepareRecord() {
+        MailProcessingRecord mailProcessingRecord = new MailProcessingRecord();
+        mailProcessingRecord.setReceivingQueue(queue);
+        mailProcessingRecord.setTimeFetchStart(System.currentTimeMillis());
+        return mailProcessingRecord;
+    }
 }

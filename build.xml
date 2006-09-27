@@ -86,6 +86,8 @@
     </target>
 
     <target name="init-compiler-sources">
+        <fixcrlf srcdir="${dir.source.classes}" includes="**/*.java" eol="lf" tab="remove" tablength="4" />
+        
         <copy todir="${dir.build.source}"  >
             <fileset dir="${dir.source.classes}" >
                 <include name="**/*.java" />

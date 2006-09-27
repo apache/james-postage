@@ -113,23 +113,23 @@ public class MailMatchingUtils {
     }
     
     public static boolean validateMail(MimeMessage message, MailProcessingRecord mailProcessingRecord) {
-    	String classname = getUniqueHeader(message, HeaderConstants.JAMES_POSTAGE_VALIDATORCLASSNAME_HEADER);
-    	MailValidator validator = (MailValidator)CachedInstanceFactory.createInstance(classname);
-    	if (validator == null) return false;
-    	
-    	boolean isValid = validator.validate(message, mailProcessingRecord);
-    	if (isValid) mailProcessingRecord.setValid();
-		else log.warn("failed to validate mail");
-    	
-		return isValid;
+        String classname = getUniqueHeader(message, HeaderConstants.JAMES_POSTAGE_VALIDATORCLASSNAME_HEADER);
+        MailValidator validator = (MailValidator)CachedInstanceFactory.createInstance(classname);
+        if (validator == null) return false;
+        
+        boolean isValid = validator.validate(message, mailProcessingRecord);
+        if (isValid) mailProcessingRecord.setValid();
+        else log.warn("failed to validate mail");
+        
+        return isValid;
     }
     
     public static MimeMultipart convertToMimeMultipart(MimeMessage message) {
         try {
-			return new MimeMultipart(message.getDataHandler().getDataSource());
-		} catch (MessagingException e) {
-			throw new RuntimeException("could not convert MimeMessage to MimeMultipart", e);
-		}
+            return new MimeMultipart(message.getDataHandler().getDataSource());
+        } catch (MessagingException e) {
+            throw new RuntimeException("could not convert MimeMessage to MimeMultipart", e);
+        }
     }
     
     public static int getMimePartSize(MimeMultipart parts, String mimeType) {

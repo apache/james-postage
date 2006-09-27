@@ -93,13 +93,13 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
     }
     
     public void recordValidatedMatch(MailProcessingRecord matchedAndMergedRecord) {
-    	if (!m_matchedMailResults.values().contains(matchedAndMergedRecord)) {
-    		log.error("cannot record validation result for (already written?) result having id " 
-    				   + matchedAndMergedRecord.getMailId());
-    		return;
-    	}
-    	
-    	if (matchedAndMergedRecord.isReceivedValid()) m_validMailCounter++;
+        if (!m_matchedMailResults.values().contains(matchedAndMergedRecord)) {
+            log.error("cannot record validation result for (already written?) result having id " 
+                       + matchedAndMergedRecord.getMailId());
+            return;
+        }
+        
+        if (matchedAndMergedRecord.isReceivedValid()) m_validMailCounter++;
     }
 
     public void addJVMResult(JVMResourcesRecord jvmResourcesRecord) {

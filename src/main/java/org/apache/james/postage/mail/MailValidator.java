@@ -28,5 +28,5 @@ import org.apache.james.postage.result.MailProcessingRecord;
  * most commonly, each MailValidator implementation matches one corresponding MailFactory.
  */
 public interface MailValidator {
-	public boolean validate(Message message, MailProcessingRecord record);
+    public boolean validate(Message message, MailProcessingRecord record);
 }

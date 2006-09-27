@@ -81,7 +81,7 @@ public class PostageRunner implements Runnable {
     private static String m_messageIdPrefix = null;
 
     public static String getMessageIdPrefix() {
-    	return m_messageIdPrefix + "-";
+        return m_messageIdPrefix + "-";
     }
 
     /**
@@ -96,9 +96,9 @@ public class PostageRunner implements Runnable {
      * @param postageConfiguration
      */
     public PostageRunner(PostageConfiguration postageConfiguration) {
-    	m_messageIdPrefix = "" + System.currentTimeMillis();
+        m_messageIdPrefix = "" + System.currentTimeMillis();
 
-    	m_postageConfiguration = postageConfiguration;
+        m_postageConfiguration = postageConfiguration;
 
         int totalMailsPerMin = m_postageConfiguration.getTotalMailsPerMin();
         int durationMinutes = m_postageConfiguration.getDurationMinutes();

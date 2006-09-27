@@ -30,7 +30,7 @@ public class CachedInstanceFactory {
 
     private final static Map m_classes = new HashMap();
 
-	public static Object createInstance(String classname) {
+    public static Object createInstance(String classname) {
         Object object = null;
 
         Class clazz = null;

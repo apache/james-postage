@@ -55,11 +55,11 @@ public class SimpleMailServer implements MailServer {
     private PostageRunnerResult m_results;
 
     public void sendMail(MailAddress sender, Collection recipients, MimeMessage message) throws MessagingException {
-    	try {
+        try {
             new SMTPMailAnalyzeStrategy("smtpOutbound", m_results, message).handle();
-		} catch (Exception e) {
-			throw new MessagingException("error handling message", e);
-		}
+        } catch (Exception e) {
+            throw new MessagingException("error handling message", e);
+        }
     }
 
     public void sendMail(MailAddress sender, Collection recipients, InputStream msg) throws MessagingException {

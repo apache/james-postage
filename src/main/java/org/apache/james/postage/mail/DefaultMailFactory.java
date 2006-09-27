@@ -33,49 +33,49 @@ import javax.mail.util.ByteArrayDataSource;
 
 public class DefaultMailFactory extends AbstractMailFactory implements MailFactory {
 
-	protected void populateMessage(MimeMessage message, MailSender mailSender, MailProcessingRecord mailProcessingRecord) throws MessagingException {
+    protected void populateMessage(MimeMessage message, MailSender mailSender, MailProcessingRecord mailProcessingRecord) throws MessagingException {
         message.addHeader("Mime-Version", "1.0");
         message.addHeader("Content-Type", "multipart/mixed");
 
-		Multipart multipart = new MimeMultipart("mixed");
+        Multipart multipart = new MimeMultipart("mixed");
 
-		if (mailSender.sendTextPart()) {
-		    int sizeMinText = mailSender.getSizeMinText();
-		    int sizeMaxText = mailSender.getSizeMaxText();
-		    MimeBodyPart part = new MimeBodyPart();
+        if (mailSender.sendTextPart()) {
+            int sizeMinText = mailSender.getSizeMinText();
+            int sizeMaxText = mailSender.getSizeMaxText();
+            MimeBodyPart part = new MimeBodyPart();
 
-		    int mailSize = generateRandomPartSize(sizeMinText, sizeMaxText);
-		    mailProcessingRecord.setByteSendText(mailSize);
+            int mailSize = generateRandomPartSize(sizeMinText, sizeMaxText);
+            mailProcessingRecord.setByteSendText(mailSize);
 
-		    StringBuffer textBody = new StringBuffer(mailSize);
-		    for (int i = 0; i < mailSize; i++) textBody.append(getRandomChar());
+            StringBuffer textBody = new StringBuffer(mailSize);
+            for (int i = 0; i < mailSize; i++) textBody.append(getRandomChar());
 
-		    part.setText(textBody.toString());
+            part.setText(textBody.toString());
 
 //                part.setDataHandler(new DataHandler(textBody.toString(), "text/plain"));
-		    
-		    multipart.addBodyPart(part);
-		}
+            
+            multipart.addBodyPart(part);
+        }
 
-		if (mailSender.sendBinaryPart()) {
-		    int sizeMinBinary = mailSender.getSizeMinBinary();
-		    int sizeMaxBinary = mailSender.getSizeMaxBinary();
-		    MimeBodyPart part = new MimeBodyPart();
+        if (mailSender.sendBinaryPart()) {
+            int sizeMinBinary = mailSender.getSizeMinBinary();
+            int sizeMaxBinary = mailSender.getSizeMaxBinary();
+            MimeBodyPart part = new MimeBodyPart();
 
-		    int mailSize = generateRandomPartSize(sizeMinBinary, sizeMaxBinary);
-		    mailProcessingRecord.setByteSendBinary(mailSize);
+            int mailSize = generateRandomPartSize(sizeMinBinary, sizeMaxBinary);
+            mailProcessingRecord.setByteSendBinary(mailSize);
 
-		    byte[] bytes = new byte[mailSize];
-		    for (int i = 0; i < mailSize; i++) bytes[i] = getRandomByte();
+            byte[] bytes = new byte[mailSize];
+            for (int i = 0; i < mailSize; i++) bytes[i] = getRandomByte();
 
-		    part.setDataHandler(new DataHandler(new ByteArrayDataSource(bytes, "application/octet-stream")));
-		    multipart.addBodyPart(part);
-		}
-		message.setContent(multipart);
-	}
-	
-	protected Class getValidatorClass() {
-		return DefaultMailValidator.class;
-	}
+            part.setDataHandler(new DataHandler(new ByteArrayDataSource(bytes, "application/octet-stream")));
+            multipart.addBodyPart(part);
+        }
+        message.setContent(multipart);
+    }
+    
+    protected Class getValidatorClass() {
+        return DefaultMailValidator.class;
+    }
 
 }

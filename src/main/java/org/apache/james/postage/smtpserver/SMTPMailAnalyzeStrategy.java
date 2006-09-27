@@ -25,15 +25,15 @@ import org.apache.james.postage.result.PostageRunnerResult;
 
 public class SMTPMailAnalyzeStrategy extends MailAnalyzeStrategy {
 
-	private MimeMessage message = null;
-	
-	public SMTPMailAnalyzeStrategy(String receivingQueueName, PostageRunnerResult results, MimeMessage message) {
-		super(receivingQueueName, results);
-		this.message = message;
-	}
-	
+    private MimeMessage message = null;
+    
+    public SMTPMailAnalyzeStrategy(String receivingQueueName, PostageRunnerResult results, MimeMessage message) {
+        super(receivingQueueName, results);
+        this.message = message;
+    }
+    
     protected MimeMessage loadMessage() throws Exception {
-    	return message;
+        return message;
     }
 
 }

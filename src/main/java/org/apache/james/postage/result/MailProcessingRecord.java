@@ -65,11 +65,11 @@ public class MailProcessingRecord {
     }
     
     public void setValid() {
-    	isReceivedValid = true;
+        isReceivedValid = true;
     }
     
     public boolean isReceivedValid() {
-    	return isReceivedValid;
+        return isReceivedValid;
     }
 
     public long getTimeConnectStart() {
