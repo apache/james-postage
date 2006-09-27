@@ -35,6 +35,9 @@
     <menu name="Postage">
       <item name="Overview" href="index.html"/>
       <item name="Prepare James" href="prepare_james.html"/>
+      <item name="Test mail format" href="test_mail_format.html"/>
+      <item name="Custom test mails" href="custom_test_mails.html"/>
+      
     </menu>
 
     ${reports}

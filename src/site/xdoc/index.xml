@@ -20,33 +20,48 @@
 <document>
   <properties>
     <title>Overview</title>
-    <author email="server-dev@james.apache.org">James jSPF Project Team</author>
+    <author email="server-dev@james.apache.org">James Postage Project Team</author>
   </properties>
   <body>
-    <section name="Overview">
-      <p>Postage is a stand-alone application generating constant mail traffic on a James server instance. It can be considered being a load test tool.</p>
-      <p>Postage records the resources used by James and supports finding resource leaks, for example memory bottlenecks.</p>
-      <p>While putting load on James, Postage also records the resulting mail traffic and tries to match incoming and outgoing mail making it possible to use it for end-to-end test.</p>
-      <p>It's flexible enough to mimic many real-world load scenarios, for example</p>
-      <ul>
-        <li>many users, each receiving few mails every day</li>
-        <li>few users, heavily receiving mails</li>
-        <li>moderate mail traffic, yet very big attachments</li>
-      </ul>
+    <section name="Postage - A Mail-Traffic Generator">
+      <p>Postage is a stand-alone pure-java application generating mail traffic on mail servers.</p>
+      <p>It uses standard mail protocols to do this, currently POP3 and SMTP.</p>
+      <p>Therefore, it is well suited for testing any mail server supporting those protocols.</p>
+      <p>It was particularily created for running against Apache James Server and contains special feature for it.</p>   
     </section>
-    <section name="Features">
-      <ul>
-        <li>Easy XML-file-based configuration with multiple running scenarios for different load profiles</li>
-        <li>Supports unlimited number of internal and external users.</li>
-        <li>Within one scenario supports different email profiles running in parallel. Every profile has its own specification in terms of</li>
+         
+    <section name="Load scenarios">
+      <p>Through the easy-to-use XML-file-based configuration, you can specify exactly the running scenario for your load profile.</p>
+      <p>Supports unlimited number of internal and external users.</p>
+      <p>Is flexible enough to mimic many real-world load scenarios, for example
+      	<ul>
+			  <li>many users, each receiving few mails every day</li>
+			  <li>few users, heavily receiving mails</li>
+			  <li>moderate mail traffic, yet very big attachments</li>
+			</ul>
+      </p>
+      <p>Within one scenario, Postage supports different email profiles running in parallel. Every profile has its own specification in terms of
           <ul>
             <li>number of generated mails per minute</li>
             <li>sender/receiver</li>
             <li>mail size</li>
           </ul>
-        <li>Records incoming and outgoing mails and matches them to keep track of successful and failed deliveries</li>
-        <li>Is able to record the Mail Servers thread and heap memory consumption (only Java SE 5)</li>
-      </ul>
+      </p>
     </section>
+         
+    <section name="Delivery analysis">
+      <p>Going beyond tools like <i>postal</i>, Postage tries to capture its test mails on the target location, records statistics and validates the result. 
+         So you can see not only the load, but also track successful and failed deliveries.</p>   
+    </section>
+         
+    <section name="Track Server resource consumption">
+      <p>Postage is able to monitor the Server for memory and thread consumption, if it is running under Java 5 SE.</p>   
+    </section>
+         
+    <section name="Pluggability">
+      <p>Per default, Postage generates test mails containing one textual and one binary part each having random sizes.</p>   
+      <p>This default behavior can be overridden on a email profile basis. User defined MailFactory and MailValidator classes which generate and handle use-case-specific mails can be plugged in very easily.</p>
+    </section>
+    
   </body>
 </document>

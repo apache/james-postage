@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.    
+-->
+<document>
+  <properties>
+    <title>Custom test mails</title>
+    <author email="server-dev@james.apache.org">James Postage Project Team</author>
+  </properties>
+  <body>
+    <section name="How to run your own test mails">
+      <p>Custom test mails are usefull to test specific configurations or functionalities of your mail server.</p>
+      <p>Take for example virus checking. You want to make sure that mails containing a virus are recognized and flagged in the right way.</p>
+      <p>To achieve this, you make Postage generate mock-up virus mails. When working correctly, the server for example marks those mails by adding a warning header.
+         Postage picks up the mail and a custom validator checks if the header is present.</p> 
+      <p>At validation time, custom code has access to the complete mail, including headers and body parts available for validation.</p>
+      <p>Depending on the result, you mark the mail's result record as valid/invalid making the result appear in the detailed report.</p>
+    </section>
+         
+    <section name="Two classes to implement">
+      <p>MailFactory and MailValidator are two interfaces which must be implemented. Both can be found in package <code>org.apache.james.postage.mail</code>.</p>
+      <p>MailFactory generates the test mail, MailValidator analyzes the received mail and
+         checks if it conforms to the expected result, whatever 'result' may be in the particular use case.</p>
+    </section>
+         
+    <section name="MailFactory">
+      <p>To comply with Postage best practices, it is recommended not to implement MailFactory directly. 
+         The most convenient way is to subclass org.apache.james.postage.mail.AbstractMailFactory.
+         Two methods must be implemented:
+		</p>
+		<p>
+		   <source>abstract protected void populateMessage(MimeMessage message, MailSender mailSender, MailProcessingRecord mailProcessingRecord) throws MessagingException;</source>
+		</p>
+		<p><code>populateMessage</code> receives an initialized <code>MimeMessage</code> which is missing only use case specific data. 
+		   See <code>DefaultMailFactory.java</code> for an example.
+		</p>
+		<p>
+		    <source>abstract protected Class getValidatorClass();</source>
+      </p>
+		<p><code>getValidatorClass</code> must simply return the validators class object.
+		</p>
+    </section>
+         
+    <section name="Adding the factory class to the configuration">
+      <p>Each <code>&lt;send&gt;</code> element in the Postage configuration file has an optional attribute, <code>mail-factory-class</code>.
+         It simply receives the fully-qualified class name. Here is an example:
+          <source>
+ &lt;profile name="int-ext" source="intern" target="extern"&gt;
+     &lt;send count-per-min="10" subject="int2ext"
+         text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"
+         <b>mail-factory-class="my.own.custom.TestMailFactory"</b>
+     /&gt;
+ &lt;/profile&gt;
+          </source>
+      </p>
+    </section>
+         
+    <section name="MailValidator">
+      <p>The validator class is responsible for judging whether the resulting mail matches the expected criteria. 
+         The <code>DefaultMailValidator</code> for example checks if binary and text body parts have the same sizes 
+         as when they were originally created by <code>DefaultMailFactory</code>. </p>
+		<p>Other potential validations include checking headers, added footers, removed attachments, introspecting mime contents and many more.
+		</p>
+		<p>
+         All validators are required to implement interface <code>org.apache.james.postage.mail.MailValidator</code>, declaring one method:<br/>
+		   <source>boolean validate(Message message, MailProcessingRecord record);</source>
+		</p>
+		<p>The MailFactory adds a Postage header to the test email, specifying which validator class has to be instantiated. If this header is missing, 
+		the validation cannot be invoked.
+		</p>
+		
+         
+    </section>
+         
+  </body>
+</document>

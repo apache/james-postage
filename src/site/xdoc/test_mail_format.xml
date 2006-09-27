@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.    
+-->
+<document>
+  <properties>
+    <title>Postage test mail format conventions</title>
+    <author email="server-dev@james.apache.org">James Postage Project Team</author>
+  </properties>
+  <body>
+    <section name="Postage standard mail headers">
+      <p>To recognize its own mails, Postage adds a couple of headers to its test mails. AbstractMailFactory takes care for adding those headers correctly.</p>
+      <p><code>X-James-Postage=This is a test mail sent by James Postage</code></p>
+      <p><code>X-James-Postage-Count=1158086107828-1</code> where "1158086107828" is constant for the whole scenario run while "1" is incremented with every test mail.</p>
+      <p><code>X-James-Postage-Count=PROFORMA</code> is used for all mails in the startup phase.</p>
+      <p><code>Message-ID=Postage-1158086175218</code> where "1158086175218" is a time stamp distinguishing this mail from all others.</p>
+      <p><code>X-James-Validator=org.apache.james.postage.mail.AbstractMailFactory</code></p>
+      <p>These headers are used for identifying, matching and validating test mails. If headers are missing, the result report can not be build properly.</p>
+    </section>
+  </body>
+</document>
