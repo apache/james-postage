@@ -23,6 +23,9 @@ package org.apache.james.postage.smtpserver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * adapter to redirect log avalon messages to commons-logging 
+ */
 public class AvalonToPostageLogger implements org.apache.avalon.framework.logger.Logger {
 
     private static Log log = LogFactory.getLog(AvalonToPostageLogger.class);

@@ -31,6 +31,9 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+/**
+ * mail factory used, when no other is specified
+ */
 public class DefaultMailFactory extends AbstractMailFactory implements MailFactory {
 
     protected void populateMessage(MimeMessage message, MailSender mailSender, MailProcessingRecord mailProcessingRecord) throws MessagingException {

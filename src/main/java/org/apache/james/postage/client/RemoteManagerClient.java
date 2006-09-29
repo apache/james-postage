@@ -31,6 +31,10 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Apache James Server specific client to access its Remote Manager.<br/>
+ * This is used for creating user accounts.
+ */
 public class RemoteManagerClient {
 
     private String  m_host = null;

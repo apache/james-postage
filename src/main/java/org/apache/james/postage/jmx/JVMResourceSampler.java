@@ -28,10 +28,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
- * wraps JVMResourceSamplerWorker to allow J2SE 1.4 compatibility
- * does not access this class through direct reference, only through reflection
- * in the case this compatibility is removed, simply inline the Worker class
- *
+ * wraps JVMResourceSamplerWorker to allow J2SE 1.4 compatibility<br/>
+ * does not access this class through direct reference, only through reflection<br/>
+ * in the case this compatibility is removed, simply inline the Worker class<br/>
+ * <br/>
  * @see org.apache.james.postage.jmx.JVMResourceSamplerWorker for how to configure James to be JVM-JMX agnostic
  */
 public class JVMResourceSampler implements Sampler {

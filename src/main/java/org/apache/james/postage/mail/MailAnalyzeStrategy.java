@@ -26,7 +26,8 @@ import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.james.postage.result.PostageRunnerResult;
 
 /**
- * handles the process of retrieving, analyzing and finally (optionally) dismissing the 
+ * handles the process of retrieving, analyzing, matching and finally (optionally) dismissing one
+ * received message.
  */
 public abstract class MailAnalyzeStrategy {
 

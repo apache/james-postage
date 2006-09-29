@@ -39,7 +39,7 @@ import org.apache.james.smtpserver.SMTPServer;
 import org.apache.james.util.connection.SimpleConnectionManager;
 
 /**
- * puts up a gateway SMTP server acting as a mail sink for the external mail sent out by James.
+ * puts up a gateway SMTP server acting as a mail sink for the external mail sent out by James.<br/>
  * mails are catched, test mails are identified and tracked
  */
 public class SMTPMailSink implements Sampler, SocketManager, ThreadManager {

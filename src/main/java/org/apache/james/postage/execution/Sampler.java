@@ -22,6 +22,10 @@ package org.apache.james.postage.execution;
 
 import org.apache.james.postage.SamplingException;
 
+/**
+ * every unit-of-work concerning issueing and retrieving test data must implement this interface
+ * as invoked by @see SampleController
+ */
 public interface Sampler {
     void doSample() throws SamplingException;
 }

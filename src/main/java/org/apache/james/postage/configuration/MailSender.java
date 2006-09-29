@@ -29,7 +29,12 @@ import org.apache.commons.logging.LogFactory;
 import javax.mail.Session;
 import javax.mail.Message;
 
-// TODO init increaseSendPerMinute & maxSendPerMinute from config
+/**
+ * specifies, how mail is to be generated and sent, as coming from the configuration (<send> element)<br/>
+ * the source and target are specified by the parent SendProfile instance<br/>
+ * <br/>
+ * TODO init increaseSendPerMinute & maxSendPerMinute from config
+ */
 public class MailSender {
 
     private static Log log = LogFactory.getLog(MailSender.class);

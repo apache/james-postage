@@ -19,7 +19,7 @@
 package org.apache.james.postage;
 
 /**
- * base exception for Postage
+ * base unchecked exception for Postage
  */
 public class PostageRuntimeException extends RuntimeException {
     public PostageRuntimeException() {

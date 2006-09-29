@@ -86,7 +86,7 @@
         -->
         <smtp-forwarding port="2525" latecomer-wait-seconds="45"/>
         <!-- James' SMTP listening port. -->
-        <smtp-inbound port="25" />
+        <smtp-inbound port="2524" />
         <!-- James' POP3 listening port. 
              count-per-min: how often per minute another random internal user account is accessed and all test email there is 
              downloaded -->
@@ -126,18 +126,18 @@
         </users>
         <profiles>
             <profile name="ext-int" source="extern" target="intern">
-               <send count-per-min="10" subject="ext2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000" />
+               <send count-per-min="1" subject="ext2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000" />
             </profile>
             <profile name="int-ext" source="intern" target="extern">
-               <send count-per-min="10" subject="int2ext" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+               <send count-per-min="1" subject="int2ext" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
             </profile>
             <profile name="int-int" source="intern" target="intern">
-               <send count-per-min="10" subject="int2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
+               <send count-per-min="1" subject="int2int" text-size-min="10" text-size-max="1000" binary-size-min="1" binary-size-max="1000"  />
             </profile>
         </profiles>
         <testserver host="localhost">
-          <smtp-forwarding port="2525" latecomer-wait-seconds="120"/>
-          <smtp-inbound port="25" />
+          <smtp-forwarding port="2525" latecomer-wait-seconds="10"/>
+          <smtp-inbound port="2524" />
           <pop3 port="110" count-per-min="10" />
           <remotemanager port="4555" name="root" password="root" />
           <spam-account name="spam-sink" password="spam-sink" />

@@ -24,6 +24,9 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * generic object factory, caching the class object for reuse
+ */
 public class CachedInstanceFactory {
 
     private static Log log = LogFactory.getLog(CachedInstanceFactory.class);

@@ -33,6 +33,10 @@ import org.apache.james.postage.execution.Sampler;
 import org.apache.james.postage.result.PostageRunnerResult;
 import org.apache.james.postage.user.UserList;
 
+/**
+ * acts like a MUA using POP3 protocol.<br/>
+ * fetches all mails for one (all) users and initiates adding to results
+ */
 public class POP3Client implements Sampler {
 
     private static Log log = LogFactory.getLog(POP3Client.class);
@@ -49,6 +53,9 @@ public class POP3Client implements Sampler {
         m_results = results;
     }
 
+    /**
+     * checks, if the configured POP3 services is accessable
+     */
     public boolean checkAvailability() throws StartupException {
         try {
             org.apache.commons.net.pop3.POP3Client pop3Client = openConnection(m_internalUsers.getRandomUsername());
@@ -79,6 +86,9 @@ public class POP3Client implements Sampler {
         return pop3Client;
     }
 
+    /**
+     * take one POP3 sample for a random user
+     */
     public void doSample() throws SamplingException {
         String username = m_internalUsers.getRandomUsername();
 
@@ -90,6 +100,10 @@ public class POP3Client implements Sampler {
         }
     }
 
+    /**
+     * used after completing with regular test scenario. tries to collect all mails, which are left 
+     * unprocessed by the random access. this is done by iterating over all user accounts, looking for mail
+     */
     public void doMatchMailForAllUsers() {
         Iterator usernames = m_internalUsers.getUsernames();
         while (usernames.hasNext()) {
@@ -102,6 +116,11 @@ public class POP3Client implements Sampler {
         }
     }
 
+    /**
+     * for the specified user, fetches all mail and invokes the matching process
+     * @param username
+     * @throws SamplingException
+     */
     private void findAllMatchingTestMail(String username) throws SamplingException {
         try {
             org.apache.commons.net.pop3.POP3Client pop3Client = openConnection(username);

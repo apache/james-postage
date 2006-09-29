@@ -21,7 +21,7 @@
 package org.apache.james.postage;
 
 /**
- * base exception for all the recording-data-stuff
+ * base exception for all the data recording stuff
  */
 public class SamplingException extends PostageException {
     public SamplingException() {

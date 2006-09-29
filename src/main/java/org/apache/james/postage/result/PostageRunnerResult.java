@@ -22,6 +22,9 @@ package org.apache.james.postage.result;
 
 import java.util.Map;
 
+/**
+ * collects and writes all result data for one scenario
+ */
 public interface PostageRunnerResult {
 
     void setEnvironmentDescription(Map descriptionItems);

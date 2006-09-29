@@ -44,7 +44,7 @@ import java.util.HashSet;
 
 
 /**
- * a quite simple (only receiving) SMTP server which reads mails and tries to match them with sent test mails.
+ * a quite simple (only receiving) SMTP server which reads mails and tries to match them with sent test mails.<br/>
  * reuses James' own SMTP server components
  */
 public class SimpleMailServer implements MailServer {

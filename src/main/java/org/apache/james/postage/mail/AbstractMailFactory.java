@@ -28,6 +28,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.james.postage.configuration.MailSender;
 import org.apache.james.postage.result.MailProcessingRecord;
 
+/**
+ * prototype of a mail factory, only missing the use case specific data. <br/>
+ * it prepares the message with all Postage specific headers.<br/>
+ * @see DefaultMailFactory as a template implementation  
+ */
 public abstract class AbstractMailFactory {
 
     private static Log log = LogFactory.getLog(DefaultMailFactory.class);

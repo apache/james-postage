@@ -37,8 +37,8 @@ import javax.mail.internet.InternetAddress;
 import java.util.Properties;
 
 /**
- * connects as a SMTP client and handles all mail according to its configuration.
- * it is threadsafe and reentrant and thus can be reused over multiple parallel client session
+ * connects as a SMTP client and handles all mail according to its configuration.<br/>
+ * it is threadsafe and reentrant and thus can be reused over multiple parallel client session<br/>
  */
 public class SMTPClient implements Sampler {
 

@@ -39,14 +39,17 @@ import java.util.Iterator;
 /**
  * the peek into the James JVM is done using the build-in management (JMX) of J2SE 5 (and probably later)
  * you must start James under a J2SE 5 compatible JVM and
- * add some system properties to the phoenix.[sh|bat] file (all on one line):
+ * add some system properties to the phoenix.[sh|bat] file (all on one line):<br/>
+ * <br/>
+ * <code>
  * JVM_OPTS="-Djava.ext.dirs=$JVM_EXT_DIRS
  *           -Dcom.sun.management.jmxremote
  *           -Dcom.sun.management.jmxremote.ssl=false
  *           -Dcom.sun.management.jmxremote.authenticate=false
  *           -Dcom.sun.management.jmxremote.port=10201 "
- *
- * this class does not even compile on Java versions before JSE 5.
+ * </code>
+ * <br/>
+ * this class does not even compile on Java versions before JSE 5.<br/>
  */
 public class JVMResourceSamplerWorker implements Sampler {
 

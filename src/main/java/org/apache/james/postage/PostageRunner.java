@@ -42,7 +42,7 @@ import java.util.Set;
 import java.io.File;
 
 /**
- * central controlling class for the testing process. starts all workers, collects data and stops when time is out.
+ * central controlling class for the testing process. starts all workers, collects data and stops when time is out.<br/>
  * relates to one and only one Scenario section from the configuration file.
  */
 public class PostageRunner implements Runnable {

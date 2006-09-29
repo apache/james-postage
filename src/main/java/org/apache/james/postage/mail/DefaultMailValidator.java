@@ -26,6 +26,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.james.postage.result.MailProcessingRecord;
 
+/**
+ * this validator is used together with DefaultMailFactory
+ */
 public class DefaultMailValidator implements MailValidator {
 
     private static Log log = LogFactory.getLog(DefaultMailValidator.class);

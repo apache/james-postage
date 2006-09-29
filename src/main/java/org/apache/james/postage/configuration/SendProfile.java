@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
+/**
+ * specifies for the contained MailSenders, what are source and target of each mail they generate
+ */
 public class SendProfile {
     private String m_profileName;
     private boolean m_sourceInternal = true;
