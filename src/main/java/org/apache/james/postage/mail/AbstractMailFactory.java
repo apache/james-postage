@@ -54,7 +54,7 @@ public abstract class AbstractMailFactory {
     }
 
     public static byte getRandomByte() {
-        return (byte)CHARSET[getRandomInt()];
+        return (byte)(Math.random() * 255);
     }
 
     public AbstractMailFactory() {

@@ -22,6 +22,7 @@ import org.apache.james.postage.PostageRunner;
 import org.apache.james.postage.PostageRuntimeException;
 import org.apache.james.postage.classloading.CachedInstanceFactory;
 import org.apache.james.postage.result.MailProcessingRecord;
+import org.apache.james.util.io.IOUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,6 +31,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Pattern;
 
 /**
@@ -138,7 +142,20 @@ public class MailMatchingUtils {
                 for (int i = 0; i < parts.getCount(); i++) {
                     BodyPart bodyPart = parts.getBodyPart(i);
                     if (bodyPart.getContentType().startsWith(mimeType)) {
-                        return bodyPart.getSize();
+                        try {
+                            Object content = bodyPart.getContent();
+                            if (content instanceof InputStream) {
+                                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                                IOUtil.copy(((InputStream) content), os);
+                                return os.size();
+                            } else if (content instanceof String) {
+                                return ((String) content).length();
+                            } else {
+                                throw new IllegalStateException("Unsupported content: "+content.getClass().toString());
+                            }
+                        } catch (IOException e) {
+                            throw new IllegalStateException("Unexpected IOException in getContent()");
+                        }
                     }
                 }
             } catch (MessagingException e) {

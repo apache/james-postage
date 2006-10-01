@@ -20,26 +20,26 @@
 
 package org.apache.james.postage;
 
-import org.apache.james.postage.configuration.PostageConfiguration;
-import org.apache.james.postage.configuration.SendProfile;
-import org.apache.james.postage.configuration.MailSender;
-import org.apache.james.postage.result.PostageRunnerResultImpl;
-import org.apache.james.postage.result.PostageRunnerResult;
-import org.apache.james.postage.client.RemoteManagerClient;
-import org.apache.james.postage.client.POP3Client;
-import org.apache.james.postage.client.SMTPClient;
-import org.apache.james.postage.execution.SampleController;
-import org.apache.james.postage.smtpserver.SMTPMailSink;
-import org.apache.james.postage.jmx.JVMResourceSampler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.james.postage.client.POP3Client;
+import org.apache.james.postage.client.RemoteManagerClient;
+import org.apache.james.postage.client.SMTPClient;
+import org.apache.james.postage.configuration.MailSender;
+import org.apache.james.postage.configuration.PostageConfiguration;
+import org.apache.james.postage.configuration.SendProfile;
+import org.apache.james.postage.execution.SampleController;
+import org.apache.james.postage.jmx.JVMResourceSampler;
+import org.apache.james.postage.result.PostageRunnerResult;
+import org.apache.james.postage.result.PostageRunnerResultImpl;
+import org.apache.james.postage.smtpserver.SMTPMailSink;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
-import java.io.File;
 
 /**
  * central controlling class for the testing process. starts all workers, collects data and stops when time is out.<br/>
@@ -384,7 +384,7 @@ public class PostageRunner implements Runnable {
             Set existingUsers = getExistingUsers(host, remoteManagerPort, remoteManagerUsername, remoteManagerPassword);
 
             RemoteManagerClient remoteManagerClient = new RemoteManagerClient(host, remoteManagerPort, remoteManagerUsername, remoteManagerPassword);
-            boolean loginSuccess = remoteManagerClient.login();
+            remoteManagerClient.login();
             ArrayList internalUsers = new ArrayList();
             for (int i = 1; i <= internalUserCount; i++) {
                 String username = internalUsernamePrefix + i;
@@ -392,13 +392,13 @@ public class PostageRunner implements Runnable {
                     log.info("user already exists: " + username);
                     if (!m_postageConfiguration.isInternalReuseExisting()) {
                         remoteManagerClient.executeCommand("deluser " + username);
-                        List answers = remoteManagerClient.readAnswer();
+                        remoteManagerClient.readAnswer();
                         addUser(remoteManagerClient, username, internalPassword);
-                        answers = remoteManagerClient.readAnswer();
+                        remoteManagerClient.readAnswer();
                         log.info("user deleted and re-created: " + username);
                     }
                     remoteManagerClient.executeCommand("setpassword " + username + " " + internalPassword);
-                    List answers = remoteManagerClient.readAnswer();
+                    remoteManagerClient.readAnswer();
                 } else {
                     addUser(remoteManagerClient, username, internalPassword);
                 }
@@ -418,7 +418,7 @@ public class PostageRunner implements Runnable {
         try {
             smtpMailSink.initialize();
         } catch (Exception e) {
-            throw new StartupException("failed to setup");
+            throw new StartupException("failed to setup",e);
         }
         m_smtpMailSink = smtpMailSink;
         log.info("forwarded mail interceptor is set up.");
@@ -443,7 +443,7 @@ public class PostageRunner implements Runnable {
 
     private void addUser(RemoteManagerClient remoteManagerClient, String username, String internalPassword) {
         remoteManagerClient.executeCommand("adduser " + username + " " + internalPassword);
-        List answers = remoteManagerClient.readAnswer();
+        remoteManagerClient.readAnswer();
         log.info("user created: " + username);
     }
 
