@@ -86,7 +86,7 @@
         -->
         <smtp-forwarding port="2525" latecomer-wait-seconds="45"/>
         <!-- James' SMTP listening port. -->
-        <smtp-inbound port="2524" />
+        <smtp-inbound port="25" />
         <!-- James' POP3 listening port. 
              count-per-min: how often per minute another random internal user account is accessed and all test email there is 
              downloaded -->
@@ -137,7 +137,7 @@
         </profiles>
         <testserver host="localhost">
           <smtp-forwarding port="2525" latecomer-wait-seconds="10"/>
-          <smtp-inbound port="2524" />
+          <smtp-inbound port="25" />
           <pop3 port="110" count-per-min="10" />
           <remotemanager port="4555" name="root" password="root" />
           <spam-account name="spam-sink" password="spam-sink" />
