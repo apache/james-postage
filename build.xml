@@ -23,7 +23,7 @@
 
     <!--  CONFIGURE -->
     
-    <!--<property file="build.properties" /> -->
+    <property file="build.properties" />
     
     <property name="dir.build" value="${basedir}/build"/>
     <property name="dir.build.source" value="${dir.build}/source/"/>
@@ -32,12 +32,19 @@
     
     <property name="dir.source.classes" value="${basedir}/src/main/java/"/>
     
-    <!-- TODO change this to a James Distribution based on a JAMES_HOME variable, or let maven do the job --> 
+	<condition property='dir.james.basedir' value="${JAMES_HOME}">
+		<isset property="JAMES_HOME"/>
+	</condition>
     <property name="dir.james.basedir" value="${basedir}/../../server/branches/v2.3"/>
 
     <property name="force.java1_4.support" value="false"/>
     
     <target name="initialize">
+		<available property='exists.james.home' file='${dir.james.basedir}'/>
+    	<fail unless='exists.james.home'>
+    		${dir.james.basedir} does not exist.
+    		Please set JAMES_HOME in a build.properties file</fail>
+    	
         <tstamp/>
         
         <path id="java.build.classpath">
