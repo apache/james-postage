@@ -27,10 +27,12 @@ import org.apache.avalon.cornerstone.services.sockets.SocketFactory;
 import org.apache.avalon.cornerstone.services.sockets.SocketManager;
 import org.apache.avalon.cornerstone.services.threads.ThreadManager;
 import org.apache.avalon.excalibur.thread.impl.DefaultThreadPool;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.thread.ThreadPool;
+import org.apache.james.dnsserver.DNSServer;
 import org.apache.james.postage.SamplingException;
 import org.apache.james.postage.execution.Sampler;
 import org.apache.james.postage.result.PostageRunnerResult;
@@ -73,7 +75,7 @@ public class SMTPMailSink implements Sampler, SocketManager, ThreadManager {
         m_smtpServer.initialize();
     }
 
-    private ServiceManager setUpServiceManager() {
+    private ServiceManager setUpServiceManager() throws Exception {
         SimpleServiceManager serviceManager = new SimpleServiceManager();
         SimpleConnectionManager connectionManager = new SimpleConnectionManager();
         connectionManager.enableLogging(new AvalonToPostageLogger());
@@ -81,6 +83,11 @@ public class SMTPMailSink implements Sampler, SocketManager, ThreadManager {
         serviceManager.put("org.apache.mailet.MailetContext", new TrivialMailContext());
         serviceManager.put("org.apache.james.services.MailServer", m_mailServer);
         serviceManager.put("org.apache.james.services.UsersRepository", null); //m_usersRepository);
+        DNSServer server = new DNSServer();
+        server.enableLogging(new AvalonToPostageLogger());
+        server.configure(new DefaultConfiguration("dnsserver"));
+        server.initialize();
+                serviceManager.put("org.apache.james.services.DNSServer", server);
         serviceManager.put(SocketManager.ROLE, this);
         serviceManager.put(ThreadManager.ROLE, this);
         return serviceManager;

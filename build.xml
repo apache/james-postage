@@ -23,39 +23,43 @@
 
     <!--  CONFIGURE -->
     
-    <property file="build.properties" />
+    <!--<property file="build.properties" /> -->
     
-    <property name="dir.build" value="${basedir}/build"/>
-    <property name="dir.build.source" value="${dir.build}/source/"/>
+    <property name="dir.build" value="${basedir}/target"/>
     <property name="dir.build.classes" value="${dir.build}/classes/"/>
     <property name="dir.build.lib" value="${dir.build}/lib/"/>
     
     <property name="dir.source.classes" value="${basedir}/src/main/java/"/>
-    
-	<condition property='dir.james.basedir' value="${JAMES_HOME}">
-		<isset property="JAMES_HOME"/>
-	</condition>
-    <property name="dir.james.basedir" value="${basedir}/../../server/branches/v2.3"/>
-
-    <property name="force.java1_4.support" value="false"/>
+	
+	  <property name="dir.stage" value="${basedir}/stage"/>
     
     <target name="initialize">
-		<available property='exists.james.home' file='${dir.james.basedir}'/>
-    	<fail unless='exists.james.home'>
-    		${dir.james.basedir} does not exist.
-    		Please set JAMES_HOME in a build.properties file</fail>
-    	
         <tstamp/>
         
         <path id="java.build.classpath">
-            <fileset dir="${basedir}/lib/">
-                <include name="*.jar"/>
-            </fileset>
-            <fileset dir="${dir.james.basedir}/lib/">
-                <include name="*.jar"/>
-            </fileset>
-            <fileset dir="${dir.james.basedir}/build/lib/">
-                <include name="*.jar"/>
+            <fileset dir="${dir.stage}">
+              <!-- BUILDTIME AND RUNTIME -->
+              <include name="commons-collections/jars/commons-collections-3.1.jar"/>
+              <include name="commons-configuration/jars/commons-configuration-1.5.jar"/>
+              <include name="commons-lang/jars/commons-lang-2.3.jar"/>
+              <include name="commons-logging/jars/commons-logging-1.1.jar"/>
+              <include name="commons-net/jars/commons-net-1.4.1.jar"/>
+              <include name="javax.mail/jars/mail-1.4.1.jar"/>
+              <include name="javax.activation/jars/activation-1.1.1.jar"/>
+            	<include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-api-2.2.2.jar" />
+            	<include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-impl-2.2.2.jar" />
+            	<include name="org.apache.avalon.cornerstone.threads/jars/cornerstone-threads-api-2.2.2.jar" />
+            	<include name="org.apache.avalon.cornerstone.connection/jars/cornerstone-connection-impl-2.2.2.jar" />
+              <include name="org.apache.avalon.framework/jars/avalon-framework-api-4.3.1.jar"/>
+              <include name="org.apache.avalon.framework/jars/avalon-framework-impl-4.3.1.jar"/>
+            	<include name="org.apache.excalibur.components/jars/excalibur-thread-impl-2.2.1.jar" />
+            	<include name="org.apache.excalibur.components/jars/excalibur-thread-api-2.2.1.jar" />
+            	<include name="org.apache.excalibur.components/jars/excalibur-pool-api-2.2.1.jar" />
+              <include name="org.apache.james/jars/mailet-2.4-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-domain-api-3.0-SNAPSHOT.jar"/>
+              <!-- BUILD TIME ONLY -->
+            	<include name="org.apache.james/jars/james-server-core-library-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-smtpserver-function-3.0-SNAPSHOT.jar"/>
             </fileset>
         </path>
 
@@ -63,60 +67,47 @@
             <fileset dir="${basedir}/build/lib/">
                 <include name="postage.jar"/>
             </fileset>
-            <fileset dir="${basedir}/lib/">
-                <include name="*.jar"/>
-            </fileset>
-            <fileset dir="${dir.james.basedir}/lib/">
-                <include name="*.jar"/>
-            </fileset>
-            <fileset dir="${dir.james.basedir}/build/lib/">
-                <include name="*.jar"/>
+            <fileset dir="${dir.stage}">
+              <!-- BUILDTIME AND RUNTIME -->
+              <include name="commons-collections/jars/commons-collections-3.1.jar"/>
+              <include name="commons-configuration/jars/commons-configuration-1.5.jar"/>
+              <include name="commons-lang/jars/commons-lang-2.3.jar"/>
+              <include name="commons-logging/jars/commons-logging-1.1.jar"/>
+              <include name="commons-net/jars/commons-net-1.4.1.jar"/>
+              <include name="javax.mail/jars/mail-1.4.1.jar"/>
+              <include name="javax.activation/jars/activation-1.1.1.jar"/>
+            	<include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-api-2.2.2.jar" />
+            	<include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-impl-2.2.2.jar" />
+            	<include name="org.apache.avalon.cornerstone.threads/jars/cornerstone-threads-api-2.2.2.jar" />
+            	<include name="org.apache.avalon.cornerstone.connection/jars/cornerstone-connection-impl-2.2.2.jar" />
+              <include name="org.apache.avalon.framework/jars/avalon-framework-api-4.3.1.jar"/>
+              <include name="org.apache.avalon.framework/jars/avalon-framework-impl-4.3.1.jar"/>
+            	<include name="org.apache.excalibur.components/jars/excalibur-thread-api-2.2.1.jar" />
+            	<include name="org.apache.excalibur.components/jars/excalibur-thread-impl-2.2.1.jar" />
+            	<include name="org.apache.excalibur.components/jars/excalibur-pool-api-2.2.1.jar" />
+              <include name="org.apache.james/jars/james-server-core-library-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-smtpserver-function-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/mailet-2.4-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-domain-api-3.0-SNAPSHOT.jar"/>
+              <!-- RUNTIME ONLY -->
+            	<include name="concurrent/jars/concurrent-1.3.4.jar" />
+            	<include name="org.apache.excalibur.components/jars/excalibur-pool-impl-2.2.1.jar" />
+              <include name="org.apache.james/jars/apache-james-mailet-base-1.0-SNAPSHOT.jar"/>
+            	<include name="org.apache.avalon.cornerstone.connection/jars/cornerstone-connection-api-2.2.2.jar" />
+            	<include name="dnsjava/jars/dnsjava-2.0.6.jar" />
             </fileset>
         </path>
-
-        <!--
-         no.gmx property determines, whether or not we can and should compile in Java 5 support (JMX support for the JVM
-         parameters like memory, threads).
-         if yes, it is probably not possible to run the application in earlier JVMs.
-         if false, it is not possible to record memory and thread consumption.
-        -->
-        <condition property="no.jmx" >
-            <or>
-                <equals arg1="${ant.java.version}" arg2="1.1" />
-                <equals arg1="${ant.java.version}" arg2="1.2" />
-                <equals arg1="${ant.java.version}" arg2="1.3" />
-                <equals arg1="${ant.java.version}" arg2="1.4" />
-                <equals arg1="force.java1_4.support" arg2="true" />
-            </or>
-        </condition>
 
     </target>
 
     <target name="init-compiler-sources">
         <fixcrlf srcdir="${dir.source.classes}" includes="**/*.java" eol="lf" tab="remove" tablength="4" />
-        
-        <copy todir="${dir.build.source}"  >
-            <fileset dir="${dir.source.classes}" >
-                <include name="**/*.java" />
-                <exclude name="**/JVMResourceSamplerWorker.java" if="no.jmx"/>  
-            </fileset> 
-        </copy>
     </target>
         
-    <!-- PREPARE LIBRARIES -->
-    <target name="fetch-third-party-libs" depends="initialize" >
-        <extension id="ext.lib.junit" extensionName="junit-3.8.1.jar" />
-        
-        <jarlib-resolve property="lib.junit">
-            <extension refid="ext.lib.junit"/>
-            <url url="http://www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar" destfile="lib/junit.jar"/>
-        </jarlib-resolve>    
-    </target>
-    
     <!--  CLEAN UP -->
     
     <target name="clean" depends="initialize" >
-        <delete dir="${dir.build}"/>
+        <delete dir="${dir.build}" />
     </target>
 
     
@@ -125,9 +116,6 @@
     <target name="init-paths">
         <mkdir dir="${dir.build}"/>
         <mkdir dir="${dir.build.classes}"/>
-            
-        <delete dir="${dir.build.source}" failonerror="false"/>
-        <mkdir dir="${dir.build.source}"/>
     </target>
         
     <target name="build" depends="initialize, init-paths, init-compiler-sources">
@@ -136,8 +124,9 @@
         <!-- build the src javas -->
         <javac destdir="${dir.build.classes}"
             classpathref="java.build.classpath"
+            target="1.5" source="1.5"
             debug="on" >
-            <src path="${dir.build.source}" /> 
+            <src path="${dir.source.classes}" /> 
         </javac>
 		
         <echo>Finished compiling ${ant.project.name}</echo>
@@ -145,7 +134,7 @@
     
     <!--  PACKAGE -->
     
-    <target name="package" depends="initialize" >
+    <target name="package" depends="build" >
         <mkdir dir="${dir.build}"/>
         <mkdir dir="${dir.build.lib}"/>
         
@@ -172,7 +161,7 @@
 
     <!--  RUN -->
     
-    <target name="run" depends="initialize" >
+    <target name="run" depends="initialize, package" >
         <java classname="org.apache.james.postage.Main" fork="true">
             <classpath refid="java.run.classpath"/>
             

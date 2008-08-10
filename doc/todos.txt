@@ -1,7 +1,4 @@
 current plans
-
-+ make project maven2 compatible
-+ move to maven2
 + test with disappearing services. is sampling data generated? are error codes being set?
 + increment mails per min
 + wiki documentation

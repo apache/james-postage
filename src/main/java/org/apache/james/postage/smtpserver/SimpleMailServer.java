@@ -20,13 +20,7 @@
 
 package org.apache.james.postage.smtpserver;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.james.postage.result.MailProcessingRecord;
 import org.apache.james.postage.result.PostageRunnerResult;
-import org.apache.james.postage.mail.HeaderConstants;
-import org.apache.james.postage.mail.MailMatchingUtils;
-import org.apache.james.postage.mail.MailAnalyzeStrategy;
 import org.apache.james.services.MailRepository;
 import org.apache.james.services.MailServer;
 import org.apache.mailet.Mail;
@@ -36,7 +30,6 @@ import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -48,8 +41,6 @@ import java.util.HashSet;
  * reuses James' own SMTP server components
  */
 public class SimpleMailServer implements MailServer {
-
-    private static Log log = LogFactory.getLog(SimpleMailServer.class);
 
     private int m_counter = 0;
     private PostageRunnerResult m_results;
@@ -107,6 +98,20 @@ public class SimpleMailServer implements MailServer {
 
     public void setResults(PostageRunnerResult results) {
         m_results = results;
+    }
+
+    /* JAMES 3.0-SNAPSHOT specific methods */
+    
+    public String getDefaultDomain() {
+        return "localhost";
+    }
+
+    public String getHelloName() {
+        return "localhost";
+    }
+
+    public boolean supportVirtualHosting() {
+        return false;
     }
 }
 

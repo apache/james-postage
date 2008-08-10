@@ -43,42 +43,40 @@ org.apache.james.postage.Main <path/to/config_file.xml> <scenario1> [<scenario2>
 the following libraries are expected on the classpath:
 
 for reading xml configuration file:                               
-commons-beanutils.jar
 commons-collections-3.1.jar
-commons-configuration-1.2.jar
-commons-digester.jar
-commons-lang-2.1.jar
+commons-configuration-1.5.jar
+commons-lang-2.3.jar
 
 for logging:
-commons-logging.jar
+commons-logging-1.1.jar
 
 for telnet, SMTP & POP3  client:
 commons-net-1.4.1.jar
 
 for unit testing:
-junit.jar
+junit-3.8.1.jar
 
 for embedded SMTP server from James:
-james-2.3-dev.jar
-mail-1.3.2.jar
-mailet-2.3.jar
-mailet-api-2.3.jar
-activation.jar
-avalon-framework-api-4.3.jar
-avalon-framework-impl-4.3.jar
-avalon-logkit-2.1.jar
+mail-1.4.1.jar
+activation-1.1.1.jar
+cornerstone-sockets-api-2.2.2.jar
+cornerstone-sockets-impl-2.2.2.jar
+cornerstone-threads-api-2.2.2.jar
+cornerstone-connection-impl-2.2.2.jar
+avalon-framework-api-4.3.1.jar
+avalon-framework-impl-4.3.1.jar
+excalibur-thread-api-2.2.1.jar
+excalibur-thread-impl-2.2.1.jar
+excalibur-pool-api-2.2.1.jar
+james-server-core-library-3.0-SNAPSHOT.jar
+james-server-smtpserver-function-3.0-SNAPSHOT.jar
+mailet-2.4-SNAPSHOT.jar
+james-server-domain-api-3.0-SNAPSHOT.jar
 concurrent-1.3.4.jar
-cornerstone-connection-api-2.1.jar
-cornerstone-connection-impl-2.1.jar
-cornerstone-sockets-api-2.1.jar
-cornerstone-sockets-impl-2.1.jar
-cornerstone-threads-api-2.1.jar
-cornerstone-threads-impl-2.1.jar
-dnsjava-2.0.1.jar
-excalibur-pool-api-2.1.jar
-excalibur-pool-impl-2.1.jar
-excalibur-thread-api-2.1.jar
-excalibur-thread-impl-2.1.jar
+excalibur-pool-impl-2.2.1.jar
+apache-james-mailet-base-1.0-SNAPSHOT.jar
+cornerstone-connection-api-2.2.2.jar
+dnsjava-2.0.6.jar
 
 ++ How does it work?
 
