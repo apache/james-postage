@@ -44,7 +44,7 @@ public class JVMResourceSampler implements Sampler {
     public static boolean isJMXAvailable() {
         try {
             // this class is only present, when the package _is run_ at least under Java 5
-            Class jmxFactoryClass = Class.forName("javax.management.remote.JMXConnectorFactory");
+            Class.forName("javax.management.remote.JMXConnectorFactory");
         } catch (ClassNotFoundException e) {
             return false;
         }
@@ -83,7 +83,7 @@ public class JVMResourceSampler implements Sampler {
     public void connectRemoteJamesJMXServer() throws SamplingException {
         if(jvmResourceSampleWorker == null) throw new SamplingException("JSE specific features not present. (compile the project with JSE 5)");
         try {
-            m_connectMethod.invoke(jvmResourceSampleWorker, (Object[])VOID_ARGUMENT_LIST);
+            m_connectMethod.invoke(jvmResourceSampleWorker, VOID_ARGUMENT_LIST);
         } catch (Exception e) {
             throw new SamplingException("could not establish connection to remote James JMX. is James really configured for JMX and running under JSE5 or later?");
         }
@@ -92,7 +92,7 @@ public class JVMResourceSampler implements Sampler {
     public void doSample() throws SamplingException {
         if(jvmResourceSampleWorker == null) throw new SamplingException("JSE specific features not present. (compile the project with JSE 5)");
         try {
-            m_doSampleMethod.invoke(jvmResourceSampleWorker, (Object[])VOID_ARGUMENT_LIST);
+            m_doSampleMethod.invoke(jvmResourceSampleWorker, VOID_ARGUMENT_LIST);
         } catch (Exception e) {
             throw new SamplingException(e);
         }

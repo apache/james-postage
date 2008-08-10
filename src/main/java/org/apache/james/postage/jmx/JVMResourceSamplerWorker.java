@@ -86,7 +86,6 @@ public class JVMResourceSamplerWorker implements Sampler {
     }
 
     private void takeThreadingSample(JVMResourcesRecord jvmResourcesRecord) throws SamplingException {
-        CompositeDataSupport data = null;
         AttributeList attributes = getRemoteThreadingAttributeValues();
         jvmResourcesRecord.setThreadCountCurrent(((Integer)getAttributeValue(attributes, "ThreadCount")).longValue());
         jvmResourcesRecord.setThreadCountPeak(((Integer)getAttributeValue(attributes, "PeakThreadCount")).longValue());

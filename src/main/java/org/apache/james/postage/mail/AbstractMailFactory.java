@@ -50,7 +50,7 @@ public abstract class AbstractMailFactory {
     }
 
     private static int getRandomInt() {
-        return (int)(Math.random() * (double)(CHARSET.length - 1));
+        return (int)(Math.random() * (CHARSET.length - 1));
     }
 
     public static byte getRandomByte() {
@@ -109,7 +109,7 @@ public abstract class AbstractMailFactory {
     abstract protected Class getValidatorClass();
     
     protected int generateRandomPartSize(int sizeMin, int sizeMax) {
-        return (int)(Math.random() * (double)(sizeMax - sizeMin)) + sizeMin;
+        return (int)(Math.random() * (sizeMax - sizeMin)) + sizeMin;
     }
 
 }

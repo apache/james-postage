@@ -74,7 +74,7 @@ public class UserList {
 
     public String getRandomUsername() {
         if (m_users.isEmpty()) return null;
-        return (String)m_users.get((int)(Math.random() * (double)(m_users.size() - 1)));
+        return (String)m_users.get((int)(Math.random() * (m_users.size() - 1)));
     }
 
     public String getEmailAddress(String username) {
