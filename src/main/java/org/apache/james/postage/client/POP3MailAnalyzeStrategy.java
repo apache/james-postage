@@ -26,7 +26,7 @@ import java.io.Reader;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.james.fetchmail.ReaderInputStream;
+import org.apache.james.smtpserver.ReaderInputStream;
 import org.apache.james.postage.mail.MailAnalyzeStrategy;
 import org.apache.james.postage.result.PostageRunnerResult;
 
