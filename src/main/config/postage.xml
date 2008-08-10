@@ -30,7 +30,7 @@
       <description>
           <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
           <maxheap>64MB</maxheap>
-          <james-version>James-2.3.0b1</james-version>
+          <james-version>James-2.3.1</james-version>
           <repository-configuration>default</repository-configuration>
           <thread-configuration>default</thread-configuration>
       </description>
@@ -116,7 +116,7 @@
         <description>
             <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
             <maxheap>64MB</maxheap>
-            <james-version>James-2.3.0b1</james-version>
+            <james-version>James-2.3.1</james-version>
             <repository-configuration>default</repository-configuration>
             <thread-configuration>default</thread-configuration>
         </description>
@@ -153,7 +153,7 @@
         <description>
             <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
             <maxheap>64MB</maxheap>
-            <james-version>James-2.3.0b1</james-version>
+            <james-version>James-2.3.1</james-version>
             <repository-configuration>default</repository-configuration>
             <thread-configuration>default</thread-configuration>
         </description>
@@ -188,7 +188,7 @@
         <description>
             <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
             <maxheap>64MB</maxheap>
-            <james-version>James-2.3.0b1</james-version>
+            <james-version>James-2.3.1</james-version>
             <repository-configuration>default</repository-configuration>
             <thread-configuration>default</thread-configuration>
         </description>
@@ -244,7 +244,7 @@
         <description>
             <jvm>Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)</jvm>
             <maxheap>64MB</maxheap>
-            <james-version>James-2.3.0b1</james-version>
+            <james-version>James-2.3.1</james-version>
             <repository-configuration>default</repository-configuration>
             <thread-configuration>default</thread-configuration>
         </description>
