@@ -32,12 +32,13 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.thread.ThreadPool;
+import org.apache.james.api.dnsservice.DNSService;
 import org.apache.james.dnsserver.DNSServer;
 import org.apache.james.postage.SamplingException;
 import org.apache.james.postage.execution.Sampler;
 import org.apache.james.postage.result.PostageRunnerResult;
-import org.apache.james.services.JamesConnectionManager;
 import org.apache.james.smtpserver.SMTPServer;
+import org.apache.james.socket.JamesConnectionManager;
 import org.apache.james.util.connection.SimpleConnectionManager;
 
 /**
@@ -87,7 +88,7 @@ public class SMTPMailSink implements Sampler, SocketManager, ThreadManager {
         server.enableLogging(new AvalonToPostageLogger());
         server.configure(new DefaultConfiguration("dnsserver"));
         server.initialize();
-                serviceManager.put("org.apache.james.services.DNSServer", server);
+                serviceManager.put(DNSService.ROLE, server);
         serviceManager.put(SocketManager.ROLE, this);
         serviceManager.put(ThreadManager.ROLE, this);
         return serviceManager;

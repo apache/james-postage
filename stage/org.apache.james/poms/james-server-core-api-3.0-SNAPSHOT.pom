@@ -25,13 +25,18 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.james</groupId>
-  <artifactId>james-server-user-api</artifactId>
-  <name>Apache JAMES Server User API</name>
+  <artifactId>james-server-core-api</artifactId>
+  <name>Apache JAMES Server Core API</name>
   <dependencies>
     <!-- only used by JamesUser (for MailAddress) -->
     <dependency>
       <groupId>org.apache.james</groupId>
       <artifactId>mailet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

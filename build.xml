@@ -57,14 +57,17 @@
             	<include name="org.apache.excalibur.components/jars/excalibur-pool-api-2.2.1.jar" />
               <include name="org.apache.james/jars/mailet-2.4-SNAPSHOT.jar"/>
               <include name="org.apache.james/jars/james-server-domain-api-3.0-SNAPSHOT.jar"/>
-              <!-- BUILD TIME ONLY -->
-            	<include name="org.apache.james/jars/james-server-core-library-3.0-SNAPSHOT.jar"/>
+            	<include name="org.apache.james/jars/james-server-core-api-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-avalon-socket-library-3.0-SNAPSHOT.jar"/>
+            	<include name="org.apache.james/jars/james-server-core-function-3.0-SNAPSHOT.jar"/>
+            	<include name="org.apache.james/jars/james-server-common-util-3.0-SNAPSHOT.jar"/>
               <include name="org.apache.james/jars/james-server-smtpserver-function-3.0-SNAPSHOT.jar"/>
+              <!-- BUILD TIME ONLY -->
             </fileset>
         </path>
 
         <path id="java.run.classpath">
-            <fileset dir="${basedir}/build/lib/">
+            <fileset dir="${dir.build.lib}">
                 <include name="postage.jar"/>
             </fileset>
             <fileset dir="${dir.stage}">
@@ -85,10 +88,13 @@
             	<include name="org.apache.excalibur.components/jars/excalibur-thread-api-2.2.1.jar" />
             	<include name="org.apache.excalibur.components/jars/excalibur-thread-impl-2.2.1.jar" />
             	<include name="org.apache.excalibur.components/jars/excalibur-pool-api-2.2.1.jar" />
-              <include name="org.apache.james/jars/james-server-core-library-3.0-SNAPSHOT.jar"/>
-              <include name="org.apache.james/jars/james-server-smtpserver-function-3.0-SNAPSHOT.jar"/>
               <include name="org.apache.james/jars/mailet-2.4-SNAPSHOT.jar"/>
               <include name="org.apache.james/jars/james-server-domain-api-3.0-SNAPSHOT.jar"/>
+            	<include name="org.apache.james/jars/james-server-core-api-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-avalon-socket-library-3.0-SNAPSHOT.jar"/>
+            	<include name="org.apache.james/jars/james-server-core-function-3.0-SNAPSHOT.jar"/>
+            	<include name="org.apache.james/jars/james-server-common-util-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-smtpserver-function-3.0-SNAPSHOT.jar"/>
               <!-- RUNTIME ONLY -->
             	<include name="concurrent/jars/concurrent-1.3.4.jar" />
             	<include name="org.apache.excalibur.components/jars/excalibur-pool-impl-2.2.1.jar" />
