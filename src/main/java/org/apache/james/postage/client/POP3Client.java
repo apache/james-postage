@@ -105,9 +105,9 @@ public class POP3Client implements Sampler {
      * unprocessed by the random access. this is done by iterating over all user accounts, looking for mail
      */
     public void doMatchMailForAllUsers() {
-        Iterator usernames = m_internalUsers.getUsernames();
+        Iterator<String> usernames = m_internalUsers.getUsernames();
         while (usernames.hasNext()) {
-            String username = (String)usernames.next();
+            String username = usernames.next();
             try {
                 findAllMatchingTestMail(username);
             } catch (SamplingException e) {

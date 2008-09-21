@@ -106,7 +106,7 @@ public abstract class AbstractMailFactory {
      * 
      * @return validator class
      */
-    abstract protected Class getValidatorClass();
+    abstract protected Class<? extends MailValidator> getValidatorClass();
     
     protected int generateRandomPartSize(int sizeMin, int sizeMax) {
         return (int)(Math.random() * (sizeMax - sizeMin)) + sizeMin;

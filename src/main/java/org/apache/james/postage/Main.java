@@ -42,7 +42,7 @@ public class Main {
 
         String filename = args[0];
 
-        List scenariosToRun = new ArrayList();
+        List<String> scenariosToRun = new ArrayList<String>();
         for (int i = 1; i < args.length; i++)
         {
             scenariosToRun.add(args[i]);
@@ -50,7 +50,7 @@ public class Main {
 
         // load all scenarios from configuration file
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Map configurations;
+        Map<String, PostageConfiguration> configurations;
         try {
             // TODO allow different (non-xml) configs - as Common-Configuration supports it
             XMLConfiguration xmlConfiguration = new XMLConfiguration(filename);
@@ -68,18 +68,18 @@ public class Main {
         runScenarios(configurations, scenariosToRun);
     }
 
-    private static void runScenarios(Map configurations, List scenariosToRun) {
+    private static void runScenarios(Map<String, PostageConfiguration> configurations, List<String> scenariosToRun) {
         // run all scenarios which are requested to be run.
         int playedScenarioCounter = 0;
-        Iterator iterator = configurations.keySet().iterator();
+        Iterator<String> iterator = configurations.keySet().iterator();
         while (iterator.hasNext()) {
-            String id = (String)iterator.next();
+            String id = iterator.next();
             // if no scenario is given on the command line, all get executed
             // if one or more is given, all others are skipped
             if (!scenariosToRun.isEmpty() && !scenariosToRun.contains(id)) continue;
 
             playedScenarioCounter++;
-            PostageConfiguration postageConfiguration = (PostageConfiguration) configurations.get(id);
+            PostageConfiguration postageConfiguration = configurations.get(id);
             m_currentPostageRunner = new PostageRunner(postageConfiguration);
             m_currentPostageRunner.run(); // TODO maybe we want to run this Runnable in its own thread, but maybe not
         }

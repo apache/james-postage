@@ -77,7 +77,7 @@ public class DefaultMailFactory extends AbstractMailFactory implements MailFacto
         message.setContent(multipart);
     }
     
-    protected Class getValidatorClass() {
+    protected Class<? extends MailValidator> getValidatorClass() {
         return DefaultMailValidator.class;
     }
 

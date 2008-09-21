@@ -32,7 +32,7 @@ public class SendProfile {
     private boolean m_sourceInternal = true;
     private boolean m_targetInternal = true;
 
-    private final List m_mailSenders = new ArrayList();
+    private final List<MailSender> m_mailSenders = new ArrayList<MailSender>();
 
     public SendProfile(String profileName) {
         m_profileName = profileName;
@@ -62,15 +62,15 @@ public class SendProfile {
         m_mailSenders.add(mailSender);
     }
 
-    public Iterator mailSenderIterator() {
+    public Iterator<MailSender> mailSenderIterator() {
         return m_mailSenders.iterator();
     }
 
     public int getTotalMailsPerMin() {
-        Iterator iterator = m_mailSenders.iterator();
+        Iterator<MailSender> iterator = m_mailSenders.iterator();
         int total = 0;
         while (iterator.hasNext()) {
-            MailSender mailSender = (MailSender)iterator.next();
+            MailSender mailSender = iterator.next();
             total += mailSender.getSendPerMinute();
         }
         return total;

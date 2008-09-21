@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public interface PostageRunnerResult {
 
-    void setEnvironmentDescription(Map descriptionItems);
+    void setEnvironmentDescription(Map<String, String> descriptionItems);
 
     /**
      * add a record to be matched later on

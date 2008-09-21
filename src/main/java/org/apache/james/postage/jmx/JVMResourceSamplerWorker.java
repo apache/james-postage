@@ -119,7 +119,7 @@ public class JVMResourceSamplerWorker implements Sampler {
     }
 
     private Object getAttributeValue(AttributeList attributeList, String key) {
-        for (Iterator iterator = attributeList.iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = attributeList.iterator(); iterator.hasNext();) {
             Attribute attribute = (Attribute)iterator.next();
             if (attribute.getName().equals(key)) return attribute.getValue();
         }

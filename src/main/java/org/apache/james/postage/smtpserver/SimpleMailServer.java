@@ -65,7 +65,7 @@ public class SimpleMailServer implements MailServer {
     public void sendMail(MimeMessage message) throws MessagingException {
         // taken from class org.apache.james.James
         MailAddress sender = new MailAddress((InternetAddress)message.getFrom()[0]);
-        Collection recipients = new HashSet();
+        Collection<MailAddress> recipients = new HashSet<MailAddress>();
         Address addresses[] = message.getAllRecipients();
         if (addresses != null) {
             for (int i = 0; i < addresses.length; i++) {

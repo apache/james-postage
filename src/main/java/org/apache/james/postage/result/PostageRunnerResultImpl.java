@@ -39,13 +39,13 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
     private static Log log = LogFactory.getLog(PostageRunnerResultImpl.class);
 
-    private Map m_matchedMailResults = initMatchedMailResultContainer();
+    private Map<String, MailProcessingRecord> m_matchedMailResults = initMatchedMailResultContainer();
 
-    private final Map m_unmatchedMailResults = new HashedMap();
+    private final Map<String, MailProcessingRecord> m_unmatchedMailResults = new HashedMap();
 
-    private List m_errors = initErrorResultContainer();
+    private List<ErrorRecord> m_errors = initErrorResultContainer();
 
-    private List m_jvmStatistics = initMatchedJVMStatisticsResultContainer();
+    private List<JVMResourcesRecord> m_jvmStatistics = initMatchedJVMStatisticsResultContainer();
 
     private long m_TimestampFirstResult = -1;
 
@@ -55,14 +55,14 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
     private long m_validMailCounter = 0;
 
-    private Map  m_environmentInfo = new LinkedHashMap();
+    private Map<String, String>  m_environmentInfo = new LinkedHashMap<String, String>();
 
     public void addNewMailRecord(MailProcessingRecord mailProcessingRecord) {
 
         if (m_TimestampFirstResult <= 0) m_TimestampFirstResult = System.currentTimeMillis();
         m_TimestampLastResult = System.currentTimeMillis();
 
-        MailProcessingRecord prevMailProcessingRecord = (MailProcessingRecord)m_unmatchedMailResults.put(mailProcessingRecord.getMailId(), mailProcessingRecord);
+        MailProcessingRecord prevMailProcessingRecord = m_unmatchedMailResults.put(mailProcessingRecord.getMailId(), mailProcessingRecord);
         if (prevMailProcessingRecord != null) {
             log.error("mail result already contained in unmatched list!");
         }
@@ -75,7 +75,7 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
 
         if (m_unmatchedMailResults.containsKey(mailId)) {
             // merge both mail result objects into one and move it to matched list
-            MailProcessingRecord match = (MailProcessingRecord)m_unmatchedMailResults.remove(mailId);
+            MailProcessingRecord match = m_unmatchedMailResults.remove(mailId);
             log.info("matched test mail having id = " + mailId + " received by queue = " + mailProcessingRecord.getReceivingQueue());
 
             match.merge(mailProcessingRecord); // copy new data to saved record
@@ -106,7 +106,7 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
         m_jvmStatistics.add(jvmResourcesRecord);
     }
 
-    public void setEnvironmentDescription(Map descriptionItems) {
+    public void setEnvironmentDescription(Map<String, String> descriptionItems) {
         m_environmentInfo.putAll(descriptionItems);
     }
 
@@ -136,7 +136,7 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
     }
 
     private void writeMatchedMailResults(OutputStreamWriter outputStreamWriter) throws IOException {
-        Map writeResults = m_matchedMailResults; // keep current results for writing
+        Map<String, MailProcessingRecord> writeResults = m_matchedMailResults; // keep current results for writing
         m_matchedMailResults = initMatchedMailResultContainer(); // establish new map for further unwritten results
         writeMailResults(writeResults, outputStreamWriter);
         outputStreamWriter.flush();
@@ -147,10 +147,10 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
         outputStreamWriter.write("end," + m_TimestampLastResult + "," + new Date(m_TimestampLastResult) + "\r\n");
         outputStreamWriter.write("current," + System.currentTimeMillis() + "," + new Date() + "\r\n");
 
-        Iterator iterator = m_environmentInfo.keySet().iterator();
+        Iterator<String> iterator = m_environmentInfo.keySet().iterator();
         while (iterator.hasNext()) {
-            String elementName = (String)iterator.next();
-            String elementValue = (String)m_environmentInfo.get(elementName);
+            String elementName = iterator.next();
+            String elementValue = m_environmentInfo.get(elementName);
             outputStreamWriter.write(elementName + "," + elementValue + "\r\n");
         }
     }
@@ -171,25 +171,25 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
         return m_errors.size();
     }
 
-    private void writeMailResults(Map mailResults, OutputStreamWriter outputStreamWriter) throws IOException {
-        Iterator iterator = mailResults.values().iterator();
+    private void writeMailResults(Map<String, MailProcessingRecord> mailResults, OutputStreamWriter outputStreamWriter) throws IOException {
+        Iterator<MailProcessingRecord> iterator = mailResults.values().iterator();
         while (iterator.hasNext()) {
-            MailProcessingRecord record = (MailProcessingRecord)iterator.next();
+            MailProcessingRecord record = iterator.next();
             String resultString = record.writeData().toString();
             outputStreamWriter.write(resultString);
         }
     }
 
-    private HashedMap initMatchedMailResultContainer() {
+    private Map<String, MailProcessingRecord> initMatchedMailResultContainer() {
         return new HashedMap();
     }
 
-    private List initMatchedJVMStatisticsResultContainer() {
-        return new ArrayList();
+    private List<JVMResourcesRecord> initMatchedJVMStatisticsResultContainer() {
+        return new ArrayList<JVMResourcesRecord>();
     }
 
-    private List initErrorResultContainer() {
-        return new ArrayList();
+    private List<ErrorRecord> initErrorResultContainer() {
+        return new ArrayList<ErrorRecord>();
     }
 
     public void writeResults(String filenameMailResults, String filenameJVMStatistics, String filenameErrors, boolean flushMatchedMailOnly) {
@@ -241,11 +241,11 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
     }
 
     private void writeJVMStatisticsResults(OutputStreamWriter outputStreamWriter) throws IOException {
-        List unwrittenResults = m_jvmStatistics;
+        List<JVMResourcesRecord> unwrittenResults = m_jvmStatistics;
         m_jvmStatistics = initMatchedJVMStatisticsResultContainer();
-        Iterator iterator = unwrittenResults.iterator();
+        Iterator<JVMResourcesRecord> iterator = unwrittenResults.iterator();
         while (iterator.hasNext()) {
-            JVMResourcesRecord record = (JVMResourcesRecord)iterator.next();
+            JVMResourcesRecord record = iterator.next();
             String resultString = record.writeData().toString();
             outputStreamWriter.write(resultString);
         }
@@ -262,11 +262,11 @@ public class PostageRunnerResultImpl implements PostageRunnerResult {
                 outputStreamWriter.write("timestamp,number,message\r\n");
             }
 
-            List unwrittenResults = m_errors;
+            List<ErrorRecord> unwrittenResults = m_errors;
             m_errors = initErrorResultContainer();
-            Iterator iterator = unwrittenResults.iterator();
+            Iterator<ErrorRecord> iterator = unwrittenResults.iterator();
             while (iterator.hasNext()) {
-                ErrorRecord record = (ErrorRecord)iterator.next();
+                ErrorRecord record = iterator.next();
 
                 StringBuffer resultString = new StringBuffer();
                 resultString.append(record.m_timestamp).append(",");

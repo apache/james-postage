@@ -36,7 +36,7 @@ public class PostageConfiguration {
 
     private boolean m_internalReuseExisting = true;
 
-    private Map     m_descriptionItems = new LinkedHashMap();
+    private Map<String, String>     m_descriptionItems = new LinkedHashMap<String, String>();
 
     private UserList m_externalUsers = null;
 
@@ -66,7 +66,7 @@ public class PostageConfiguration {
 
     private int     m_testserverJMXRemotingPort = -1;
 
-    private List    m_profiles = new ArrayList();
+    private List<SendProfile>    m_profiles = new ArrayList<SendProfile>();
 
     public PostageConfiguration(String id) {
         m_id = id;
@@ -92,7 +92,7 @@ public class PostageConfiguration {
         m_descriptionItems.put(name, value);
     }
 
-    public Map getDescriptionItems() {
+    public Map<String, String> getDescriptionItems() {
         return Collections.unmodifiableMap(m_descriptionItems);
     }
 
@@ -216,14 +216,14 @@ public class PostageConfiguration {
         m_profiles.add(profile);
     }
 
-    public List getProfiles() {
+    public List<SendProfile> getProfiles() {
         return Collections.unmodifiableList(m_profiles);
     }
 
     public SendProfile findProfile(boolean sourceInternal, boolean targetInternal) {
-        Iterator iterator = m_profiles.iterator();
+        Iterator<SendProfile> iterator = m_profiles.iterator();
         while (iterator.hasNext()) {
-            SendProfile sendProfile = (SendProfile)iterator.next();
+            SendProfile sendProfile = iterator.next();
             if (sendProfile.isSourceInternal() == sourceInternal && sendProfile.isTargetInternal() == targetInternal) {
                 return sendProfile;
             }
@@ -232,10 +232,10 @@ public class PostageConfiguration {
     }
 
     public int getTotalMailsPerMin() {
-        Iterator iterator = m_profiles.iterator();
+        Iterator<SendProfile> iterator = m_profiles.iterator();
         int total = 0;
         while (iterator.hasNext()) {
-            SendProfile sendProfile = (SendProfile)iterator.next();
+            SendProfile sendProfile = iterator.next();
             total += sendProfile.getTotalMailsPerMin();
         }
         return total;

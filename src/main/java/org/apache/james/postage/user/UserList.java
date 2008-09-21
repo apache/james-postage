@@ -32,7 +32,7 @@ public class UserList {
     int m_count         = 0;
     String m_namePrefix = null;
 
-    List   m_users    = new ArrayList();
+    List<String>   m_users    = new ArrayList<String>();
     String m_password = null; // common to all users, if set
     String m_domain   = null; // domain, common to all users
 
@@ -55,11 +55,11 @@ public class UserList {
         return m_namePrefix;
     }
 
-    public Iterator getUsernames() {
+    public Iterator<String> getUsernames() {
         return m_users.iterator();
     }
 
-    public void setExistingUsers(List existingUsers) {
+    public void setExistingUsers(List<String> existingUsers) {
         m_users.clear();
         m_users.addAll(existingUsers);
     }
@@ -74,7 +74,7 @@ public class UserList {
 
     public String getRandomUsername() {
         if (m_users.isEmpty()) return null;
-        return (String)m_users.get((int)(Math.random() * (m_users.size() - 1)));
+        return m_users.get((int)(Math.random() * (m_users.size() - 1)));
     }
 
     public String getEmailAddress(String username) {

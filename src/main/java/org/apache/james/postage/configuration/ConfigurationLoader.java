@@ -37,18 +37,18 @@ public class ConfigurationLoader {
 
     private static Log log = LogFactory.getLog(ConfigurationLoader.class);
 
-    public Map create(Configuration configuration) {
+		public Map<String, PostageConfiguration> create(Configuration configuration) {
         log.debug("reading configuration.");
 
-        Map postageConfigurations = new LinkedHashMap();
+        Map<String, PostageConfiguration> postageConfigurations = new LinkedHashMap<String, PostageConfiguration>();
 
-        List scenariosIds = configuration.getList("scenario[@id]");
+        List<String> scenariosIds = configuration.getList("scenario[@id]");
         log.debug("scenarios contained in configuration: " + scenariosIds.size());
 
-        Iterator scenarioIter = scenariosIds.iterator();
+        Iterator<String> scenarioIter = scenariosIds.iterator();
         int scenarioCount = 0;
         while (scenarioIter.hasNext()) {
-            String scenarioId = (String) scenarioIter.next();
+            String scenarioId = scenarioIter.next();
 
             if (postageConfigurations.containsKey(scenarioId)) {
                 log.error("found in configuration more than one scenario which is named: " + scenarioId);
@@ -102,11 +102,11 @@ public class ConfigurationLoader {
     }
 
     private void addDescription(PostageConfiguration postageConfiguration, Configuration configuration) {
-        Iterator keys = configuration.getKeys();
+        Iterator<String> keys = configuration.getKeys();
 
 
         while (keys.hasNext()) {
-            String itemName = (String) keys.next();
+            String itemName = keys.next();
             String itemContent = configuration.getString(itemName);
 
             postageConfiguration.addDescriptionItem(itemName, itemContent);
@@ -114,13 +114,13 @@ public class ConfigurationLoader {
     }
 
     private void addSendProfiles(PostageConfiguration postageConfiguration, Configuration configuration, String scenario) {
-        List profileNames = configuration.getList(scenario + ".profiles.profile[@name]");
+        List<String> profileNames = configuration.getList(scenario + ".profiles.profile[@name]");
         log.debug("profiles contained in scenario " + postageConfiguration.getId() + ": " + profileNames.size());
 
-        Iterator profileIter = profileNames.iterator();
+        Iterator<String> profileIter = profileNames.iterator();
         int profileCount = 0;
         while (profileIter.hasNext()) {
-            String profileName = (String) profileIter.next();
+            String profileName = profileIter.next();
 
             SendProfile profile = new SendProfile(profileName);
 
@@ -138,9 +138,9 @@ public class ConfigurationLoader {
     }
 
     private void addMailSender(SendProfile profile, Configuration configuration, String profilePath) {
-        List mailSenders = configuration.getList(profilePath + ".send[@count-per-min]");
+        List<String> mailSenders = configuration.getList(profilePath + ".send[@count-per-min]");
 
-        Iterator mailSenderIter = mailSenders.iterator();
+        Iterator<String> mailSenderIter = mailSenders.iterator();
         int mailSenderCount = 0;
         while (mailSenderIter.hasNext()) {
             mailSenderIter.next(); // ignore

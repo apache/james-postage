@@ -50,7 +50,7 @@ public class MailSender {
     private SendProfile m_parentProfile;
 
     private String m_mailFactoryClassname = null;
-    private Class m_mailFactoryClass = null;
+    private Class<? extends MailFactory> m_mailFactoryClass = null;
 
     public MailSender(SendProfile parent) {
         m_parentProfile = parent;
@@ -165,7 +165,7 @@ public class MailSender {
         // class is configured, but not yet loaded
         if (m_mailFactoryClassname != null && m_mailFactoryClass == null) {
             try {
-                m_mailFactoryClass = Class.forName(m_mailFactoryClassname);
+                m_mailFactoryClass = (Class<? extends MailFactory>) Class.forName(m_mailFactoryClassname);
             } catch (ClassNotFoundException e) {
                 log.error("failed to load MailFactory class " + m_mailFactoryClassname, e);
             }
@@ -174,7 +174,7 @@ public class MailSender {
         // create instance, if custom class is given
         if (m_mailFactoryClass != null) {
             try {
-                mailFactory = (MailFactory)m_mailFactoryClass.newInstance();
+                mailFactory = m_mailFactoryClass.newInstance();
             } catch (Exception e) {
                 log.error("failed to create instance if MailFactory class " + m_mailFactoryClassname, e);
             }

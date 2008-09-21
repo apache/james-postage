@@ -66,7 +66,7 @@ public class PostageRunner implements Runnable {
     private SMTPMailSink m_smtpMailSink;
     private SampleController m_outboundMailingInterceptorController;
 
-    private List m_sendControllers = new ArrayList();
+    private List<SampleController> m_sendControllers = new ArrayList<SampleController>();
 
     private JVMResourceSamplerWorker m_jvmResourceSampler = null;
     private SampleController m_jvmResourceController = null;
@@ -216,9 +216,9 @@ public class PostageRunner implements Runnable {
     private void stopRecording() {
         log.info("stopping");
         if (m_sendControllers != null) {
-            Iterator iterator = m_sendControllers.iterator();
+            Iterator<SampleController> iterator = m_sendControllers.iterator();
             while (iterator.hasNext()) {
-                SampleController sendController = (SampleController)iterator.next();
+                SampleController sendController = iterator.next();
                 sendController.stop();
             }
         }
@@ -267,9 +267,9 @@ public class PostageRunner implements Runnable {
 
     private void recordData() {
 
-        Iterator iterator = m_sendControllers.iterator();
+        Iterator<SampleController> iterator = m_sendControllers.iterator();
         while (iterator.hasNext()) {
-            SampleController sendController = (SampleController)iterator.next();
+            SampleController sendController = iterator.next();
             sendController.runThreaded();
         }
 
@@ -307,7 +307,7 @@ public class PostageRunner implements Runnable {
         int externalUserCount = m_postageConfiguration.getExternalUsers().getCount();
         String externalUsernamePrefix = m_postageConfiguration.getExternalUsers().getNamePrefix();
 
-        ArrayList externalUsers = new ArrayList();
+        ArrayList<String> externalUsers = new ArrayList<String>();
         for (int i = 1; i <= externalUserCount; i++) {
             String username = externalUsernamePrefix + i;
             externalUsers.add(username);
@@ -322,12 +322,12 @@ public class PostageRunner implements Runnable {
     private void setupInboundMailing() throws StartupException {
         if (m_postageConfiguration.getTestserverPortSMTPInbound() <= 0) return;
 
-        Iterator profileIterator = m_postageConfiguration.getProfiles().iterator();
+        Iterator<SendProfile> profileIterator = m_postageConfiguration.getProfiles().iterator();
         while (profileIterator.hasNext()) {
-            SendProfile sendProfile = (SendProfile)profileIterator.next();
-            Iterator mailSenderIterator = sendProfile.mailSenderIterator();
+            SendProfile sendProfile = profileIterator.next();
+            Iterator<MailSender> mailSenderIterator = sendProfile.mailSenderIterator();
             while (mailSenderIterator.hasNext()) {
-                MailSender mailSender = (MailSender)mailSenderIterator.next();
+                MailSender mailSender = mailSenderIterator.next();
                 int sendPerMinute = mailSender.getSendPerMinute();
 
                 if (sendPerMinute < 1) continue;
@@ -381,11 +381,11 @@ public class PostageRunner implements Runnable {
             String internalUsernamePrefix = m_postageConfiguration.getInternalUsers().getNamePrefix();
             String internalPassword = m_postageConfiguration.getInternalUsers().getPassword();
 
-            Set existingUsers = getExistingUsers(host, remoteManagerPort, remoteManagerUsername, remoteManagerPassword);
+            Set<String> existingUsers = getExistingUsers(host, remoteManagerPort, remoteManagerUsername, remoteManagerPassword);
 
             RemoteManagerClient remoteManagerClient = new RemoteManagerClient(host, remoteManagerPort, remoteManagerUsername, remoteManagerPassword);
             remoteManagerClient.login();
-            ArrayList internalUsers = new ArrayList();
+            ArrayList<String> internalUsers = new ArrayList<String>();
             for (int i = 1; i <= internalUserCount; i++) {
                 String username = internalUsernamePrefix + i;
                 if (existingUsers.contains(username)) {
@@ -450,17 +450,17 @@ public class PostageRunner implements Runnable {
      * aquire a list of all existing internal James accounts
      * @return Set<String>, each String a username
      */
-    private Set getExistingUsers(String host, int remoteManagerPort, String remoteManagerUsername, String remoteManagerPassword) {
+    private Set<String> getExistingUsers(String host, int remoteManagerPort, String remoteManagerUsername, String remoteManagerPassword) {
         RemoteManagerClient remoteManagerClient = new RemoteManagerClient(host, remoteManagerPort, remoteManagerUsername, remoteManagerPassword);
         boolean loginSuccess = remoteManagerClient.login();
         if (!loginSuccess) throw new Error("failed to login to remote manager");
-        List rawUserList = remoteManagerClient.executeCommand("listusers");
+        List<String> rawUserList = remoteManagerClient.executeCommand("listusers");
         remoteManagerClient.disconnect();
 
-        Set existingUsers = new LinkedHashSet();
-        Iterator iterator = rawUserList.iterator();
+        Set<String> existingUsers = new LinkedHashSet<String>();
+        Iterator<String> iterator = rawUserList.iterator();
         while (iterator.hasNext()) {
-            String line = (String)iterator.next();
+            String line = iterator.next();
             if (!line.startsWith("user: ")) continue;
 
             existingUsers.add(line.substring(6));

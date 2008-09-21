@@ -71,8 +71,8 @@ public class RemoteManagerClient {
             e.printStackTrace();
         }
 
-        List answers = readAnswer();
-        if (answers == null || answers.size() == 0 || !((String)answers.get(answers.size() - 1)).startsWith("Welcome"))
+        List<String> answers = readAnswer();
+        if (answers == null || answers.size() == 0 || !answers.get(answers.size() - 1).startsWith("Welcome"))
         {
             disconnect();
             return false;
@@ -93,7 +93,7 @@ public class RemoteManagerClient {
         }
     }
 
-    public List executeCommand(String command) {
+    public List<String> executeCommand(String command) {
         try {
             sendCommand(command);
         } catch (IOException e) {
@@ -101,7 +101,7 @@ public class RemoteManagerClient {
             return null;
         }
 
-        List list = readAnswer();
+        List<String> list = readAnswer();
         return list;
     }
 
@@ -110,12 +110,12 @@ public class RemoteManagerClient {
         m_writer.flush();
     }
 
-    public List readAnswer() {
+    public List<String> readAnswer() {
         return readAnswer(0);
     }
 
-    protected List readAnswer(int numLines) {
-        List allAnswerLines = new ArrayList();
+    protected List<String> readAnswer(int numLines) {
+        List<String> allAnswerLines = new ArrayList<String>();
         try {
             delay();
             if (numLines > 0) {
@@ -140,7 +140,7 @@ public class RemoteManagerClient {
         }
     }
 
-    private void readline(List allAnswerLines) throws IOException {
+    private void readline(List<String> allAnswerLines) throws IOException {
         if (!m_reader.ready()) return;
         String line = m_reader.readLine();
         if (line != null) allAnswerLines.add(line);
