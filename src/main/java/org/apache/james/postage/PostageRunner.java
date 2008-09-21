@@ -29,7 +29,7 @@ import org.apache.james.postage.configuration.MailSender;
 import org.apache.james.postage.configuration.PostageConfiguration;
 import org.apache.james.postage.configuration.SendProfile;
 import org.apache.james.postage.execution.SampleController;
-import org.apache.james.postage.jmx.JVMResourceSampler;
+import org.apache.james.postage.jmx.JVMResourceSamplerWorker;
 import org.apache.james.postage.result.PostageRunnerResult;
 import org.apache.james.postage.result.PostageRunnerResultImpl;
 import org.apache.james.postage.smtpserver.SMTPMailSink;
@@ -68,7 +68,7 @@ public class PostageRunner implements Runnable {
 
     private List m_sendControllers = new ArrayList();
 
-    private JVMResourceSampler m_jvmResourceSampler = null;
+    private JVMResourceSamplerWorker m_jvmResourceSampler = null;
     private SampleController m_jvmResourceController = null;
 
     private int  m_minutesRunning = 0;
@@ -426,12 +426,11 @@ public class PostageRunner implements Runnable {
 
 
     private void setupJMXRemoting() throws StartupException {
-        boolean jmxAvailable = JVMResourceSampler.isJMXAvailable();
         int jmxPort = m_postageConfiguration.getTestserverPortJMXRemoting();
-        if (!jmxAvailable || jmxPort <= 0) {
+        if (jmxPort <= 0) {
             return;
         }
-        JVMResourceSampler jvmResourceSampler = new JVMResourceSampler("localhost", jmxPort, m_results);
+        JVMResourceSamplerWorker jvmResourceSampler = new JVMResourceSamplerWorker("localhost", jmxPort, m_results);
         try {
             jvmResourceSampler.connectRemoteJamesJMXServer();
             log.info("connected to remote JMX");
