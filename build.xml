@@ -79,28 +79,29 @@
               <include name="commons-net/jars/commons-net-1.4.1.jar"/>
               <include name="javax.mail/jars/mail-1.4.1.jar"/>
               <include name="javax.activation/jars/activation-1.1.1.jar"/>
-            	<include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-api-2.2.2.jar" />
-            	<include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-impl-2.2.2.jar" />
-            	<include name="org.apache.avalon.cornerstone.threads/jars/cornerstone-threads-api-2.2.2.jar" />
-            	<include name="org.apache.avalon.cornerstone.connection/jars/cornerstone-connection-impl-2.2.2.jar" />
+              <include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-api-2.2.2.jar" />
+              <include name="org.apache.avalon.cornerstone.sockets/jars/cornerstone-sockets-impl-2.2.2.jar" />
+              <include name="org.apache.avalon.cornerstone.threads/jars/cornerstone-threads-api-2.2.2.jar" />
+              <include name="org.apache.avalon.cornerstone.connection/jars/cornerstone-connection-impl-2.2.2.jar" />
               <include name="org.apache.avalon.framework/jars/avalon-framework-api-4.3.1.jar"/>
               <include name="org.apache.avalon.framework/jars/avalon-framework-impl-4.3.1.jar"/>
-            	<include name="org.apache.excalibur.components/jars/excalibur-thread-api-2.2.1.jar" />
-            	<include name="org.apache.excalibur.components/jars/excalibur-thread-impl-2.2.1.jar" />
-            	<include name="org.apache.excalibur.components/jars/excalibur-pool-api-2.2.1.jar" />
+              <include name="org.apache.excalibur.components/jars/excalibur-thread-api-2.2.1.jar" />
+              <include name="org.apache.excalibur.components/jars/excalibur-thread-impl-2.2.1.jar" />
+              <include name="org.apache.excalibur.components/jars/excalibur-pool-api-2.2.1.jar" />
               <include name="org.apache.james/jars/mailet-2.4-SNAPSHOT.jar"/>
               <include name="org.apache.james/jars/james-server-domain-api-3.0-SNAPSHOT.jar"/>
-            	<include name="org.apache.james/jars/james-server-core-api-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-core-api-3.0-SNAPSHOT.jar"/>
               <include name="org.apache.james/jars/james-server-avalon-socket-library-3.0-SNAPSHOT.jar"/>
-            	<include name="org.apache.james/jars/james-server-core-function-3.0-SNAPSHOT.jar"/>
-            	<include name="org.apache.james/jars/james-server-common-util-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-core-function-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.james/jars/james-server-common-util-3.0-SNAPSHOT.jar"/>
               <include name="org.apache.james/jars/james-server-smtpserver-function-3.0-SNAPSHOT.jar"/>
               <!-- RUNTIME ONLY -->
-            	<include name="concurrent/jars/concurrent-1.3.4.jar" />
-            	<include name="org.apache.excalibur.components/jars/excalibur-pool-impl-2.2.1.jar" />
+              <include name="concurrent/jars/concurrent-1.3.4.jar" />
+              <include name="org.apache.excalibur.components/jars/excalibur-pool-impl-2.2.1.jar" />
               <include name="org.apache.james/jars/apache-james-mailet-base-1.0-SNAPSHOT.jar"/>
-            	<include name="org.apache.avalon.cornerstone.connection/jars/cornerstone-connection-api-2.2.2.jar" />
-            	<include name="dnsjava/jars/dnsjava-2.0.6.jar" />
+              <include name="org.apache.james/jars/james-server-core-library-3.0-SNAPSHOT.jar"/>
+              <include name="org.apache.avalon.cornerstone.connection/jars/cornerstone-connection-api-2.2.2.jar" />
+              <include name="dnsjava/jars/dnsjava-2.0.6.jar" />
             </fileset>
         </path>
 
