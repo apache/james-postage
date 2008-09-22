@@ -51,7 +51,7 @@ import java.util.Iterator;
  * <br/>
  * this class does not even compile on Java versions before JSE 5.<br/>
  */
-public class JVMResourceSamplerWorker implements Sampler {
+public class JVMResourceSampler implements Sampler {
 
     private String m_host;
     private int m_port;
@@ -59,7 +59,7 @@ public class JVMResourceSamplerWorker implements Sampler {
 
     private MBeanServerConnection m_mBeanServerConnection;
 
-    public JVMResourceSamplerWorker(String host, int port, PostageRunnerResult results) {
+    public JVMResourceSampler(String host, int port, PostageRunnerResult results) {
         m_host = host;
         m_port = port;
         m_results = results;

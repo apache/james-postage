@@ -29,7 +29,7 @@ import org.apache.james.postage.configuration.MailSender;
 import org.apache.james.postage.configuration.PostageConfiguration;
 import org.apache.james.postage.configuration.SendProfile;
 import org.apache.james.postage.execution.SampleController;
-import org.apache.james.postage.jmx.JVMResourceSamplerWorker;
+import org.apache.james.postage.jmx.JVMResourceSampler;
 import org.apache.james.postage.result.PostageRunnerResult;
 import org.apache.james.postage.result.PostageRunnerResultImpl;
 import org.apache.james.postage.smtpserver.SMTPMailSink;
@@ -68,7 +68,7 @@ public class PostageRunner implements Runnable {
 
     private List<SampleController> m_sendControllers = new ArrayList<SampleController>();
 
-    private JVMResourceSamplerWorker m_jvmResourceSampler = null;
+    private JVMResourceSampler m_jvmResourceSampler = null;
     private SampleController m_jvmResourceController = null;
 
     private int  m_minutesRunning = 0;
@@ -430,7 +430,7 @@ public class PostageRunner implements Runnable {
         if (jmxPort <= 0) {
             return;
         }
-        JVMResourceSamplerWorker jvmResourceSampler = new JVMResourceSamplerWorker("localhost", jmxPort, m_results);
+        JVMResourceSampler jvmResourceSampler = new JVMResourceSampler("localhost", jmxPort, m_results);
         try {
             jvmResourceSampler.connectRemoteJamesJMXServer();
             log.info("connected to remote JMX");
