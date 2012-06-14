@@ -16,38 +16,37 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
-
 package org.apache.james.postage.smtpserver;
 
-import org.apache.james.postage.result.PostageRunnerResult;
-import org.apache.james.services.MailRepository;
-import org.apache.james.services.MailServer;
-import org.apache.mailet.Mail;
-import org.apache.mailet.MailAddress;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashSet;
 
 import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashSet;
-
+import org.apache.james.mailrepository.api.MailRepository;
+import org.apache.james.postage.result.PostageRunnerResult;
+import org.apache.james.smtpserver.netty.SMTPServer;
+import org.apache.mailet.Mail;
+import org.apache.mailet.MailAddress;
 
 /**
- * a quite simple (only receiving) SMTP server which reads mails and tries to match them with sent test mails.<br/>
- * reuses James' own SMTP server components
+ * <p>
+ * A quite simple (only receiving) {@link SMTPServer} which reads mails and tries to match 
+ * them with sent test mails. It reuses James' own SMTP server components.
+ * </p>
  */
-public class SimpleMailServer implements MailServer {
+public class SimpleMailServer {
 
-    private int m_counter = 0;
-    private PostageRunnerResult m_results;
+    private int counter = 0;
+    private PostageRunnerResult results;
 
     public void sendMail(MailAddress sender, Collection recipients, MimeMessage message) throws MessagingException {
         try {
-            new SMTPMailAnalyzeStrategy("smtpOutbound", m_results, message).handle();
+            new SMTPMailAnalyzeStrategy("smtpOutbound", this.results, message).handle();
         } catch (Exception e) {
             throw new MessagingException("error handling message", e);
         }
@@ -84,8 +83,8 @@ public class SimpleMailServer implements MailServer {
     }
 
     public synchronized String getId() {
-        m_counter++;
-        return "SimpleMailServer-ID-" + m_counter;
+        this.counter++;
+        return "SimpleMailServer-ID-" + this.counter;
     }
 
     public boolean addUser(String userName, String password) {
@@ -97,11 +96,9 @@ public class SimpleMailServer implements MailServer {
     }
 
     public void setResults(PostageRunnerResult results) {
-        m_results = results;
+        this.results = results;
     }
 
-    /* JAMES 3.0-SNAPSHOT specific methods */
-    
     public String getDefaultDomain() {
         return "localhost";
     }

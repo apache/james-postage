@@ -17,33 +17,24 @@
  * under the License.                                           *
  ****************************************************************/
 
+package org.apache.james.postage.client;
 
-package org.apache.james.postage.smtpserver;
-
-import org.apache.avalon.framework.service.ServiceException;
-
-import java.util.HashMap;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 /**
- * mock-up of ServiceManager
+ * Simple class to allow a cast from a java.io.Reader to a java.io.InputStream
+ * 
  */
-public class SimpleServiceManager implements org.apache.avalon.framework.service.ServiceManager {
-
-    private HashMap<String, Object> m_serviceMap = new HashMap<String, Object>();
-
-    public Object lookup(String serviceName) throws ServiceException {
-        return m_serviceMap.get(serviceName);
+public class ReaderInputStream extends InputStream {
+    private Reader reader = null;
+    public ReaderInputStream(Reader reader) {
+        this.reader = reader;
     }
-
-    public boolean hasService(String serviceName) {
-        return m_serviceMap.get(serviceName) != null;
-    }
-
-    public void put(String name, Object service) {
-        m_serviceMap.put(name, service);
-    }
-
-    public void release(Object object) {
-         // trivial implementation
+    /**
+     * @see java.io.InputStream#read()
+     */
+    public int read() throws IOException {
+        return reader.read();
     }
 }

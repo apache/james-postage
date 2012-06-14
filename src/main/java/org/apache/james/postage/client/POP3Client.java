@@ -41,16 +41,16 @@ public class POP3Client implements Sampler {
 
     private static Log log = LogFactory.getLog(POP3Client.class);
 
-    private String m_host;
-    private int m_port;
-    private UserList m_internalUsers;
-    private PostageRunnerResult m_results;
+    private String host;
+    private int port;
+    private UserList internalUsers;
+    private PostageRunnerResult results;
 
     public POP3Client(String host, int port, UserList internalUsers, PostageRunnerResult results) {
-        m_host = host;
-        m_port = port;
-        m_internalUsers = internalUsers;
-        m_results = results;
+        this.host = host;
+        this.port = port;
+        this.internalUsers = internalUsers;
+        this.results = results;
     }
 
     /**
@@ -58,7 +58,7 @@ public class POP3Client implements Sampler {
      */
     public boolean checkAvailability() throws StartupException {
         try {
-            org.apache.commons.net.pop3.POP3Client pop3Client = openConnection(m_internalUsers.getRandomUsername());
+            org.apache.commons.net.pop3.POP3Client pop3Client = openConnection(this.internalUsers.getRandomUsername());
             closeSession(pop3Client);
         } catch (PostageException e) {
             throw new StartupException("error checking availability");
@@ -78,8 +78,10 @@ public class POP3Client implements Sampler {
     private org.apache.commons.net.pop3.POP3Client openConnection(String username) throws PostageException {
         org.apache.commons.net.pop3.POP3Client pop3Client = new org.apache.commons.net.pop3.POP3Client();
         try {
-            pop3Client.connect(m_host, m_port);
-            pop3Client.login(username, m_internalUsers.getPassword());
+            pop3Client.connect(this.host, this.port);
+            if (!pop3Client.login(this.internalUsers.getEmailAddress(username), this.internalUsers.getPassword())) {
+                log.warn("Login did not work for user: " + username);
+            }
         } catch (IOException e) {
             throw new PostageException("POP3 service not available", e);
         }
@@ -90,7 +92,7 @@ public class POP3Client implements Sampler {
      * take one POP3 sample for a random user
      */
     public void doSample() throws SamplingException {
-        String username = m_internalUsers.getRandomUsername();
+        String username = this.internalUsers.getRandomUsername();
 
         try {
             findAllMatchingTestMail(username);
@@ -105,7 +107,7 @@ public class POP3Client implements Sampler {
      * unprocessed by the random access. this is done by iterating over all user accounts, looking for mail
      */
     public void doMatchMailForAllUsers() {
-        Iterator<String> usernames = m_internalUsers.getUsernames();
+        Iterator<String> usernames = this.internalUsers.getUsernames();
         while (usernames.hasNext()) {
             String username = usernames.next();
             try {
@@ -131,7 +133,7 @@ public class POP3Client implements Sampler {
                 entries = pop3Client.listMessages();
             } catch (Exception e) {
                 String errorMessage = "failed to read pop3 account mail list for " + username;
-                m_results.addError(500, errorMessage);
+                this.results.addError(500, errorMessage);
                 log.info(errorMessage);
                 return;
             }
@@ -140,7 +142,7 @@ public class POP3Client implements Sampler {
                 POP3MessageInfo entry = entries[i];
 
                 try {
-                    new POP3MailAnalyzeStrategy("pop3", m_results, pop3Client, entry.number, i).handle();
+                    new POP3MailAnalyzeStrategy("pop3", this.results, pop3Client, entry.number, i).handle();
                 } catch (Exception exception) {
                     log.warn("error processing pop3 mail", exception);
                 }

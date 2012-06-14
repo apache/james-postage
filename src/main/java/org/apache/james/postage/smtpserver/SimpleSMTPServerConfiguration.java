@@ -16,66 +16,89 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
-
 package org.apache.james.postage.smtpserver;
 
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.DefaultConfigurationBuilder;
+import org.apache.james.smtpserver.CoreCmdHandlerLoader;
+import org.apache.james.smtpserver.fastfail.DNSRBLHandler;
+import org.apache.james.smtpserver.fastfail.MaxRcptHandler;
+import org.apache.james.smtpserver.fastfail.ResolvableEhloHeloHandler;
+import org.apache.james.smtpserver.fastfail.ReverseEqualsEhloHeloHandler;
+import org.apache.james.smtpserver.fastfail.ValidSenderDomainHandler;
 
-public class SimpleSMTPServerConfiguration extends DefaultConfiguration {
-    private int m_smtpListenerPort;
-    private String m_authorizedAddresses = "127.0.0.0/8";
-    private String m_authorizingMode = "false";
-
-    public static Configuration getValuedConfiguration(String name, String value) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration(name);
-        defaultConfiguration.setValue(value);
-        return defaultConfiguration;
-    }
-
+public class SimpleSMTPServerConfiguration extends DefaultConfigurationBuilder {
+    private static final long serialVersionUID = 6459491961488047925L;
+    private int smtpListenerPort;
+    private int maxMessageSizeKB = 0;
+    private String authorizedAddresses = "127.0.0.0/8";
+    private String authorizingMode = "false";
+    private boolean verifyIdentity = false;
+    private Integer connectionLimit = null;
+    private Integer connectionBacklog = null;
+    private boolean heloResolv = false;
+    private boolean ehloResolv = false;
+    private boolean senderDomainResolv = false;
+    private boolean checkAuthNetworks = false;
+    private boolean heloEhloEnforcement = true;
+    private boolean reverseEqualsHelo = false;
+    private boolean reverseEqualsEhlo = false;
+    private int maxRcpt = 0;
+    private boolean useRBL = false;
+    private boolean addressBracketsEnforcement = true;
+    private boolean startTLS = false;
+    
     public SimpleSMTPServerConfiguration(int smtpListenerPort) {
-        super("smptserver");
-
-        m_smtpListenerPort = smtpListenerPort;
+        this.smtpListenerPort = smtpListenerPort;
     }
 
-    public String getAuthorizedAddresses() {
-        return m_authorizedAddresses;
-    }
+    public void init() throws ConfigurationException {
 
-    public void setAuthorizedAddresses(String authorizedAddresses) {
-        m_authorizedAddresses = authorizedAddresses;
-    }
+        addProperty("[@enabled]", true);
 
-    public void setAuthorizingNotRequired() {
-        m_authorizingMode = "false";
-    }
+        addProperty("bind", "127.0.0.1:" + smtpListenerPort);
+        if (connectionLimit != null)
+            addProperty("connectionLimit", "" + connectionLimit.intValue());
+        if (connectionBacklog != null)
+            addProperty("connectionBacklog", "" + connectionBacklog.intValue());
 
-    public void setAuthorizingRequired() {
-        m_authorizingMode = "true";
-        //m_verifyIdentity = true;
-    }
+        addProperty("helloName", "myMailServer");
+        addProperty("connectiontimeout", 360000);
+        addProperty("authorizedAddresses", authorizedAddresses);
+        addProperty("maxmessagesize", maxMessageSizeKB);
+        addProperty("authRequired", authorizingMode);
+        addProperty("heloEhloEnforcement", heloEhloEnforcement);
+        addProperty("addressBracketsEnforcement", addressBracketsEnforcement);
 
-    public void setAuthorizingAnnounce() {
-        m_authorizingMode = "announce";
-        //m_verifyIdentity = true;
-    }
+        addProperty("tls.[@startTLS]", startTLS);
+        addProperty("tls.keystore", "file://conf/test_keystore");
+        addProperty("tls.secret", "jamestest");
+        if (verifyIdentity)
+            addProperty("verifyIdentity", verifyIdentity);
 
-    public void init() {
+        // add the rbl handler
+        if (useRBL) {
 
-        setAttribute("enabled", true);
-
-        addChild(getValuedConfiguration("port", "" + m_smtpListenerPort));
-
-        DefaultConfiguration handlerConfig = new DefaultConfiguration("handler");
-        handlerConfig.addChild(getValuedConfiguration("helloName", "myMailServer"));
-        handlerConfig.addChild(getValuedConfiguration("connectiontimeout", "360000"));
-        handlerConfig.addChild(getValuedConfiguration("authorizedAddresses", m_authorizedAddresses));
-        handlerConfig.addChild(getValuedConfiguration("maxmessagesize", "" + 0));
-        handlerConfig.addChild(getValuedConfiguration("authRequired", m_authorizingMode));
-
-        addChild(handlerConfig);
+            addProperty("handlerchain.handler.[@class]", DNSRBLHandler.class.getName());
+            addProperty("handlerchain.handler.rblservers.blacklist", "bl.spamcop.net.");
+        }
+        if (heloResolv || ehloResolv) {
+            addProperty("handlerchain.handler.[@class]", ResolvableEhloHeloHandler.class.getName());
+            addProperty("handlerchain.handler.checkAuthNetworks", checkAuthNetworks);
+        }
+        if (reverseEqualsHelo || reverseEqualsEhlo) {
+            addProperty("handlerchain.handler.[@class]", ReverseEqualsEhloHeloHandler.class.getName());
+            addProperty("handlerchain.handler.checkAuthNetworks", checkAuthNetworks);
+        }
+        if (senderDomainResolv) {
+            addProperty("handlerchain.handler.[@class]", ValidSenderDomainHandler.class.getName());
+            addProperty("handlerchain.handler.checkAuthNetworks", checkAuthNetworks);
+        }
+        if (maxRcpt > 0) {
+            addProperty("handlerchain.handler.[@class]", MaxRcptHandler.class.getName());
+            addProperty("handlerchain.handler.maxRcpt", maxRcpt);
+        }
+        addProperty("handlerchain.[@coreHandlersPackage]", CoreCmdHandlerLoader.class.getName());
     }
 
 }
