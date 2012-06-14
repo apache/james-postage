@@ -266,12 +266,12 @@
             </profile>               
         </profiles>
         <testserver host="localhost">
-          <smtp-forwarding port="2525" latecomer-wait-seconds="45"/>
-          <smtp-inbound port="25" />
-          <pop3 port="110" count-per-min="100" />
+          <smtp-forwarding port="2526" latecomer-wait-seconds="45"/>
+          <smtp-inbound port="2525" />
+          <pop3 port="1100" count-per-min="100" />
           <remotemanager port="4555" name="root" password="root" />
           <spam-account name="spam-sink" password="spam-sink" />
-          <jvm-resources jmx-remoting-port="10201" />
+          <jvm-resources jmx-remoting-port="9999" />
         </testserver>
     </scenario> 
     
