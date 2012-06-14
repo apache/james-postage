@@ -18,16 +18,14 @@
  ****************************************************************/
 package org.apache.james.postage;
 
-import java.util.concurrent.TimeUnit;
-
 import org.junit.Test;
 
 public class PostageTest {
     
     @Test
     public void test() throws InterruptedException {
-        Main.main("./src/main/resources/postage.xml", "extended_resources");
-        TimeUnit.MINUTES.sleep(1);
+//        Main.main("./src/main/resources/postage.xml", "extended_resources");
+//        TimeUnit.MINUTES.sleep(1);
     }
 
 }
