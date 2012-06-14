@@ -20,21 +20,22 @@
 
 package org.apache.james.postage.jmx;
 
-import org.apache.james.postage.execution.Sampler;
-import org.apache.james.postage.result.PostageRunnerResult;
-import org.apache.james.postage.result.JVMResourcesRecord;
-import org.apache.james.postage.SamplingException;
+import java.io.IOException;
+import java.util.Iterator;
 
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXServiceURL;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.openmbean.CompositeDataSupport;
+import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import javax.management.Attribute;
-import java.io.IOException;
-import java.util.Iterator;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+
+import org.apache.james.postage.SamplingException;
+import org.apache.james.postage.execution.Sampler;
+import org.apache.james.postage.result.JVMResourcesRecord;
+import org.apache.james.postage.result.PostageRunnerResult;
 
 /**
  * the peek into the James JVM is done using the build-in management (JMX) of J2SE 5 (and probably later)
@@ -52,25 +53,23 @@ import java.util.Iterator;
  * this class does not even compile on Java versions before JSE 5.<br/>
  */
 public class JVMResourceSampler implements Sampler {
-
-    private String m_host;
-    private int m_port;
-    private PostageRunnerResult m_results;
-
-    private MBeanServerConnection m_mBeanServerConnection;
+    private String host;
+    private int port;
+    private PostageRunnerResult results;
+    private MBeanServerConnection mBeanServerConnection;
 
     public JVMResourceSampler(String host, int port, PostageRunnerResult results) {
-        m_host = host;
-        m_port = port;
-        m_results = results;
+        this.host = host;
+        this.port = port;
+        this.results = results;
     }
 
     public void connectRemoteJamesJMXServer() throws SamplingException {
-        String serviceURL = "service:jmx:rmi:///jndi/rmi://" + m_host + ":" + m_port + "/jmxrmi";
+        String serviceURL = "service:jmx:rmi:///jndi/rmi://" + this.host + ":" + this.port + "/jmxrmi";
         try {
             JMXServiceURL jmxServiceURL = new JMXServiceURL(serviceURL);
             JMXConnector jmxConnector = JMXConnectorFactory.connect(jmxServiceURL, null);
-            m_mBeanServerConnection = jmxConnector.getMBeanServerConnection();
+            this.mBeanServerConnection = jmxConnector.getMBeanServerConnection();
         } catch (IOException e) {
             throw new SamplingException("could not connect to " + serviceURL, e);
         }
@@ -96,7 +95,7 @@ public class JVMResourceSampler implements Sampler {
         CompositeDataSupport data;
         try {
             ObjectName name = new ObjectName(jmxObjectName);
-            data = (CompositeDataSupport)m_mBeanServerConnection.getAttribute(name, attributeName);
+            data = (CompositeDataSupport)this.mBeanServerConnection.getAttribute(name, attributeName);
         } catch (IOException e) {
             throw new SamplingException("lost connection to JMX server", e);
         } catch (Exception e) {
@@ -109,7 +108,7 @@ public class JVMResourceSampler implements Sampler {
         try {
             ObjectName name = new ObjectName("java.lang:type=Threading");
             String[] attributeNames = new String[] {"PeakThreadCount", "ThreadCount", "TotalStartedThreadCount"};
-            AttributeList attributes = m_mBeanServerConnection.getAttributes(name, attributeNames);
+            AttributeList attributes = this.mBeanServerConnection.getAttributes(name, attributeNames);
             return attributes;
         } catch (IOException e) {
             throw new SamplingException("lost connection to JMX server", e);
@@ -130,6 +129,6 @@ public class JVMResourceSampler implements Sampler {
         JVMResourcesRecord jvmResourcesRecord = new JVMResourcesRecord();
         takeMemorySample(jvmResourcesRecord);
         takeThreadingSample(jvmResourcesRecord);
-        m_results.addJVMResult(jvmResourcesRecord);
+        this.results.addJVMResult(jvmResourcesRecord);
     }
 }

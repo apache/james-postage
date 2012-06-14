@@ -20,14 +20,14 @@
 
 package org.apache.james.postage.configuration;
 
-import org.apache.james.postage.mail.MailFactory;
-import org.apache.james.postage.mail.DefaultMailFactory;
-import org.apache.james.postage.result.MailProcessingRecord;
+import javax.mail.Message;
+import javax.mail.Session;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import javax.mail.Session;
-import javax.mail.Message;
+import org.apache.james.postage.mail.DefaultMailFactory;
+import org.apache.james.postage.mail.MailFactory;
+import org.apache.james.postage.result.MailProcessingRecord;
 
 /**
  * specifies, how mail is to be generated and sent, as coming from the configuration (<send> element)<br/>
@@ -47,13 +47,13 @@ public class MailSender {
     private int sizeMaxText = 1000;
     private int sizeMinBinary = -1;
     private int sizeMaxBinary = -1;
-    private SendProfile m_parentProfile;
+    private SendProfile parentProfile;
 
-    private String m_mailFactoryClassname = null;
-    private Class<? extends MailFactory> m_mailFactoryClass = null;
+    private String mailFactoryClassname = null;
+    private Class<? extends MailFactory> mailFactoryClass = null;
 
     public MailSender(SendProfile parent) {
-        m_parentProfile = parent;
+        this.parentProfile = parent;
     }
 
     public int getSendPerMinute() {
@@ -135,15 +135,15 @@ public class MailSender {
     }
 
     public SendProfile getParentProfile() {
-        return m_parentProfile;
+        return this.parentProfile;
     }
 
     public String getMailFactoryClassname() {
-        return m_mailFactoryClassname;
+        return this.mailFactoryClassname;
     }
 
     public void setMailFactoryClassname(String mailFactoryClassname) {
-        this.m_mailFactoryClassname = mailFactoryClassname;
+        this.mailFactoryClassname = mailFactoryClassname;
     }
 
     public boolean sendTextPart() {
@@ -163,20 +163,20 @@ public class MailSender {
         MailFactory mailFactory = null;
 
         // class is configured, but not yet loaded
-        if (m_mailFactoryClassname != null && m_mailFactoryClass == null) {
+        if (this.mailFactoryClassname != null && this.mailFactoryClass == null) {
             try {
-                m_mailFactoryClass = (Class<? extends MailFactory>) Class.forName(m_mailFactoryClassname);
+                this.mailFactoryClass = (Class<? extends MailFactory>) Class.forName(this.mailFactoryClassname);
             } catch (ClassNotFoundException e) {
-                log.error("failed to load MailFactory class " + m_mailFactoryClassname, e);
+                log.error("failed to load MailFactory class " + this.mailFactoryClassname, e);
             }
         }
 
         // create instance, if custom class is given
-        if (m_mailFactoryClass != null) {
+        if (this.mailFactoryClass != null) {
             try {
-                mailFactory = m_mailFactoryClass.newInstance();
+                mailFactory = this.mailFactoryClass.newInstance();
             } catch (Exception e) {
-                log.error("failed to create instance if MailFactory class " + m_mailFactoryClassname, e);
+                log.error("failed to create instance if MailFactory class " + this.mailFactoryClassname, e);
             }
         }
 

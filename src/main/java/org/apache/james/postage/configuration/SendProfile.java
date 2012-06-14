@@ -21,53 +21,53 @@
 package org.apache.james.postage.configuration;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * specifies for the contained MailSenders, what are source and target of each mail they generate
  */
 public class SendProfile {
-    private String m_profileName;
-    private boolean m_sourceInternal = true;
-    private boolean m_targetInternal = true;
+    private String profileName;
+    private boolean sourceInternal = true;
+    private boolean targetInternal = true;
 
-    private final List<MailSender> m_mailSenders = new ArrayList<MailSender>();
+    private final List<MailSender> mailSenders = new ArrayList<MailSender>();
 
     public SendProfile(String profileName) {
-        m_profileName = profileName;
+        this.profileName = profileName;
     }
 
     public String getName() {
-        return m_profileName;
+        return this.profileName;
     }
 
     public void setSourceInternal(boolean internal) {
-        m_sourceInternal = internal;
+        this.sourceInternal = internal;
     }
 
     public boolean isSourceInternal() {
-        return m_sourceInternal;
+        return this.sourceInternal;
     }
 
     public void setTargetInternal(boolean internal) {
-        m_targetInternal = internal;
+        this.targetInternal = internal;
     }
 
     public boolean isTargetInternal() {
-        return m_targetInternal;
+        return this.targetInternal;
     }
 
     public void addMailSender(MailSender mailSender) {
-        m_mailSenders.add(mailSender);
+        this.mailSenders.add(mailSender);
     }
 
     public Iterator<MailSender> mailSenderIterator() {
-        return m_mailSenders.iterator();
+        return this.mailSenders.iterator();
     }
 
     public int getTotalMailsPerMin() {
-        Iterator<MailSender> iterator = m_mailSenders.iterator();
+        Iterator<MailSender> iterator = this.mailSenders.iterator();
         int total = 0;
         while (iterator.hasNext()) {
             MailSender mailSender = iterator.next();

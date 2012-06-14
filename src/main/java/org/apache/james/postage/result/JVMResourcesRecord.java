@@ -26,79 +26,79 @@ package org.apache.james.postage.result;
 public class JVMResourcesRecord {
     private static String SEPARATOR = ",";
 
-    private final long m_timestamp = System.currentTimeMillis();
-    private String m_errorMessage = null;
+    private final long timestamp = System.currentTimeMillis();
+    private String errorMessage = null;
 
-    private long m_memoryCommitted = -1;
-    private long m_memoryInit = -1;
-    private long m_memoryMax = -1;
-    private long m_memoryUsed = -1;
-    private long m_threadCountPeak = -1;
-    private long m_threadCountCurrent = -1;
-    private long m_threadCountTotalStarted = -1;
+    private long memoryCommitted = -1;
+    private long memoryInit = -1;
+    private long memoryMax = -1;
+    private long memoryUsed = -1;
+    private long threadCountPeak = -1;
+    private long threadCountCurrent = -1;
+    private long threadCountTotalStarted = -1;
 
     public String getErrorMessage() {
-        return m_errorMessage;
+        return this.errorMessage;
     }
 
     public void setErrorMessage(String errorMessage) {
-        m_errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
     }
 
     public long getMemoryCommitted() {
-        return m_memoryCommitted;
+        return this.memoryCommitted;
     }
 
     public void setMemoryCommitted(long memoryCommitted) {
-        this.m_memoryCommitted = memoryCommitted;
+        this.memoryCommitted = memoryCommitted;
     }
 
     public long getMemoryInit() {
-        return m_memoryInit;
+        return this.memoryInit;
     }
 
     public void setMemoryInit(long memoryInit) {
-        this.m_memoryInit = memoryInit;
+        this.memoryInit = memoryInit;
     }
 
     public long getMemoryMax() {
-        return m_memoryMax;
+        return this.memoryMax;
     }
 
     public void setMemoryMax(long memoryMax) {
-        this.m_memoryMax = memoryMax;
+        this.memoryMax = memoryMax;
     }
 
     public long getMemoryUsed() {
-        return m_memoryUsed;
+        return this.memoryUsed;
     }
 
     public void setMemoryUsed(long memoryUsed) {
-        this.m_memoryUsed = memoryUsed;
+        this.memoryUsed = memoryUsed;
     }
 
     public long getThreadCountPeak() {
-        return m_threadCountPeak;
+        return this.threadCountPeak;
     }
 
     public void setThreadCountPeak(long threadCountPeak) {
-        this.m_threadCountPeak = threadCountPeak;
+        this.threadCountPeak = threadCountPeak;
     }
 
     public long getThreadCountCurrent() {
-        return m_threadCountCurrent;
+        return this.threadCountCurrent;
     }
 
     public void setThreadCountCurrent(long threadCountCurrent) {
-        this.m_threadCountCurrent = threadCountCurrent;
+        this.threadCountCurrent = threadCountCurrent;
     }
 
     public long getThreadCountTotalStarted() {
-        return m_threadCountTotalStarted;
+        return this.threadCountTotalStarted;
     }
 
     public void setThreadCountTotalStarted(long threadCountTotalStarted) {
-        this.m_threadCountTotalStarted = threadCountTotalStarted;
+        this.threadCountTotalStarted = threadCountTotalStarted;
     }
 
     public static StringBuffer writeHeader() {
@@ -119,15 +119,15 @@ public class JVMResourcesRecord {
 
     public StringBuffer writeData() {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(m_timestamp).append(SEPARATOR);
-        stringBuffer.append(m_errorMessage).append(SEPARATOR);
-        stringBuffer.append(m_memoryInit).append(SEPARATOR);
-        stringBuffer.append(m_memoryMax).append(SEPARATOR);
-        stringBuffer.append(m_memoryCommitted).append(SEPARATOR);
-        stringBuffer.append(m_memoryUsed).append(SEPARATOR);
-        stringBuffer.append(m_threadCountPeak).append(SEPARATOR);
-        stringBuffer.append(m_threadCountCurrent).append(SEPARATOR);
-        stringBuffer.append(m_threadCountTotalStarted).append(SEPARATOR);
+        stringBuffer.append(this.timestamp).append(SEPARATOR);
+        stringBuffer.append(this.errorMessage).append(SEPARATOR);
+        stringBuffer.append(this.memoryInit).append(SEPARATOR);
+        stringBuffer.append(this.memoryMax).append(SEPARATOR);
+        stringBuffer.append(this.memoryCommitted).append(SEPARATOR);
+        stringBuffer.append(this.memoryUsed).append(SEPARATOR);
+        stringBuffer.append(this.threadCountPeak).append(SEPARATOR);
+        stringBuffer.append(this.threadCountCurrent).append(SEPARATOR);
+        stringBuffer.append(this.threadCountTotalStarted).append(SEPARATOR);
         stringBuffer.append("\r\n");
 
         return stringBuffer;

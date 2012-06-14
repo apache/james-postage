@@ -34,37 +34,37 @@ public class SampleController extends TimerTask {
 
     private static Log log = LogFactory.getLog(SampleController.class);
 
-    private Sampler m_sampler;
-    private int m_samplesPerMinute;
-    private Timer m_timer;
-    private int m_secondsDelayOnStop = 0;
+    private Sampler sampler;
+    private int samplesPerMinute;
+    private Timer timer;
+    private int secondsDelayOnStop = 0;
 
     public SampleController(Sampler sampler, int samplesPerMinute) {
-        m_sampler = sampler;
-        m_samplesPerMinute = samplesPerMinute;
+        this.sampler = sampler;
+        this.samplesPerMinute = samplesPerMinute;
     }
 
     public SampleController(Sampler sampler, int samplesPerMinute, int secondsDelayOnStop) {
         this(sampler, samplesPerMinute);
-        m_secondsDelayOnStop = secondsDelayOnStop;
+        this.secondsDelayOnStop = secondsDelayOnStop;
     }
 
     public void runThreaded() {
-        if (m_samplesPerMinute < 1) {
-            log.warn("sample controller effectivly disabled with sample-per-minute value = " + m_samplesPerMinute);
+        if (this.samplesPerMinute < 1) {
+            log.warn("sample controller effectivly disabled with sample-per-minute value = " + this.samplesPerMinute);
             return;
         }
-        m_timer = new Timer(true);
-        m_timer.schedule(this, 5, 60*1000/m_samplesPerMinute);
+        this.timer = new Timer(true);
+        this.timer.schedule(this, 5, 60*1000/this.samplesPerMinute);
     }
 
     public void stop() {
-        if (m_timer != null) m_timer.cancel();
+        if (this.timer != null) this.timer.cancel();
 
-        if (m_secondsDelayOnStop > 0) {
+        if (this.secondsDelayOnStop > 0) {
             try {
-                log.warn("sampler is waiting additional seconds: " + m_secondsDelayOnStop + " (type = " + m_sampler.getClass().getName() + ")");
-                Thread.sleep(m_secondsDelayOnStop * 1000);
+                log.warn("sampler is waiting additional seconds: " + this.secondsDelayOnStop + " (type = " + this.sampler.getClass().getName() + ")");
+                Thread.sleep(this.secondsDelayOnStop * 1000);
                 log.warn("sampler delay passed.");
             } catch (InterruptedException e) {
                 ; // fall thru
@@ -74,7 +74,7 @@ public class SampleController extends TimerTask {
 
     public void run() {
         try {
-            m_sampler.doSample();
+            this.sampler.doSample();
         } catch (SamplingException e) {
             log.warn("taking sample failed", e);
         }

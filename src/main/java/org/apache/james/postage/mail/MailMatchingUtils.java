@@ -18,23 +18,23 @@
  ****************************************************************/
 package org.apache.james.postage.mail;
 
-import org.apache.james.postage.PostageRunner;
-import org.apache.james.postage.PostageRuntimeException;
-import org.apache.james.postage.classloading.CachedInstanceFactory;
-import org.apache.james.postage.result.MailProcessingRecord;
-import org.apache.james.util.io.IOUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.regex.Pattern;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.regex.Pattern;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.james.postage.PostageRunner;
+import org.apache.james.postage.PostageRuntimeException;
+import org.apache.james.postage.classloading.CachedInstanceFactory;
+import org.apache.james.postage.result.MailProcessingRecord;
 
 /**
  * helps matching, analysing and validating result mails and sent test mails
@@ -146,7 +146,7 @@ public class MailMatchingUtils {
                             Object content = bodyPart.getContent();
                             if (content instanceof InputStream) {
                                 ByteArrayOutputStream os = new ByteArrayOutputStream();
-                                IOUtil.copy(((InputStream) content), os);
+                                IOUtils.copy(((InputStream) content), os);
                                 return os.size();
                             } else if (content instanceof String) {
                                 return ((String) content).length();

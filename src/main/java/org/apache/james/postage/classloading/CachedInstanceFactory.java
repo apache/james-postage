@@ -31,14 +31,14 @@ public class CachedInstanceFactory {
 
     private static Log log = LogFactory.getLog(CachedInstanceFactory.class);
 
-    private final static Map<String, Class<?>> m_classes = new HashMap<String, Class<?>>();
+    private final static Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 
     public static Object createInstance(String classname) {
         Object object = null;
 
         Class<?> clazz = null;
         // class is configured, but not yet loaded
-        if (classname != null && m_classes.get(classname) == null) {
+        if (classname != null && classes.get(classname) == null) {
             try {
                 clazz = Class.forName(classname);
             } catch (ClassNotFoundException e) {

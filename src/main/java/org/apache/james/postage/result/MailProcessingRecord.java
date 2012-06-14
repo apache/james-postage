@@ -28,7 +28,7 @@ import org.apache.james.postage.PostageRunner;
 public class MailProcessingRecord {
 
     private static String SEPARATOR = ",";
-    private static int m_messageId = 1;
+    private static int messageId = 1;
 
     boolean matchedSentAndReceived = false;
     boolean isReceivedValid = false;
@@ -57,7 +57,7 @@ public class MailProcessingRecord {
     String receivingQueue;
 
     public synchronized static String getNextId() {
-        return PostageRunner.getMessageIdPrefix() + (m_messageId++);
+        return PostageRunner.getMessageIdPrefix() + (messageId++);
     }
 
     public boolean isMatchedSentAndReceived() {

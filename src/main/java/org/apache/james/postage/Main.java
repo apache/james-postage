@@ -18,23 +18,23 @@
  ****************************************************************/
 package org.apache.james.postage;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.james.postage.configuration.ConfigurationLoader;
 import org.apache.james.postage.configuration.PostageConfiguration;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * bootstrapping the application
  */
 public class Main {
-    private static PostageRunner m_currentPostageRunner = null;
+    private static PostageRunner currentPostageRunner = null;
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         if (args == null || args.length == 0) {
             System.out.println("Please provide the configuration file");
             return;
@@ -43,8 +43,7 @@ public class Main {
         String filename = args[0];
 
         List<String> scenariosToRun = new ArrayList<String>();
-        for (int i = 1; i < args.length; i++)
-        {
+        for (int i = 1; i < args.length; i++) {
             scenariosToRun.add(args[i]);
         }
 
@@ -80,10 +79,10 @@ public class Main {
 
             playedScenarioCounter++;
             PostageConfiguration postageConfiguration = configurations.get(id);
-            m_currentPostageRunner = new PostageRunner(postageConfiguration);
-            m_currentPostageRunner.run(); // TODO maybe we want to run this Runnable in its own thread, but maybe not
+            currentPostageRunner = new PostageRunner(postageConfiguration);
+            currentPostageRunner.run(); // TODO maybe we want to run this Runnable in its own thread, but maybe not
         }
-        m_currentPostageRunner = null;
+        currentPostageRunner = null;
         if (playedScenarioCounter == 0) {
             System.out.println("No scenario has been executed. ");
             System.out.println("Either those on the command line where not matching those in the file.");
@@ -92,7 +91,7 @@ public class Main {
     }
 
     private static void shutdown() {
-        if (m_currentPostageRunner != null) m_currentPostageRunner.terminate();
+        if (currentPostageRunner != null) currentPostageRunner.terminate();
     }
 
 }

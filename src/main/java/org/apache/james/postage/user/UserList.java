@@ -16,68 +16,65 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
-
 package org.apache.james.postage.user;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
- * collection of all users used for one Postage scenario
+ * Collection of all users used for one Postage scenario
  */
 public class UserList {
-
-    int m_count         = 0;
-    String m_namePrefix = null;
-
-    List<String>   m_users    = new ArrayList<String>();
-    String m_password = null; // common to all users, if set
-    String m_domain   = null; // domain, common to all users
+    int count = 0;
+    String namePrefix = null;
+    List<String>   users    = new ArrayList<String>();
+    String password = null; // common to all users, if set
+    String domain   = null; // domain, common to all users
 
     public UserList(int count, String namePrefix, String domain) {
-        m_count = count;
-        m_namePrefix = namePrefix;
-        m_domain   = domain;
+        this.count = count;
+        this.namePrefix = namePrefix;
+        this.domain   = domain;
     }
 
     public UserList(int count, String namePrefix, String domain, String password) {
         this(count, namePrefix, domain);
-        m_password = password;
+        this.password = password;
     }
 
     public int getCount() {
-        return m_count;
+        return this.count;
     }
 
     public String getNamePrefix() {
-        return m_namePrefix;
+        return this.namePrefix;
     }
 
     public Iterator<String> getUsernames() {
-        return m_users.iterator();
+        return this.users.iterator();
     }
 
     public void setExistingUsers(List<String> existingUsers) {
-        m_users.clear();
-        m_users.addAll(existingUsers);
+        this.users.clear();
+        this.users.addAll(existingUsers);
     }
 
     public String getPassword() {
-        return m_password;
+        return this.password;
     }
 
     public String getDomain() {
-        return m_domain;
+        return this.domain;
     }
 
     public String getRandomUsername() {
-        if (m_users.isEmpty()) return null;
-        return m_users.get((int)(Math.random() * (m_users.size() - 1)));
+        if (this.users.isEmpty()) return null;
+        return this.users.get((int)(Math.random() * (this.users.size() - 1)));
     }
 
     public String getEmailAddress(String username) {
-        return username + "@" + m_domain;
+        return username + "@" + this.domain;
     }
+
 }

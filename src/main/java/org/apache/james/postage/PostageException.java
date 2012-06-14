@@ -16,14 +16,16 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
-
 package org.apache.james.postage;
 
 /**
- * base exception for Postage
+ * <p>
+ * Base exception for Postage
+ * </p>
  */
 public class PostageException extends Exception {
+    private static final long serialVersionUID = 6272996357773871487L;
+
     public PostageException() {
         super();
     }
@@ -39,4 +41,5 @@ public class PostageException extends Exception {
     public PostageException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }
