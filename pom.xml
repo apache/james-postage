@@ -43,6 +43,36 @@
           <version>${version.james-server}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-protocols-library</artifactId>
+        <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-cli</artifactId>
+        <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-data-api</artifactId>
+        <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-queue-api</artifactId>
+        <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.james</groupId>
+          <artifactId>james-server-data-library</artifactId>
+          <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.james</groupId>
+          <artifactId>james-server-filesystem-api</artifactId>
+          <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
           <groupId>commons-net</groupId>
           <artifactId>commons-net</artifactId>
           <version>1.4.1</version>
@@ -51,6 +81,53 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.james</groupId>
+          <artifactId>james-server-protocols-smtp</artifactId>
+          <scope>test</scope>
+          <type>test-jar</type>
+          <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.james</groupId>
+          <artifactId>james-server-filesystem-api</artifactId>
+          <scope>test</scope>
+          <type>test-jar</type>
+          <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-protocols-library</artifactId>
+        <scope>test</scope>
+        <type>test-jar</type>
+        <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-data-api</artifactId>
+        <scope>test</scope>
+        <type>test-jar</type>
+        <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-queue-api</artifactId>
+        <scope>test</scope>
+        <type>test-jar</type>
+        <version>${version.james-server}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.james</groupId>
+          <artifactId>james-server-data-library</artifactId>
+          <scope>test</scope>
+          <type>test-jar</type>
+          <version>${version.james-server}</version>
       </dependency>
     </dependencies>
     <build>
