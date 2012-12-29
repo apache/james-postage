@@ -17,17 +17,20 @@
  * under the License.                                           *
  ****************************************************************/
 
-
 package org.apache.james.postage.smtpserver;
 
-import org.apache.mailet.MailetContext;
-import org.apache.mailet.Mail;
-import org.apache.mailet.MailAddress;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Collection;
-import java.util.Iterator;
+
+import org.apache.mailet.LookupException;
+import org.apache.mailet.Mail;
+import org.apache.mailet.MailAddress;
+import org.apache.mailet.MailetContext;
+import org.apache.mailet.TemporaryLookupException;
 
 /**
  * mock-up of MailetContext
@@ -43,39 +46,39 @@ public class TrivialMailContext implements MailetContext {
     }
 
     public Collection getMailServers(String host) {
-        return null;  // trivial implementation
+        return null; // trivial implementation
     }
 
     public MailAddress getPostmaster() {
-        return null;  // trivial implementation
+        return null; // trivial implementation
     }
 
     public Object getAttribute(String name) {
-        return null;  // trivial implementation
+        return null; // trivial implementation
     }
 
     public Iterator getAttributeNames() {
-        return null;  // trivial implementation
+        return null; // trivial implementation
     }
 
     public int getMajorVersion() {
-        return 0;  // trivial implementation
+        return 0; // trivial implementation
     }
 
     public int getMinorVersion() {
-        return 0;  // trivial implementation
+        return 0; // trivial implementation
     }
 
     public String getServerInfo() {
-        return null;  // trivial implementation
+        return null; // trivial implementation
     }
 
     public boolean isLocalServer(String serverName) {
-        return false;  // trivial implementation
+        return false; // trivial implementation
     }
 
     public boolean isLocalUser(String userAccount) {
-        return false;  // trivial implementation
+        return false; // trivial implementation
     }
 
     public void log(String message) {
@@ -94,14 +97,6 @@ public class TrivialMailContext implements MailetContext {
         // trivial implementation
     }
 
-    public void sendMail(MailAddress sender, Collection recipients, MimeMessage msg) throws MessagingException {
-        // trivial implementation
-    }
-
-    public void sendMail(MailAddress sender, Collection recipients, MimeMessage msg, String state) throws MessagingException {
-        // trivial implementation
-    }
-
     public void sendMail(Mail mail) throws MessagingException {
         // trivial implementation
     }
@@ -115,12 +110,42 @@ public class TrivialMailContext implements MailetContext {
     }
 
     public Iterator getSMTPHostAddresses(String domainName) {
-        return null;  // trivial implementation
+        return null; // trivial implementation
     }
 
     // compatibility with James-trunk
     public boolean isLocalEmail(MailAddress arg0) {
         return false; // trivial implementation
     }
-}
 
+    @Override
+    public List<String> dnsLookup(String arg0, RecordType arg1) throws TemporaryLookupException, LookupException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void log(LogLevel arg0, String arg1) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void log(LogLevel arg0, String arg1, Throwable arg2) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void sendMail(MailAddress arg0, Collection<MailAddress> arg1, MimeMessage arg2) throws MessagingException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void sendMail(MailAddress arg0, Collection<MailAddress> arg1, MimeMessage arg2, String arg3)
+            throws MessagingException {
+        // TODO Auto-generated method stub
+
+    }
+}
