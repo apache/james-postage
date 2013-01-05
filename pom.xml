@@ -90,44 +90,38 @@
       <dependency>
           <groupId>org.apache.james</groupId>
           <artifactId>james-server-protocols-smtp</artifactId>
-          <scope>test</scope>
           <type>test-jar</type>
           <version>${version.james-server}</version>
       </dependency>
       <dependency>
           <groupId>org.apache.james</groupId>
           <artifactId>james-server-filesystem-api</artifactId>
-          <scope>test</scope>
           <type>test-jar</type>
           <version>${version.james-server}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.james</groupId>
         <artifactId>james-server-protocols-library</artifactId>
-        <scope>test</scope>
         <type>test-jar</type>
         <version>${version.james-server}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.james</groupId>
         <artifactId>james-server-data-api</artifactId>
-        <scope>test</scope>
         <type>test-jar</type>
         <version>${version.james-server}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.james</groupId>
         <artifactId>james-server-queue-api</artifactId>
-        <scope>test</scope>
         <type>test-jar</type>
         <version>${version.james-server}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.james</groupId>
-          <artifactId>james-server-data-library</artifactId>
-          <scope>test</scope>
-          <type>test-jar</type>
-          <version>${version.james-server}</version>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-server-data-library</artifactId>
+        <type>test-jar</type>
+        <version>${version.james-server}</version>
       </dependency>
     </dependencies>
     <build>

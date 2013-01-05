@@ -17,18 +17,17 @@
  * under the License.                                           *
  ****************************************************************/
 
-
 package org.apache.james.postage.configuration;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.james.postage.user.UserList;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.james.postage.user.UserList;
 
 /**
  * generates named PostageConfigurations
@@ -37,18 +36,18 @@ public class ConfigurationLoader {
 
     private static Log log = LogFactory.getLog(ConfigurationLoader.class);
 
-		public Map<String, PostageConfiguration> create(Configuration configuration) {
+    public Map<String, PostageConfiguration> create(Configuration configuration) {
         log.debug("reading configuration.");
 
         Map<String, PostageConfiguration> postageConfigurations = new LinkedHashMap<String, PostageConfiguration>();
 
-        List<String> scenariosIds = configuration.getList("scenario[@id]");
+        List<Object> scenariosIds = configuration.getList("scenario[@id]");
         log.debug("scenarios contained in configuration: " + scenariosIds.size());
 
-        Iterator<String> scenarioIter = scenariosIds.iterator();
+        Iterator<Object> scenarioIter = scenariosIds.iterator();
         int scenarioCount = 0;
         while (scenarioIter.hasNext()) {
-            String scenarioId = scenarioIter.next();
+            String scenarioId = (String) scenarioIter.next();
 
             if (postageConfigurations.containsKey(scenarioId)) {
                 log.error("found in configuration more than one scenario which is named: " + scenarioId);
@@ -59,37 +58,52 @@ public class ConfigurationLoader {
 
             String scenario = getIndexedPropertyName("scenario", scenarioCount);
 
-            postageConfiguration.setDurationMinutes(configuration.getInt(getAttributedPropertyName(scenario, "runtimeMinutes")));
+            postageConfiguration.setDurationMinutes(configuration.getInt(getAttributedPropertyName(scenario,
+                    "runtimeMinutes")));
 
             addDescription(postageConfiguration, configuration.subset(scenario + ".description"));
 
             String scenarioInternalUsers = scenario + ".users.internal";
-            UserList internals = new UserList(configuration.getInt(getAttributedPropertyName(scenarioInternalUsers, "count")),
-                                              configuration.getString(getAttributedPropertyName(scenarioInternalUsers, "username-prefix")),
-                                              configuration.getString(getAttributedPropertyName(scenarioInternalUsers, "domain")),
-                                              configuration.getString(getAttributedPropertyName(scenarioInternalUsers, "password")));
+            UserList internals = new UserList(configuration.getInt(getAttributedPropertyName(scenarioInternalUsers,
+                    "count")), configuration.getString(getAttributedPropertyName(scenarioInternalUsers,
+                    "username-prefix")), configuration.getString(getAttributedPropertyName(scenarioInternalUsers,
+                    "domain")), configuration.getString(getAttributedPropertyName(scenarioInternalUsers, "password")));
             postageConfiguration.setInternalUsers(internals);
-            postageConfiguration.setInternalReuseExisting(configuration.getBoolean(getAttributedPropertyName(scenarioInternalUsers, "reuseExisting")));
+            postageConfiguration.setInternalReuseExisting(configuration.getBoolean(getAttributedPropertyName(
+                    scenarioInternalUsers, "reuseExisting")));
 
             String scenarioExternalUsers = scenario + ".users.external";
-            UserList externals = new UserList(configuration.getInt(getAttributedPropertyName(scenarioExternalUsers, "count")),
-                                              configuration.getString(getAttributedPropertyName(scenarioExternalUsers, "username-prefix")),
-                                              configuration.getString(getAttributedPropertyName(scenarioExternalUsers, "domain")));
+            UserList externals = new UserList(configuration.getInt(getAttributedPropertyName(scenarioExternalUsers,
+                    "count")), configuration.getString(getAttributedPropertyName(scenarioExternalUsers,
+                    "username-prefix")), configuration.getString(getAttributedPropertyName(scenarioExternalUsers,
+                    "domain")));
             postageConfiguration.setExternalUsers(externals);
 
             String scenarioTestserver = scenario + ".testserver";
-            postageConfiguration.setTestserverHost(configuration.getString(getAttributedPropertyName(scenarioTestserver, "host")));
-            postageConfiguration.setTestserverPortPOP3(configuration.getInt(getAttributedPropertyName(scenarioTestserver + ".pop3", "port")));
-            postageConfiguration.setTestserverPOP3FetchesPerMinute(configuration.getInt(getAttributedPropertyName(scenarioTestserver + ".pop3", "count-per-min")));
-            postageConfiguration.setTestserverPortSMTPInbound(configuration.getInt(getAttributedPropertyName(scenarioTestserver + ".smtp-inbound", "port")));
-            postageConfiguration.setTestserverPortSMTPForwarding(configuration.getInt(getAttributedPropertyName(scenarioTestserver + ".smtp-forwarding", "port")));
-            postageConfiguration.setTestserverSMTPForwardingWaitSeconds(configuration.getInt(getAttributedPropertyName(scenarioTestserver + ".smtp-forwarding", "latecomer-wait-seconds")));
-            postageConfiguration.setTestserverRemoteManagerPort(configuration.getInt(getAttributedPropertyName(scenarioTestserver + ".remotemanager", "port")));
-            postageConfiguration.setTestserverRemoteManagerUsername(configuration.getString(getAttributedPropertyName(scenarioTestserver + ".remotemanager", "name")));
-            postageConfiguration.setTestserverRemoteManagerPassword(configuration.getString(getAttributedPropertyName(scenarioTestserver + ".remotemanager", "password")));
-            postageConfiguration.setTestserverSpamAccountUsername(configuration.getString(getAttributedPropertyName(scenarioTestserver + ".spam-account", "name")));
-            postageConfiguration.setTestserverSpamAccountPassword(configuration.getString(getAttributedPropertyName(scenarioTestserver + ".spam-account", "password")));
-            postageConfiguration.setTestserverPortJMXRemoting(configuration.getInt(getAttributedPropertyName(scenarioTestserver + ".jvm-resources", "jmx-remoting-port")));
+            postageConfiguration.setTestserverHost(configuration.getString(getAttributedPropertyName(
+                    scenarioTestserver, "host")));
+            postageConfiguration.setTestserverPortPOP3(configuration.getInt(getAttributedPropertyName(
+                    scenarioTestserver + ".pop3", "port")));
+            postageConfiguration.setTestserverPOP3FetchesPerMinute(configuration.getInt(getAttributedPropertyName(
+                    scenarioTestserver + ".pop3", "count-per-min")));
+            postageConfiguration.setTestserverPortSMTPInbound(configuration.getInt(getAttributedPropertyName(
+                    scenarioTestserver + ".smtp-inbound", "port")));
+            postageConfiguration.setTestserverPortSMTPForwarding(configuration.getInt(getAttributedPropertyName(
+                    scenarioTestserver + ".smtp-forwarding", "port")));
+            postageConfiguration.setTestserverSMTPForwardingWaitSeconds(configuration.getInt(getAttributedPropertyName(
+                    scenarioTestserver + ".smtp-forwarding", "latecomer-wait-seconds")));
+            postageConfiguration.setTestserverRemoteManagerPort(configuration.getInt(getAttributedPropertyName(
+                    scenarioTestserver + ".remotemanager", "port")));
+            postageConfiguration.setTestserverRemoteManagerUsername(configuration.getString(getAttributedPropertyName(
+                    scenarioTestserver + ".remotemanager", "name")));
+            postageConfiguration.setTestserverRemoteManagerPassword(configuration.getString(getAttributedPropertyName(
+                    scenarioTestserver + ".remotemanager", "password")));
+            postageConfiguration.setTestserverSpamAccountUsername(configuration.getString(getAttributedPropertyName(
+                    scenarioTestserver + ".spam-account", "name")));
+            postageConfiguration.setTestserverSpamAccountPassword(configuration.getString(getAttributedPropertyName(
+                    scenarioTestserver + ".spam-account", "password")));
+            postageConfiguration.setTestserverPortJMXRemoting(configuration.getInt(getAttributedPropertyName(
+                    scenarioTestserver + ".jvm-resources", "jmx-remoting-port")));
 
             addSendProfiles(postageConfiguration, configuration, scenario);
 
@@ -104,7 +118,6 @@ public class ConfigurationLoader {
     private void addDescription(PostageConfiguration postageConfiguration, Configuration configuration) {
         Iterator<String> keys = configuration.getKeys();
 
-
         while (keys.hasNext()) {
             String itemName = keys.next();
             String itemContent = configuration.getString(itemName);
@@ -114,20 +127,22 @@ public class ConfigurationLoader {
     }
 
     private void addSendProfiles(PostageConfiguration postageConfiguration, Configuration configuration, String scenario) {
-        List<String> profileNames = configuration.getList(scenario + ".profiles.profile[@name]");
+        List<Object> profileNames = configuration.getList(scenario + ".profiles.profile[@name]");
         log.debug("profiles contained in scenario " + postageConfiguration.getId() + ": " + profileNames.size());
 
-        Iterator<String> profileIter = profileNames.iterator();
+        Iterator<Object> profileIter = profileNames.iterator();
         int profileCount = 0;
         while (profileIter.hasNext()) {
-            String profileName = profileIter.next();
+            String profileName = (String) profileIter.next();
 
             SendProfile profile = new SendProfile(profileName);
 
             String profilePath = getIndexedPropertyName(scenario + ".profiles.profile", profileCount);
 
-            profile.setSourceInternal(convertToInternalExternalFlag(configuration.getString(getAttributedPropertyName(profilePath, "source"))));
-            profile.setTargetInternal(convertToInternalExternalFlag(configuration.getString(getAttributedPropertyName(profilePath, "target"))));
+            profile.setSourceInternal(convertToInternalExternalFlag(configuration.getString(getAttributedPropertyName(
+                    profilePath, "source"))));
+            profile.setTargetInternal(convertToInternalExternalFlag(configuration.getString(getAttributedPropertyName(
+                    profilePath, "target"))));
 
             addMailSender(profile, configuration, profilePath);
 
@@ -138,9 +153,9 @@ public class ConfigurationLoader {
     }
 
     private void addMailSender(SendProfile profile, Configuration configuration, String profilePath) {
-        List<String> mailSenders = configuration.getList(profilePath + ".send[@count-per-min]");
+        List<Object> mailSenders = configuration.getList(profilePath + ".send[@count-per-min]");
 
-        Iterator<String> mailSenderIter = mailSenders.iterator();
+        Iterator<Object> mailSenderIter = mailSenders.iterator();
         int mailSenderCount = 0;
         while (mailSenderIter.hasNext()) {
             mailSenderIter.next(); // ignore
@@ -148,13 +163,20 @@ public class ConfigurationLoader {
             String mailSenderPath = getIndexedPropertyName(profilePath + ".send", mailSenderCount);
 
             MailSender mailSender = new MailSender(profile);
-            mailSender.setSubject(configuration.getString(getAttributedPropertyName(mailSenderPath, "subject"), "Apache JAMES Postage test mail"));
-            mailSender.setSendPerMinute(configuration.getInt(getAttributedPropertyName(mailSenderPath, "count-per-min")));
-            mailSender.setSizeMinText(configuration.getInt(getAttributedPropertyName(mailSenderPath, "text-size-min"), 0));
-            mailSender.setSizeMaxText(configuration.getInt(getAttributedPropertyName(mailSenderPath, "text-size-max"), 0));
-            mailSender.setSizeMinBinary(configuration.getInt(getAttributedPropertyName(mailSenderPath, "binary-size-min"), 0));
-            mailSender.setSizeMaxBinary(configuration.getInt(getAttributedPropertyName(mailSenderPath, "binary-size-max"), 0));
-            mailSender.setMailFactoryClassname(configuration.getString(getAttributedPropertyName(mailSenderPath, "mail-factory-class"), null));
+            mailSender.setSubject(configuration.getString(getAttributedPropertyName(mailSenderPath, "subject"),
+                    "Apache JAMES Postage test mail"));
+            mailSender.setSendPerMinute(configuration
+                    .getInt(getAttributedPropertyName(mailSenderPath, "count-per-min")));
+            mailSender.setSizeMinText(configuration.getInt(getAttributedPropertyName(mailSenderPath, "text-size-min"),
+                    0));
+            mailSender.setSizeMaxText(configuration.getInt(getAttributedPropertyName(mailSenderPath, "text-size-max"),
+                    0));
+            mailSender.setSizeMinBinary(configuration.getInt(
+                    getAttributedPropertyName(mailSenderPath, "binary-size-min"), 0));
+            mailSender.setSizeMaxBinary(configuration.getInt(
+                    getAttributedPropertyName(mailSenderPath, "binary-size-max"), 0));
+            mailSender.setMailFactoryClassname(configuration.getString(
+                    getAttributedPropertyName(mailSenderPath, "mail-factory-class"), null));
 
             profile.addMailSender(mailSender);
 
