@@ -1,0 +1,4 @@
+name: postage
+title: Apache James Postage
+version: '0.1-SNAPSHOT'
+prerelease: true
